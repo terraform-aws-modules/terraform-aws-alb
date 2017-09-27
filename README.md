@@ -1,14 +1,14 @@
-# tf_aws_alb
+# terraform-aws-alb
 A Terraform module containing common configurations for an AWS Application Load
 Balancer (ALB) running over HTTP/HTTPS.
 
 ## Assumptions
-* *You want to associate the ASG with a target group and ALB*
+* You want to create a set of resources for the ALB: namely an associated target group and listener.
 * You've created a Virtual Private Cloud (VPC) + subnets where you intend to put
-this ALB and backing instances.
-* You can fully bootstrap your instances using an AMI + user_data.
-* You want to configure a listener for HTTPS
-* You've uploaded an SSL certificate to AWS/IAM
+this ALB.
+* You have one or more security groups to attach to the ALB.
+* You want to configure a listener for HTTPS/HTTP
+* You've uploaded an SSL certificate to AWS IAM if using HTTPS
 
 The module supports both (mutually exclusive):
 * Internal IP ALBs
@@ -83,7 +83,7 @@ gem install bundler; bundle install
 Report issues/questions/feature requests on in the [Issues](https://github.com/terraform-aws-modules/terraform-aws-alb/issues) section.
 
 Pull requests are welcome! Ideally create a feature branch and issue for every
-individual change you make. These are the steps:
+individual change made. These are the steps:
 
 1. Fork the repo to a personal space or org.
 2. Create your feature branch from master (`git checkout -b my-new-feature`).
