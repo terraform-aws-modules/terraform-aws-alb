@@ -1,5 +1,6 @@
 require 'awspec'
-require 'Rhcl'
+puts $:
+require 'rhcl'
 
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
 log_prefix = module_vars['variable']['log_prefix']['default']
