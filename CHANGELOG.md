@@ -17,13 +17,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * pinned examples to provider and terraform versions to harden versioning.
 * self signed cert added to the test fixtures, eliminating the need for manual upload and terraform.tfvars configuration.
 
-
 ## [1.0.1] - 2017-09-14
 ### Added
-* tag maps can now be provided.
+* tag maps can now be provided (thanks @kwach)
 
 ### Changed
-* optional S3 logging.
+* optional S3 logging (thanks @marocchino)
 
 ## [1.0.0] - 2017-03-16
 ### Added
@@ -40,4 +39,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1.0] - 2017-03-09
 ### Added
-* Initial release
+* Initial release.
