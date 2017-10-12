@@ -40,19 +40,19 @@ script:
   - terraform fmt -check=true
   - terraform validate -var "region=us-east-2" -var "certificate_arn=arn:aws:iam::123456789012:server-certificate/test_cert-123456789012" -var "health_check_path=/" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "alb_name=my-alb" -var "alb_security_groups=[]"
   - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
-  - cd examples/test_fixtures
-  # this line is to change the source of the root module to 2 dirs back which works when validating in CI but when running through test kitchen, we need to source from 3 dirs up, oddly
-  - sed -i.bak 's/ = \"\.\.\// = \"/g' main.tf
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light validate
-  - terraform init
-  - terraform fmt -check=true
-  - terraform validate
-  # FIXME: tflint is unhappy with sourcing a module from a relative dir here.
-  # - docker run --rm -v $(pwd):/data --workdir=/data -t wata727/tflint --error-with-issues
-  - mv main.tf.bak main.tf
-  - cd -
+  # - cd examples/test_fixtures
+  # # this line is to change the source of the root module to 2 dirs back which works when validating in CI but when running through test kitchen, we need to source from 3 dirs up, oddly
+  # - sed -i.bak 's/ = \"\.\.\// = \"/g' main.tf
+  # # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
+  # # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true
+  # # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light validate
+  # - terraform init
+  # - terraform fmt -check=true
+  # - terraform validate
+  # # FIXME: tflint is unhappy with sourcing a module from a relative dir here.
+  # # - docker run --rm -v $(pwd):/data --workdir=/data -t wata727/tflint --error-with-issues
+  # - mv main.tf.bak main.tf
+  # - cd -
   - terraform -v
   - kitchen test --destroy always
 
