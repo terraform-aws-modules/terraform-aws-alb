@@ -40,7 +40,7 @@ module "security-group" {
 }
 
 module "alb" {
-  source                   = "../../../"
+  source                   = "../../.."
   alb_name                 = "my-alb"
   alb_security_groups      = ["${module.security-group.this_security_group_id}"]
   region                   = "${var.region}"
