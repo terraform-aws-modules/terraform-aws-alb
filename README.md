@@ -2,6 +2,10 @@
 A Terraform module containing common configurations for an AWS Application Load
 Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registry](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws).
 
+| Branch | Build status |
+| --- | --- |
+| master | [![build Status](https://travis-ci.org/run-at-scale/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/run-at-scale/terraform-aws-skeleton) |
+
 ## Assumptions
 * You want to create a set of resources for the ALB: namely an associated target group and listener.
 * You've created a Virtual Private Cloud (VPC) + subnets where you intend to put
@@ -32,12 +36,15 @@ A full example leveraging other community modules is contained in the [examples/
 ```
 module "alb" {
   source              = "terraform-aws-modules/alb/aws"
+  alb_name            = "my-alb"
+  aws_region          = "us-east-2"
+  alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
   vpc_id              = "vpc-abcde012"
   subnets             = ["subnet-abcde012", "subnet-bcde012a"]
-  alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
   certificate_arn     = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
   log_bucket          = "logs-us-east-2-123456789012"
   log_prefix          = "my-alb-logs"
+  health_check_path   = "/"
 
   tags {
     "Terraform" = "true"
@@ -50,7 +57,7 @@ module "alb" {
 
 ## Testing
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
-1. Install the prerequisites of rvm and ruby 2.4.0 via homebrew.
+1. Install the prerequisites of rvm and ruby 2.4.2 via homebrew.
 2. Install bundler and the gems from our Gemfile:
 ```
 gem install bundler; bundle install

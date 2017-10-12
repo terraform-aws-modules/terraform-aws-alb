@@ -69,34 +69,10 @@ The following IAM policy is the minimum needed to execute the module from the te
             ]
         },
         {
-            "Sid": "Stmt1507789585000",
-            "Effect": "Allow",
-            "Action": [
-                "s3:CreateBucket",
-                "s3:DeleteBucket",
-                "s3:DeleteBucketPolicy",
-                "s3:DeleteObject",
-                "s3:GetBucketPolicy",
-                "s3:GetObject",
-                "s3:ListAllMyBuckets",
-                "s3:ListBucket",
-                "s3:PutBucketPolicy",
-                "s3:PutObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::logs-us-east-2-084274556666/*"
-            ]
-        },
-        {
             "Sid": "Stmt1507789585001",
             "Effect": "Allow",
             "Action": [
-                "s3:CreateBucket",
-                "s3:DeleteBucket",
-                "s3:DeleteBucketPolicy",
-                "s3:GetBucketPolicy",
-                "s3:ListAllMyBuckets",
-                "s3:ListBucket"
+                "s3:*",
             ],
             "Resource": [
                 "*"
@@ -117,7 +93,8 @@ The following IAM policy is the minimum needed to execute the module from the te
             "Effect": "Allow",
             "Action": [
                 "iam:UploadServerCertificate",
-                "iam:DeleteServerCertificate"
+                "iam:DeleteServerCertificate",
+                "iam:GetServerCertificate"
             ],
             "Resource": [
                 "*"

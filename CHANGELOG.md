@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `aws_caller_identity` now used to gather account_id rather than using a variable.
 * tests added for `target_group` and expanded for `alb`.
 * input variables added for health checks, bucket policy, force_destroy_log_bucket - increasing flexibility.
-* circle CI config and badge
+* TravisCI configuration and badge.
 
 ### Changed
 * altered structure of module to conform to the new [Terraform registry standards](https://www.terraform.io/docs/registry/modules/publish.html#requirements)
