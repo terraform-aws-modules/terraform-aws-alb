@@ -42,7 +42,7 @@ script:
   - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
   - cd examples/test_fixtures
   # this line is to change the source of the root module to 2 dirs back which works when validating in CI but when running through test kitchen, we need to source from 3 dirs up, oddly
-  - sed -i.bak 's/source = \"\.\.\//source = \"/g' main.tf
+  - sed -i.bak 's/ = \"\.\.\// = \"/g' main.tf
   # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
   # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true
   # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light validate
