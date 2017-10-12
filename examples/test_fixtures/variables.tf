@@ -3,5 +3,5 @@ variable "log_prefix" {
 }
 
 variable "aws_region" {
-  default = "us-west-2"
+  default = "us-east-2"
 }

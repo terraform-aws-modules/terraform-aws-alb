@@ -1,24 +1,20 @@
-/*
-Module variables
-*/
-
 variable "alb_is_internal" {
-  description = "Determines if the ALB is internal. Default: false"
+  description = "Boolean determining if the ALB is internal or externally facing."
   default     = false
 }
 
 variable "alb_name" {
   description = "The name of the ALB as will show in the AWS EC2 ELB console."
-  default     = "my-alb"
 }
 
 variable "alb_protocols" {
-  description = "A comma delimited list of the protocols the ALB accepts. e.g.: HTTPS"
-  default     = "HTTPS"
+  description = "The protocols the ALB accepts. e.g.: [\"HTTPS\"]"
+  type        = "list"
+  default     = ["HTTPS"]
 }
 
 variable "alb_security_groups" {
-  description = "A comma separated string of security groups with which we associate the ALB. e.g. 'sg-edcd9784,sg-edcd9785'"
+  description = "The security groups with which we associate the ALB. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
   type        = "list"
 }
 
@@ -36,22 +32,56 @@ variable "backend_protocol" {
   default     = "HTTP"
 }
 
+variable "bucket_policy" {
+  description = "A custom S3 bucket policy to apply to the log bucket. If not provided, a minimal policy will be generated from other variables."
+  default     = ""
+}
+
 variable "certificate_arn" {
-  description = "The ARN of the SSL Certificate. e.g. 'arn:aws:iam::123456789012:server-certificate/ProdServerCert'"
+  description = "The ARN of the SSL Certificate. e.g. \"arn:aws:iam::123456789012:server-certificate/ProdServerCert\""
 }
 
 variable "cookie_duration" {
-  description = "If load balancer connection stickiness is desired, set this to the duration that cookie should be valid. If no stickiness is wanted, leave it blank. e.g.: 300"
-  default     = "1"
+  description = "If load balancer connection stickiness is desired, set this to the duration in seconds that cookie should be valid (e.g. 300). Otherwise, if no stickiness is desired, leave the default."
+  default     = 1
+}
+
+variable "force_destroy_log_bucket" {
+  description = "If set to true and if the log bucket already exists, it will be destroyed and recreated."
+  default     = false
+}
+
+variable "health_check_healthy_threshold" {
+  description = "Number of consecutive positive health checks before a backend instance is considered healthy."
+  default     = 3
+}
+
+variable "health_check_interval" {
+  description = "Interval in seconds on which the health check against backend hosts is tried."
+  default     = 10
 }
 
 variable "health_check_path" {
   description = "The URL the ELB should use for health checks. e.g. /health"
-  default     = "/"
+}
+
+variable "health_check_port" {
+  description = "The port used by the health check if different from the traffic-port."
+  default     = "traffic-port"
+}
+
+variable "health_check_timeout" {
+  description = "Seconds to leave a health check waiting before terminating it and calling the check unhealthy."
+  default     = 5
+}
+
+variable "health_check_unhealthy_threshold" {
+  description = "Number of consecutive positive health checks before a backend instance is considered unhealthy."
+  default     = 3
 }
 
 variable "log_bucket" {
-  description = "S3 bucket for storing ALB access logs."
+  description = "S3 bucket for storing ALB access logs. Setting this means the module will try to create the bucket."
   default     = ""
 }
 
@@ -70,11 +100,11 @@ variable "subnets" {
   type        = "list"
 }
 
-variable "vpc_id" {
-  description = "VPC id where the ALB and other resources will be deployed."
-}
-
 variable "tags" {
   description = "A map of tags to add to all resources"
   default     = {}
+}
+
+variable "vpc_id" {
+  description = "VPC id where the ALB and other resources will be deployed."
 }

@@ -1,6 +1,5 @@
 require 'awspec'
-puts $:
-require 'rhcl'
+require 'Rhcl'
 
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
 log_prefix = module_vars['variable']['log_prefix']['default']
@@ -42,10 +41,8 @@ describe s3_bucket(log_bucket) do
     should have_policy <<-POLICY
 {
     "Version": "2012-10-17",
-    "Id": "Policy1429136655940",
     "Statement": [
         {
-            "Sid": "Stmt1429136633762",
             "Effect": "Allow",
             "Principal": {
                 "AWS": "arn:aws:iam::#{principal_account_id}:root"

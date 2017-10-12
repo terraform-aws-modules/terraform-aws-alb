@@ -1,30 +1,25 @@
 ### ALB resources
 
-# TODO:
-# support not logging
-
 resource "aws_alb" "main" {
   name            = "${var.alb_name}"
   subnets         = ["${var.subnets}"]
   security_groups = ["${var.alb_security_groups}"]
   internal        = "${var.alb_is_internal}"
+  tags            = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 
   access_logs {
     bucket  = "${var.log_bucket}"
     prefix  = "${var.log_prefix}"
     enabled = "${var.log_bucket != ""}"
   }
-
-  tags = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  count         = "${var.log_bucket != "" ? 1 : 0}"
   bucket        = "${var.log_bucket}"
-  policy        = "${data.template_file.bucket_policy.rendered}"
-  force_destroy = true
-
-  tags = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
+  policy        = "${var.bucket_policy == "" ? local.bucket_policy : var.bucket_policy}"
+  force_destroy = "${var.force_destroy_log_bucket}"
+  count         = "${var.log_bucket != "" ? 1 : 0}"
+  tags          = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
 }
 
 resource "aws_alb_target_group" "target_group" {
@@ -34,12 +29,12 @@ resource "aws_alb_target_group" "target_group" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    interval            = 30
+    interval            = "${var.health_check_interval}"
     path                = "${var.health_check_path}"
-    port                = "traffic-port"
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
-    timeout             = 5
+    port                = "${var.health_check_port}"
+    healthy_threshold   = "${var.health_check_healthy_threshold}"
+    unhealthy_threshold = "${var.health_check_unhealthy_threshold}"
+    timeout             = "${var.health_check_timeout}"
     protocol            = "${var.backend_protocol}"
   }
 
@@ -56,13 +51,12 @@ resource "aws_alb_listener" "front_end_http" {
   load_balancer_arn = "${aws_alb.main.arn}"
   port              = "80"
   protocol          = "HTTP"
+  count             = "${contains(var.alb_protocols, "HTTP") ? 1 : 0}"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.target_group.id}"
     type             = "forward"
   }
-
-  count = "${trimspace(element(split(",", var.alb_protocols), 1)) == "HTTP" || trimspace(element(split(",", var.alb_protocols), 2)) == "HTTP" ? 1 : 0}"
 }
 
 resource "aws_alb_listener" "front_end_https" {
@@ -71,11 +65,10 @@ resource "aws_alb_listener" "front_end_https" {
   protocol          = "HTTPS"
   certificate_arn   = "${var.certificate_arn}"
   ssl_policy        = "${var.security_policy}"
+  count             = "${contains(var.alb_protocols, "HTTPS") ? 1 : 0}"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.target_group.id}"
     type             = "forward"
   }
-
-  count = "${trimspace(element(split(",", var.alb_protocols), 1)) == "HTTPS" || trimspace(element(split(",", var.alb_protocols), 2)) == "HTTPS" ? 1 : 0}"
 }

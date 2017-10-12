@@ -11,7 +11,7 @@ output "vpc_id" {
 }
 
 output "sg_id" {
-  value = "${module.sg_https_web.security_group_id_web}"
+  value = "${module.security-group.this_security_group_id}"
 }
 
 output "account_id" {
