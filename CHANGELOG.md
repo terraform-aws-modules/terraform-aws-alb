@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * modules referenced in the test fixture are now sourced from the terraform registry.
 * moved bucket_policy.json and template rending to locals + optional variable input.
 * stringed list variables moved to native lists
-*
 
 ## [1.0.1] - 2017-09-14
 ### Added
