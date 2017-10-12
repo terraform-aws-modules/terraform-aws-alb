@@ -22,9 +22,9 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 [terraform-aws-security-group](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws), and
 [terraform-aws-autoscaling](https://registry.terraform.io/modules/terraform-aws-modules/autoscaling/aws/).
 
-## Why ALB instad of ELB?
+## Why ALB instead of ELB?
 The use-case presented here appears almost identical to how one would use an ELB
-BUT we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
+but we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
 documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/).
 For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
