@@ -19,7 +19,7 @@ The module supports both (mutually exclusive):
 * External IP ALBs
 
 It's recommended you use this module with [terraform-aws-vpc](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws),
-[terraform-aws-security-group](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws), and 
+[terraform-aws-security-group](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws), and
 [terraform-aws-autoscaling](https://registry.terraform.io/modules/terraform-aws-modules/autoscaling/aws/).
 
 ## Why ALB instad of ELB?
@@ -37,7 +37,7 @@ A full example leveraging other community modules is contained in the [examples/
 module "alb" {
   source              = "terraform-aws-modules/alb/aws"
   alb_name            = "my-alb"
-  aws_region          = "us-east-2"
+  region              = "us-east-2"
   alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
   vpc_id              = "vpc-abcde012"
   subnets             = ["subnet-abcde012", "subnet-bcde012a"]

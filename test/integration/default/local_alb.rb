@@ -10,7 +10,7 @@ vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
 security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
 # this must match the format in examples/test_fixtures/locals.tf
-log_bucket = 'logs-' + module_vars['variable']['aws_region']['default'] + '-' + account_id
+log_bucket = 'logs-' + module_vars['variable']['region']['default'] + '-' + account_id
 # subnet_ids = tf_state['modules'][0]['outputs']['subnet_ids']['value']
 
 describe alb('my-alb') do

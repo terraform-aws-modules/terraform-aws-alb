@@ -2,6 +2,6 @@ variable "log_prefix" {
   default = "my-alb-logs"
 }
 
-variable "aws_region" {
+variable "region" {
   default = "us-east-2"
 }

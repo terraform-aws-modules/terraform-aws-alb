@@ -3,7 +3,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "${var.aws_region}"
+  region  = "${var.region}"
   version = "~> 1.0.0"
 }
 
@@ -43,12 +43,12 @@ module "alb" {
   source                   = "../../../"
   alb_name                 = "my-alb"
   alb_security_groups      = ["${module.security-group.this_security_group_id}"]
-  aws_region               = "${var.aws_region}"
+  region                   = "${var.region}"
   vpc_id                   = "${module.vpc.vpc_id}"
   subnets                  = "${module.vpc.public_subnets}"
   certificate_arn          = "${aws_iam_server_certificate.fixture_cert.arn}"
   health_check_path        = "/"
-  log_bucket               = "logs-${var.aws_region}-${data.aws_caller_identity.fixtures.account_id}"
+  log_bucket               = "logs-${var.region}-${data.aws_caller_identity.fixtures.account_id}"
   log_prefix               = "${var.log_prefix}"
   force_destroy_log_bucket = true
 
