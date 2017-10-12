@@ -1,0 +1,81 @@
+language: ruby
+
+sudo: false
+
+dist: trusty
+
+rvm:
+  - 2.4.2
+
+services:
+  - docker
+
+before_install:
+  - echo "before_install"
+
+install:
+  - echo "install"
+  - gem install bundler --no-rdoc --no-ri
+  - bundle install
+
+before_script:
+  - echo 'before_script'
+  - export AWS_REGION=us-east-2
+  - wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
+  - unzip terraform_0.10.7_linux_amd64
+  - chmod +x terraform
+  - mkdir -p ${HOME}/bin
+  - export PATH=${PATH}:${HOME}/bin
+  - mv terraform ${HOME}/bin/
+  - rm -f terraform_*
+  - terraform -v
+
+script:
+  - echo 'before_script'
+  # no terraform through docker until kitchen-terraform supports it
+  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
+  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true
+  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light validate
+  - terraform init
+  - terraform fmt -check=true
+  - terraform validate
+  - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
+  - cd examples/test_fixtures
+  # this line is to change the source of the root module to 2 dirs back which works when validating in CI but when running through test kitchen, we need to source from 3 dirs up, oddly
+  - sed -i.bak 's/source = \"\.\.\//source = \"/g' main.tf
+  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
+  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true
+  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light validate
+  - terraform init
+  - terraform fmt -check=true
+  - terraform validate
+  # FIXME: tflint is unhappy with sourcing a module from a relative dir here.
+  # - docker run --rm -v $(pwd):/data --workdir=/data -t wata727/tflint --error-with-issues
+  - mv main.tf.bak main.tf
+  - cd -
+  - terraform -v
+  - kitchen test --destroy always
+
+# after_success:
+#   - echo 'after_success'
+
+# after_failure:
+#   - echo 'after_failure'
+
+before_deploy:
+# check if this is new release and conditionally continue?
+  - echo 'before_deploy phase'
+
+deploy:
+# likely want to publish to the registry
+  provider: script
+  script: ci/deploy.sh
+  on:
+    branch: dev
+
+# after_deploy:
+# notify of success/failure provide links
+#   - echo 'after_deploy'
+
+# after_script:
+#   - echo 'after_script'

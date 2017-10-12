@@ -87,7 +87,7 @@ The following IAM policy is the minimum needed to execute the module from the te
                 "arn:aws:s3:::logs-us-east-2-084274556666/*"
             ]
         },
-                {
+        {
             "Sid": "Stmt1507789585001",
             "Effect": "Allow",
             "Action": [
@@ -97,10 +97,9 @@ The following IAM policy is the minimum needed to execute the module from the te
                 "s3:GetBucketPolicy",
                 "s3:ListAllMyBuckets",
                 "s3:ListBucket"
-
             ],
             "Resource": [
-                "arn:aws:s3:::*"
+                "*"
             ]
         },
         {
@@ -112,7 +111,19 @@ The following IAM policy is the minimum needed to execute the module from the te
             "Resource": [
                 "*"
             ]
+        },
+        {
+            "Sid": "Stmt1507789655001",
+            "Effect": "Allow",
+            "Action": [
+                "iam:UploadServerCertificate",
+                "iam:DeleteServerCertificate"
+            ],
+            "Resource": [
+                "*"
+            ]
         }
     ]
 }
+
 ```
