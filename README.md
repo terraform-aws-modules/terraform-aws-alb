@@ -70,6 +70,10 @@ individual change made. These are the steps:
 5. Push to the branch (`git push origin my-new-feature`).
 6. Create a new Pull Request and tell us about your changes.
 
+## IAM Permissions
+Testing and using this repo requires a minimum set of IAM permissions. Test permissions
+are listed in the [test_fixtures README](examples/test_fixtures/README.md).
+
 ## Change log
 The [changelog](CHANGELOG.md) captures all important release notes.
 
