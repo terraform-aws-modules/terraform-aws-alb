@@ -1,0 +1,22 @@
+---
+driver:
+  name: "terraform"
+  directory: "examples/test_fixtures"
+
+provisioner:
+  name: "terraform"
+  variable_files:
+    - "examples/test_fixtures/terraform.tfvars"
+
+platforms:
+  - name: "aws"
+
+verifier:
+  name: "awspec"
+
+suites:
+  - name: "default"
+    verifier:
+      name: "awspec"
+      patterns:
+      - "test/integration/default/local_alb.rb"
