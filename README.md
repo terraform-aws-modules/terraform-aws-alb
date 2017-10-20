@@ -62,7 +62,7 @@ This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tes
 ```
 gem install bundler; bundle install
 ```
-3. Configure variables in `test/fixtures/terraform.tfvars`. An example of how this should look is in [terraform.tfvars.example](test/fixtures/terraform.tfvars.example).
+3. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
 4. Test using `kitchen test` from the root of the repo.
 
 ## Contributing

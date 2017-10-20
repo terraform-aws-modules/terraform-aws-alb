@@ -12,7 +12,7 @@ provider "template" {
 }
 
 resource "aws_iam_server_certificate" "fixture_cert" {
-  name             = "test_cert-${data.aws_caller_identity.fixtures.account_id}"
+  name             = "test_cert-${data.aws_caller_identity.fixtures.account_id}-${var.region}"
   certificate_body = "${file("${path.module}/../../../examples/test_fixtures/certs/example.crt.pem")}"
   private_key      = "${file("${path.module}/../../../examples/test_fixtures/certs/example.key.pem")}"
 
