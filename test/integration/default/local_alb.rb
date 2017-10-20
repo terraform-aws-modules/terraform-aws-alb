@@ -1,12 +1,6 @@
 require 'awspec'
-<<<<<<< HEAD
 require 'rhcl'
 
-=======
-require 'Rhcl'
-
-ENV['AWS_REGION'] = 'us-east-2'
->>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
 log_prefix = module_vars['variable']['log_prefix']['default']
 tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)
@@ -16,11 +10,7 @@ vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
 security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
 # this must match the format in examples/test_fixtures/locals.tf
-<<<<<<< HEAD
 log_bucket = 'logs-' + ENV['AWS_REGION'] + '-' + account_id
-=======
-log_bucket = 'logs-' + module_vars['variable']['aws_region']['default'] + '-' + account_id
->>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
 # subnet_ids = tf_state['modules'][0]['outputs']['subnet_ids']['value']
 
 describe alb('my-alb') do
@@ -53,10 +43,7 @@ describe s3_bucket(log_bucket) do
     "Version": "2012-10-17",
     "Statement": [
         {
-<<<<<<< HEAD
             "Sid": "",
-=======
->>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
             "Effect": "Allow",
             "Principal": {
                 "AWS": "arn:aws:iam::#{principal_account_id}:root"

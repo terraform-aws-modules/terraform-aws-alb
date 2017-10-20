@@ -18,11 +18,7 @@ variable "alb_security_groups" {
   type        = "list"
 }
 
-<<<<<<< HEAD
 variable "region" {
-=======
-variable "aws_region" {
->>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
   description = "AWS region to use."
 }
 
