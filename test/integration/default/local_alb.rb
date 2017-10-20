@@ -1,6 +1,7 @@
 require 'awspec'
 require 'rhcl'
 
+ENV['AWS_REGION'] = 'us-east-2'
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
 log_prefix = module_vars['variable']['log_prefix']['default']
 tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)

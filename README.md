@@ -57,7 +57,7 @@ module "alb" {
 
 ## Testing
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
-1. Install the prerequisites of rvm and ruby 2.4.2 via homebrew.
+1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](Gemfile).
 2. Install bundler and the gems from our Gemfile:
 ```
 gem install bundler; bundle install
