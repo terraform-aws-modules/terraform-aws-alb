@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `aws_caller_identity` now used to gather account_id rather than using a variable.
 * tests added for `target_group` and expanded for `alb`.
 * input variables added for health checks, bucket policy, force_destroy_log_bucket - increasing flexibility.
-* circle CI config and badge
+* TravisCI configuration and badge.
 
 ### Changed
 * altered structure of module to conform to the new [Terraform registry standards](https://www.terraform.io/docs/registry/modules/publish.html#requirements)
@@ -19,9 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * pinned examples to provider and terraform versions to harden versioning.
 * self signed cert added to the test fixtures, eliminating the need for manual upload and terraform.tfvars configuration.
 * modules referenced in the test fixture are now sourced from the terraform registry.
-* moved bucket_policy.json and template rending to locals + optional variable input. 
+* moved bucket_policy.json and template rending to locals + optional variable input.
 * stringed list variables moved to native lists
-* 
 
 ## [1.0.1] - 2017-09-14
 ### Added

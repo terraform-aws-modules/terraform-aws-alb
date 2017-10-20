@@ -2,6 +2,10 @@
 A Terraform module containing common configurations for an AWS Application Load
 Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registry](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws).
 
+| Branch | Build status |
+| --- | --- |
+| master | [![build Status](https://travis-ci.org/run-at-scale/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/run-at-scale/terraform-aws-skeleton) |
+
 ## Assumptions
 * You want to create a set of resources for the ALB: namely an associated target group and listener.
 * You've created a Virtual Private Cloud (VPC) + subnets where you intend to put
@@ -20,7 +24,7 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 
 ## Why ALB instead of ELB?
 The use-case presented here appears almost identical to how one would use an ELB
-BUT we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
+but we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
 documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/).
 For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
@@ -32,12 +36,15 @@ A full example leveraging other community modules is contained in the [examples/
 ```
 module "alb" {
   source              = "terraform-aws-modules/alb/aws"
+  alb_name            = "my-alb"
+  region              = "us-east-2"
+  alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
   vpc_id              = "vpc-abcde012"
   subnets             = ["subnet-abcde012", "subnet-bcde012a"]
-  alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
   certificate_arn     = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
   log_bucket          = "logs-us-east-2-123456789012"
   log_prefix          = "my-alb-logs"
+  health_check_path   = "/"
 
   tags {
     "Terraform" = "true"
@@ -55,7 +62,7 @@ This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tes
 ```
 gem install bundler; bundle install
 ```
-3. Configure variables in `test/fixtures/terraform.tfvars`. An example of how this should look is in [terraform.tfvars.example](test/fixtures/terraform.tfvars.example).
+3. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
 4. Test using `kitchen test` from the root of the repo.
 
 ## Contributing
@@ -69,6 +76,10 @@ individual change made. These are the steps:
 4. Commit your awesome changes (`git commit -am 'Added some feature'`).
 5. Push to the branch (`git push origin my-new-feature`).
 6. Create a new Pull Request and tell us about your changes.
+
+## IAM Permissions
+Testing and using this repo requires a minimum set of IAM permissions. Test permissions
+are listed in the [test_fixtures README](examples/test_fixtures/README.md).
 
 ## Change log
 The [changelog](CHANGELOG.md) captures all important release notes.
