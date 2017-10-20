@@ -14,9 +14,26 @@ resource "aws_alb" "main" {
   }
 }
 
+data "aws_iam_policy_document" "bucket_policy" {
+  statement {
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.log_bucket}/${var.log_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+    ]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["${data.aws_elb_service_account.main.id}"]
+    }
+  }
+}
+
 resource "aws_s3_bucket" "log_bucket" {
   bucket        = "${var.log_bucket}"
-  policy        = "${var.bucket_policy == "" ? local.bucket_policy : var.bucket_policy}"
+  policy        = "${var.bucket_policy == "" ? data.aws_iam_policy_document.bucket_policy.json : var.bucket_policy}"
   force_destroy = "${var.force_destroy_log_bucket}"
   count         = "${var.log_bucket != "" ? 1 : 0}"
   tags          = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"

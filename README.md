@@ -15,10 +15,10 @@ The module supports both (mutually exclusive):
 * External IP ALBs
 
 It's recommended you use this module with [terraform-aws-vpc](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws),
-[terraform-aws-security-group](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws), and 
+[terraform-aws-security-group](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws), and
 [terraform-aws-autoscaling](https://registry.terraform.io/modules/terraform-aws-modules/autoscaling/aws/).
 
-## Why ALB instad of ELB?
+## Why ALB instead of ELB?
 The use-case presented here appears almost identical to how one would use an ELB
 BUT we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
 documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/).
@@ -50,7 +50,7 @@ module "alb" {
 
 ## Testing
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
-1. Install the prerequisites of rvm and ruby 2.4.0 via homebrew.
+1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](Gemfile).
 2. Install bundler and the gems from our Gemfile:
 ```
 gem install bundler; bundle install
