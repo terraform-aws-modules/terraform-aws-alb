@@ -2,6 +2,7 @@
 A Terraform module containing common configurations for an AWS Application Load
 Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registry](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws).
 
+<<<<<<< HEAD
 | Branch | Build status |
 | --- | --- |
 | master | [![build Status](https://travis-ci.org/run-at-scale/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/run-at-scale/terraform-aws-skeleton) |
@@ -14,6 +15,16 @@ this ALB.
 * You want to configure a listener for HTTPS/HTTP
 * You've uploaded an SSL certificate to AWS IAM if using HTTPS
 
+=======
+## Assumptions
+* You want to create a set of resources for the ALB: namely an associated target group and listener.
+* You've created a Virtual Private Cloud (VPC) + subnets where you intend to put
+this ALB.
+* You have one or more security groups to attach to the ALB.
+* You want to configure a listener for HTTPS/HTTP
+* You've uploaded an SSL certificate to AWS IAM if using HTTPS
+
+>>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
 The module supports both (mutually exclusive):
 * Internal IP ALBs
 * External IP ALBs
@@ -24,7 +35,11 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 
 ## Why ALB instead of ELB?
 The use-case presented here appears almost identical to how one would use an ELB
+<<<<<<< HEAD
 but we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
+=======
+BUT we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
+>>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
 documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/).
 For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
@@ -36,6 +51,7 @@ A full example leveraging other community modules is contained in the [examples/
 ```
 module "alb" {
   source              = "terraform-aws-modules/alb/aws"
+<<<<<<< HEAD
   alb_name            = "my-alb"
   region              = "us-east-2"
   alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
@@ -45,6 +61,14 @@ module "alb" {
   log_bucket          = "logs-us-east-2-123456789012"
   log_prefix          = "my-alb-logs"
   health_check_path   = "/"
+=======
+  vpc_id              = "vpc-abcde012"
+  subnets             = ["subnet-abcde012", "subnet-bcde012a"]
+  alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
+  certificate_arn     = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+  log_bucket          = "logs-us-east-2-123456789012"
+  log_prefix          = "my-alb-logs"
+>>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
 
   tags {
     "Terraform" = "true"
@@ -62,7 +86,11 @@ This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tes
 ```
 gem install bundler; bundle install
 ```
+<<<<<<< HEAD
 3. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
+=======
+3. Configure variables in `test/fixtures/terraform.tfvars`. An example of how this should look is in [terraform.tfvars.example](test/fixtures/terraform.tfvars.example).
+>>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
 4. Test using `kitchen test` from the root of the repo.
 
 ## Contributing
@@ -77,10 +105,13 @@ individual change made. These are the steps:
 5. Push to the branch (`git push origin my-new-feature`).
 6. Create a new Pull Request and tell us about your changes.
 
+<<<<<<< HEAD
 ## IAM Permissions
 Testing and using this repo requires a minimum set of IAM permissions. Test permissions
 are listed in the [test_fixtures README](examples/test_fixtures/README.md).
 
+=======
+>>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
 ## Change log
 The [changelog](CHANGELOG.md) captures all important release notes.
 

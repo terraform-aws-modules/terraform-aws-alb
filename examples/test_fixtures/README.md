@@ -2,6 +2,7 @@
 This set of templates serves two purposes:
 0. it shows developers how to use the module in a straightforward way as integrated with other terraform community supported modules.
 1. serves as the test infrastructure for CI on the project.
+<<<<<<< HEAD
 
 ## IAM Permissions
 The following IAM policy is the minimum needed to execute the module from the test suite.
@@ -104,3 +105,5 @@ The following IAM policy is the minimum needed to execute the module from the te
 }
 
 ```
+=======
+>>>>>>> b5a4c76cab7e5471f5af210fb858c42787453ebb
