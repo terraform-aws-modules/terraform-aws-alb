@@ -21,6 +21,8 @@ resource "aws_alb" "main" {
 
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
+    sid = "AllowToPutLoadBalancerLogsToS3Bucket"
+
     actions = [
       "s3:PutObject",
     ]
@@ -31,7 +33,7 @@ data "aws_iam_policy_document" "bucket_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = ["${data.aws_elb_service_account.main.id}"]
+      identifiers = ["arn:aws:iam::${data.aws_elb_service_account.main.id}:root"]
     }
   }
 }
