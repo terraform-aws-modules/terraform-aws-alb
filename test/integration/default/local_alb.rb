@@ -43,7 +43,7 @@ describe s3_bucket(log_bucket) do
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "",
+            "Sid": "AllowToPutLoadBalancerLogsToS3Bucket",
             "Effect": "Allow",
             "Principal": {
                 "AWS": "arn:aws:iam::#{principal_account_id}:root"
