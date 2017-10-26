@@ -4,7 +4,7 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registr
 
 | Branch | Build status |
 | --- | --- |
-| master | [![build Status](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/terraform-aws-modules/terraform-aws-skeleton) |
+| master | [![build Status](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb) |
 
 ## Assumptions
 * You want to create a set of resources for the ALB: namely an associated target group and listener.
