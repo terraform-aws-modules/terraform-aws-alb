@@ -35,16 +35,18 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 A full example leveraging other community modules is contained in the [examples/test_fixtures directory](examples/test_fixtures). Here's the gist of using it via the Terraform registry:
 ```
 module "alb" {
-  source              = "terraform-aws-modules/alb/aws"
-  alb_name            = "my-alb"
-  region              = "us-east-2"
-  alb_security_groups = ["sg-edcd9784", "sg-edcd9785"]
-  vpc_id              = "vpc-abcde012"
-  subnets             = ["subnet-abcde012", "subnet-bcde012a"]
-  certificate_arn     = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
-  log_bucket          = "logs-us-east-2-123456789012"
-  log_prefix          = "my-alb-logs"
-  health_check_path   = "/"
+  source                        = "terraform-aws-modules/alb/aws"
+  alb_name                      = "my-alb"
+  region                        = "us-east-2"
+  alb_security_groups           = ["sg-edcd9784", "sg-edcd9785"]
+  vpc_id                        = "vpc-abcde012"
+  subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
+  certificate_arn               = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+  create_log_bucket             = true
+  enable_logging                = true
+  log_bucket_name               = "logs-us-east-2-123456789012"
+  log_location_prefix           = "my-alb-logs"
+  health_check_path             = "/"
 
   tags {
     "Terraform" = "true"

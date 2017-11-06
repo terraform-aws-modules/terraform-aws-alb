@@ -2,7 +2,7 @@ require 'awspec'
 require 'rhcl'
 
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
-log_prefix = module_vars['variable']['log_prefix']['default']
+log_location_prefix = module_vars['variable']['log_location_prefix']['default']
 tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)
 principal_account_id = tf_state['modules'][0]['outputs']['principal_account_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
@@ -10,7 +10,7 @@ vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
 security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
 # this must match the format in examples/test_fixtures/locals.tf
-log_bucket = 'logs-' + ENV['AWS_REGION'] + '-' + account_id
+log_bucket_name = 'logs-' + ENV['AWS_REGION'] + '-' + account_id
 # subnet_ids = tf_state['modules'][0]['outputs']['subnet_ids']['value']
 
 describe alb('my-alb') do
@@ -34,9 +34,9 @@ describe alb_target_group('my-alb-tg') do
     it { should belong_to_vpc('my-vpc') }
  end
 
-describe s3_bucket(log_bucket) do
+describe s3_bucket(log_bucket_name) do
   it { should exist }
-  it { should have_object("#{log_prefix}/AWSLogs/#{account_id}/ELBAccessLogTestFile") }
+  it { should have_object("#{log_location_prefix}/AWSLogs/#{account_id}/ELBAccessLogTestFile") }
     it do
     should have_policy <<-POLICY
 {
@@ -49,7 +49,7 @@ describe s3_bucket(log_bucket) do
                 "AWS": "arn:aws:iam::#{principal_account_id}:root"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::#{log_bucket}/#{log_prefix}/AWSLogs/#{account_id}/*"
+            "Resource": "arn:aws:s3:::#{log_bucket_name}/#{log_location_prefix}/AWSLogs/#{account_id}/*"
         }
     ]
 }
