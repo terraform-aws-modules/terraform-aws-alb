@@ -4,14 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.4] - 2017-11-06
+#### Added
+* added `create_log_bucket` and `enable_logging` to help control logging more granularly.
+
+#### Changed
+* existing related variables made more descriptive
+* S3 policy related test made more explicit (⭐ @antonbabenko)
+
 ## [1.0.3] - 2017-10-19
-## Added
+#### Added
 * TravisCI configuration added and now passing.
 * badge added to docs.
 * permissions section now in the example readme.
 * placeholder shell script added for CI deployment. Eventually this should conditionally release to the registry when those APIs become available.
 
-## Changed
+#### Changed
 * altered tf variable `aws_region` to `region`.
 * replaced hardcoding the region to instead use a random region as retrieved by an awscli docker container within CI.
 * example cert is now a regionally-specific resource enabling tests to run in various regions at once and not collide.

@@ -33,7 +33,7 @@ variable "backend_protocol" {
 }
 
 variable "bucket_policy" {
-  description = "A custom S3 bucket policy to apply to the log bucket. If not provided, a minimal policy will be generated from other variables."
+  description = "An S3 bucket policy to apply to the log bucket. If not provided, a minimal policy will be generated from other variables."
   default     = ""
 }
 
@@ -80,13 +80,23 @@ variable "health_check_unhealthy_threshold" {
   default     = 3
 }
 
-variable "log_bucket" {
+variable "create_log_bucket" {
+  default     = false
+  description = "Create the S3 bucket (named with the log_bucket_name var) and attach a policy to allow ALB logging."
+}
+
+variable "enable_logging" {
+  default     = false
+  description = "Enable the ALB to write log entries to S3."
+}
+
+variable "log_bucket_name" {
   description = "S3 bucket for storing ALB access logs. Setting this means the module will try to create the bucket."
   default     = ""
 }
 
-variable "log_prefix" {
-  description = "S3 prefix within the log_bucket under which logs are stored."
+variable "log_location_prefix" {
+  description = "S3 prefix within the log_bucket_name under which logs are stored."
   default     = ""
 }
 

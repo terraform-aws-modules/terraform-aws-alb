@@ -13,9 +13,9 @@ resource "aws_alb" "main" {
   tags            = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 
   access_logs {
-    bucket  = "${var.log_bucket}"
-    prefix  = "${var.log_prefix}"
-    enabled = "${var.log_bucket != ""}"
+    bucket  = "${var.log_bucket_name}"
+    prefix  = "${var.log_location_prefix}"
+    enabled = "${var.enable_logging}"
   }
 }
 
@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "bucket_policy" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.log_bucket}/${var.log_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+      "arn:aws:s3:::${var.log_bucket_name}/${var.log_location_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
     ]
 
     principals {
@@ -39,11 +39,11 @@ data "aws_iam_policy_document" "bucket_policy" {
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket        = "${var.log_bucket}"
+  bucket        = "${var.log_bucket_name}"
   policy        = "${var.bucket_policy == "" ? data.aws_iam_policy_document.bucket_policy.json : var.bucket_policy}"
   force_destroy = "${var.force_destroy_log_bucket}"
-  count         = "${var.log_bucket != "" ? 1 : 0}"
-  tags          = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
+  count         = "${var.create_log_bucket ? 1 : 0}"
+  tags          = "${merge(var.tags, map("Name", format("%s", var.log_bucket_name)))}"
 }
 
 resource "aws_alb_target_group" "target_group" {
@@ -71,7 +71,7 @@ resource "aws_alb_target_group" "target_group" {
   tags = "${merge(var.tags, map("Name", format("%s-tg", var.alb_name)))}"
 }
 
-resource "aws_alb_listener" "front_end_http" {
+resource "aws_alb_listener" "frontend_http" {
   load_balancer_arn = "${aws_alb.main.arn}"
   port              = "80"
   protocol          = "HTTP"
@@ -83,7 +83,7 @@ resource "aws_alb_listener" "front_end_http" {
   }
 }
 
-resource "aws_alb_listener" "front_end_https" {
+resource "aws_alb_listener" "frontend_https" {
   load_balancer_arn = "${aws_alb.main.arn}"
   port              = "443"
   protocol          = "HTTPS"

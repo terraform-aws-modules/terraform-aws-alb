@@ -1,4 +1,4 @@
-variable "log_prefix" {
+variable "log_location_prefix" {
   default = "my-alb-logs"
 }
 
