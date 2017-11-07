@@ -81,8 +81,8 @@ variable "health_check_unhealthy_threshold" {
 }
 
 variable "create_log_bucket" {
-  default     = false
   description = "Create the S3 bucket (named with the log_bucket_name var) and attach a policy to allow ALB logging."
+  default     = false
 }
 
 variable "enable_logging" {
