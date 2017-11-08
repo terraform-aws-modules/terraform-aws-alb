@@ -32,7 +32,7 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 [Resources](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws?tab=resources), [inputs](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws?tab=inputs), and [outputs](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws?tab=outputs) documented in the terraform registry.
 
 ## Usage example
-A full example leveraging other community modules is contained in the [examples/test_fixtures directory](examples/test_fixtures). Here's the gist of using it via the Terraform registry:
+A full example leveraging other community modules is contained in the [examples/test_fixtures directory](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/test_fixtures). Here's the gist of using it via the Terraform registry:
 ```
 module "alb" {
   source                        = "terraform-aws-modules/alb/aws"
@@ -59,7 +59,7 @@ module "alb" {
 
 ## Testing
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
-1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](Gemfile).
+1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/Gemfile).
 2. Install bundler and the gems from our Gemfile:
 ```
 gem install bundler; bundle install
@@ -81,13 +81,13 @@ individual change made. These are the steps:
 
 ## IAM Permissions
 Testing and using this repo requires a minimum set of IAM permissions. Test permissions
-are listed in the [test_fixtures README](examples/test_fixtures/README.md).
+are listed in the [test_fixtures README](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/test_fixtures/README.md).
 
 ## Change log
-The [changelog](CHANGELOG.md) captures all important release notes.
+The [changelog](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/CHANGELOG.md) captures all important release notes.
 
 ## Authors
 Created and maintained by [Brandon O'Connor](https://github.com/brandoconnor) - brandon@atscale.run.
 
 ## License
-MIT Licensed. See [LICENSE](LICENSE) for full details.
+MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/LICENSE) for full details.
