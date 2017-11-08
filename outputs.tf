@@ -10,7 +10,7 @@ output "alb_id" {
 
 output "alb_listener_https_id" {
   description = "The ID of the ALB Listener we created."
-  value       = "${aws_alb_listener.frontend_https.id"
+  value       = "${aws_alb_listener.frontend_https.id}"
 }
 
 output "alb_zone_id" {
