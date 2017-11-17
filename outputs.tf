@@ -8,6 +8,16 @@ output "alb_id" {
   value       = "${aws_alb.main.id}"
 }
 
+output "alb_listener_https_id" {
+  description = "The ID of the ALB Listener we created."
+  value       = "${aws_alb_listener.frontend_https.id}"
+}
+
+output "alb_listener_http_id" {
+  description = "The ID of the ALB Listener we created."
+  value       = "${aws_alb_listener.frontend_http.id}"
+}
+
 output "alb_zone_id" {
   description = "The zone_id of the ALB to assist with creating DNS records."
   value       = "${aws_alb.main.zone_id}"
