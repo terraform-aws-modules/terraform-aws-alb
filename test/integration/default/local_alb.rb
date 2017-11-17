@@ -3,14 +3,17 @@ require 'rhcl'
 
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
 log_location_prefix = module_vars['variable']['log_location_prefix']['default']
+
 tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)
 principal_account_id = tf_state['modules'][0]['outputs']['principal_account_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
 vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
 security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
+region = tf_state['modules'][0]['outputs']['region']['value']
+ENV['AWS_REGION'] = region
 # this must match the format in examples/test_fixtures/locals.tf
-log_bucket_name = 'logs-' + ENV['AWS_REGION'] + '-' + account_id
+log_bucket_name = 'logs-' + region + '-' + account_id
 # subnet_ids = tf_state['modules'][0]['outputs']['subnet_ids']['value']
 
 describe alb('my-alb') do

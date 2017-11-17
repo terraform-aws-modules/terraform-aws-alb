@@ -34,7 +34,7 @@ before_script:
   - terraform -v
 
 script:
-  - echo 'before_script'
+  - echo 'script'
   # no terraform through docker until kitchen-terraform supports it
   # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
   # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true

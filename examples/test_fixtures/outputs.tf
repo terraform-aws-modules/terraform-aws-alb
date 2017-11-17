@@ -17,3 +17,7 @@ output "sg_id" {
 output "account_id" {
   value = "${data.aws_caller_identity.fixtures.account_id}"
 }
+
+output "region" {
+  value = "${var.region}"
+}

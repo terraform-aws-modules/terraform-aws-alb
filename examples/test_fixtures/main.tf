@@ -47,6 +47,7 @@ module "alb" {
   vpc_id                   = "${module.vpc.vpc_id}"
   subnets                  = "${module.vpc.public_subnets}"
   certificate_arn          = "${aws_iam_server_certificate.fixture_cert.arn}"
+  alb_protocols            = ["HTTPS"]
   health_check_path        = "/"
   create_log_bucket        = true
   enable_logging           = true
