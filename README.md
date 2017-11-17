@@ -41,6 +41,7 @@ module "alb" {
   alb_security_groups           = ["sg-edcd9784", "sg-edcd9785"]
   vpc_id                        = "vpc-abcde012"
   subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
+  alb_protocols                 = ["HTTPS"]
   certificate_arn               = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
   create_log_bucket             = true
   enable_logging                = true
@@ -88,6 +89,7 @@ The [changelog](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/
 
 ## Authors
 Created and maintained by [Brandon O'Connor](https://github.com/brandoconnor) - brandon@atscale.run.
+Many thanks to [the contributers listed here](https://github.com/terraform-aws-modules/terraform-aws-alb/graphs/contributors)!
 
 ## License
 MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/LICENSE) for full details.

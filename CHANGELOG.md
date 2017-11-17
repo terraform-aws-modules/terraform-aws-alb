@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] - 2017-11-16
+#### Added
+* outputs added for listeners - these can be useful for ECR integration (🍰 @mbolek).
+* Moved default `alb_protocols` to HTTP to lower barier of entry in getting started.
+
 ## [2.0.0] - 2017-11-06
 #### Added
 * added `create_log_bucket` and `enable_logging` to help control logging more granularly.

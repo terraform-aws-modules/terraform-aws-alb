@@ -8,9 +8,9 @@ variable "alb_name" {
 }
 
 variable "alb_protocols" {
-  description = "The protocols the ALB accepts. e.g.: [\"HTTPS\"]"
+  description = "The protocols the ALB accepts. e.g.: [\"HTTP\"]"
   type        = "list"
-  default     = ["HTTPS"]
+  default     = ["HTTP"]
 }
 
 variable "alb_security_groups" {
