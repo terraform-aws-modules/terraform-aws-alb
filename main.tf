@@ -60,6 +60,7 @@ resource "aws_alb_target_group" "target_group" {
     unhealthy_threshold = "${var.health_check_unhealthy_threshold}"
     timeout             = "${var.health_check_timeout}"
     protocol            = "${var.backend_protocol}"
+    matcher             = "${var.health_check_code}"
   }
 
   stickiness {

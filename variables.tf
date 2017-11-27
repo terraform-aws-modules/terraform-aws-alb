@@ -80,6 +80,11 @@ variable "health_check_unhealthy_threshold" {
   default     = 3
 }
 
+variable "health_check_code" {
+  description = "The HTTP codes that are a success when checking TG health"
+  default     = "200-299"
+}
+
 variable "create_log_bucket" {
   description = "Create the S3 bucket (named with the log_bucket_name var) and attach a policy to allow ALB logging."
   default     = false
