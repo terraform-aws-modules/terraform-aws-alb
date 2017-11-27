@@ -33,6 +33,7 @@ describe alb_target_group('my-alb-tg') do
     its(:health_check_path) { should eq '/' }
     its(:health_check_port) { should eq 'traffic-port' }
     its(:health_check_protocol) { should eq 'HTTP' }
+    its(:health_check_code) { should eq '200-299' }
     it { should belong_to_alb('my-alb') }
     it { should belong_to_vpc('my-vpc') }
  end
