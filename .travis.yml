@@ -53,7 +53,7 @@ script:
   - terraform validate
   - cd -
   - terraform -v
-  - kitchen test --destroy always
+  - bundle exec kitchen test --destroy always
 
 # after_success:
 #   - echo 'after_success'
