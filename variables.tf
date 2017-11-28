@@ -80,8 +80,8 @@ variable "health_check_unhealthy_threshold" {
   default     = 3
 }
 
-variable "health_check_code" {
-  description = "The HTTP codes that are a success when checking TG health"
+variable "health_check_matcher" {
+  description = "The HTTP codes that are a success when checking TG health."
   default     = "200-299"
 }
 
