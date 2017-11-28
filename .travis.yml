@@ -51,6 +51,7 @@ script:
   - terraform validate
   - cd -
   - terraform -v
+  - chef gem list
   - kitchen test --destroy always
 
 # after_success:
