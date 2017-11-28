@@ -35,7 +35,7 @@ before_script:
   - terraform -v
   - wget https://packages.chef.io/files/current/chefdk/2.4.15/ubuntu/16.04/chefdk_2.4.15-1_amd64.deb
   - sudo dpkg -i chefdk_2.4.15-1_amd64.deb
-  - chef install bundler
+  - chef gem install bundler
   - chef bundle install
 
 script:
