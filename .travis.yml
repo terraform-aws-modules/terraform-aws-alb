@@ -35,7 +35,8 @@ before_script:
   - terraform -v
   - wget https://packages.chef.io/files/current/chefdk/2.4.15/ubuntu/16.04/chefdk_2.4.15-1_amd64.deb
   - sudo dpkg -i chefdk_2.4.15-1_amd64.deb
-  - chef gem install kitchen-terraform
+  - chef install bundler
+  - chef bundle install
 
 script:
   - echo 'script'
@@ -74,3 +75,10 @@ deploy:
 
 # after_script:
 #   - echo 'after_script'
+
+notifications:
+  email:
+    recipients:
+      - brandon@atscale.run
+    on_success: change # default: change
+    on_failure: change # default: always
