@@ -20,7 +20,7 @@ install:
 
 before_script:
   - echo 'before_script'
-  # Get a random variable from the awscli and use it through the remainder of the test cycle.
+  # Get a random region from the awscli and use it through the remainder of the test cycle.
   - export AWS_REGION=$(docker run --env AWS_DEFAULT_REGION=us-east-2 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} garland/aws-cli-docker aws ec2 describe-regions --query 'Regions[].{Name:RegionName}' --output text | shuf | head -n1)
   - echo "using AWS_REGION=${AWS_REGION}"
   - export TF_VAR_region=${AWS_REGION}
@@ -33,13 +33,13 @@ before_script:
   - mv terraform ${HOME}/bin/
   - rm -f terraform.zip
   - terraform -v
-  - wget https://packages.chef.io/files/current/chefdk/2.4.15/ubuntu/16.04/chefdk_2.4.15-1_amd64.deb
-  - sudo dpkg -i chefdk_2.4.15-1_amd64.deb
-  - chef gem install bundler
-  - chef gem install kitchen-terraform
-  # seems fragile. How to call 
-  - ~/.chefdk/gem/ruby/2.4.0/bin/bundle install
-  - chef gem list
+  # - wget https://packages.chef.io/files/current/chefdk/2.4.15/ubuntu/16.04/chefdk_2.4.15-1_amd64.deb
+  # - sudo dpkg -i chefdk_2.4.15-1_amd64.deb
+  # - chef gem install bundler
+  # - chef gem install kitchen-terraform
+  # seems fragile. How to call? 
+  # - ~/.chefdk/gem/ruby/2.4.0/bin/bundle install
+  # - chef gem list
 
 script:
   - echo 'script'
@@ -55,33 +55,16 @@ script:
   - terraform -v
   - bundle exec kitchen test --destroy always
 
-# after_success:
-#   - echo 'after_success'
-
-# after_failure:
-#   - echo 'after_failure'
-
-before_deploy:
-# check if this is new release and conditionally continue?
-  - echo 'before_deploy phase'
-
 deploy:
-# likely want to publish to the registry
+# publish to the registry when those APIs are documented
   provider: script
   script: ci/deploy.sh
   on:
-    branch: dev
-
-# after_deploy:
-# notify of success/failure provide links
-#   - echo 'after_deploy'
-
-# after_script:
-#   - echo 'after_script'
+    branch: master
 
 notifications:
   email:
     recipients:
       - brandon@atscale.run
-    on_success: change # default: change
-    on_failure: change # default: always
+    on_success: change
+    on_failure: change
