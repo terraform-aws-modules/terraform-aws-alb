@@ -37,7 +37,7 @@ before_script:
   - sudo dpkg -i chefdk_2.4.15-1_amd64.deb
   - chef gem install bundler
   - chef gem install kitchen-terraform
-  # - chef bundle install
+  - ~/.chefdk/gem/ruby/2.4.0/bin/bundle install
 
 script:
   - echo 'script'
@@ -51,7 +51,6 @@ script:
   - terraform validate
   - cd -
   - terraform -v
-  - chef gem list
   - kitchen test --destroy always
 
 # after_success:
