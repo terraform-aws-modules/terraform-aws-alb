@@ -37,7 +37,9 @@ before_script:
   - sudo dpkg -i chefdk_2.4.15-1_amd64.deb
   - chef gem install bundler
   - chef gem install kitchen-terraform
+  # seems fragile. How to call 
   - ~/.chefdk/gem/ruby/2.4.0/bin/bundle install
+  - chef gem list
 
 script:
   - echo 'script'
