@@ -4,7 +4,7 @@ require 'rhcl'
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
 log_location_prefix = module_vars['variable']['log_location_prefix']['default']
 
-tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)
+tf_state = JSON.parse(File.open('terraform.tfstate.d/kitchen-terraform-default-aws/terraform.tfstate').read)
 principal_account_id = tf_state['modules'][0]['outputs']['principal_account_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
 vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
@@ -14,7 +14,6 @@ region = tf_state['modules'][0]['outputs']['region']['value']
 ENV['AWS_REGION'] = region
 # this must match the format in examples/test_fixtures/locals.tf
 log_bucket_name = 'logs-' + region + '-' + account_id
-# subnet_ids = tf_state['modules'][0]['outputs']['subnet_ids']['value']
 
 describe alb('my-alb') do
   it { should exist }
@@ -25,7 +24,6 @@ describe alb('my-alb') do
   its (:scheme) {should eq 'internet-facing'}
   its (:ip_address_type) {should eq 'ipv4'}
   it { should have_security_group(security_group_id) }
-#   it { should have_subnet(subnet_id) }
 end
 
 describe alb_target_group('my-alb-tg') do
@@ -33,7 +31,6 @@ describe alb_target_group('my-alb-tg') do
     its(:health_check_path) { should eq '/' }
     its(:health_check_port) { should eq 'traffic-port' }
     its(:health_check_protocol) { should eq 'HTTP' }
-    its(:health_check_code) { should eq '200-299' }
     it { should belong_to_alb('my-alb') }
     it { should belong_to_vpc('my-vpc') }
  end

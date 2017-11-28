@@ -1,20 +1,18 @@
 terraform {
-  required_version = "~> 0.10.6"
+  required_version = ">= 0.10.0"
 }
 
 provider "aws" {
   region  = "${var.region}"
-  version = "~> 1.0.0"
+  version = ">= 1.0.0"
 }
 
-provider "template" {
-  version = "~> 1.0.0"
-}
+provider "template" {}
 
 resource "aws_iam_server_certificate" "fixture_cert" {
   name             = "test_cert-${data.aws_caller_identity.fixtures.account_id}-${var.region}"
-  certificate_body = "${file("${path.module}/../../../examples/test_fixtures/certs/example.crt.pem")}"
-  private_key      = "${file("${path.module}/../../../examples/test_fixtures/certs/example.key.pem")}"
+  certificate_body = "${file("${path.module}/../../examples/test_fixtures/certs/example.crt.pem")}"
+  private_key      = "${file("${path.module}/../../examples/test_fixtures/certs/example.key.pem")}"
 
   lifecycle {
     create_before_destroy = true
@@ -40,7 +38,7 @@ module "security-group" {
 }
 
 module "alb" {
-  source                   = "../../.."
+  source                   = "../.."
   alb_name                 = "my-alb"
   alb_security_groups      = ["${module.security-group.this_security_group_id}"]
   region                   = "${var.region}"
