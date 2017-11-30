@@ -17,6 +17,7 @@ resource "aws_alb" "main" {
     prefix  = "${var.log_location_prefix}"
     enabled = "${var.enable_logging}"
   }
+
   depends_on = ["aws_s3_bucket.log_bucket"]
 }
 
