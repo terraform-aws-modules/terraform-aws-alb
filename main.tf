@@ -13,10 +13,11 @@ resource "aws_alb" "main" {
   tags            = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 
   access_logs {
-    bucket  = "${var.create_log_bucket ? element(concat(aws_s3_bucket.log_bucket.*.id, list("")), 0) : var.log_bucket_name}"
+    bucket  = "${var.log_bucket_name}"
     prefix  = "${var.log_location_prefix}"
     enabled = "${var.enable_logging}"
   }
+  depends_on = ["aws_s3_bucket.log_bucket"]
 }
 
 data "aws_iam_policy_document" "bucket_policy" {
