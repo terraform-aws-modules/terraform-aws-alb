@@ -96,7 +96,7 @@ variable "enable_logging" {
 }
 
 variable "log_bucket_name" {
-  description = "S3 bucket for storing ALB access logs. Setting this means the module will try to create the bucket."
+  description = "S3 bucket for storing ALB access logs. To create the bucket \"create_log_bucket\" should be set to true."
   default     = ""
 }
 
