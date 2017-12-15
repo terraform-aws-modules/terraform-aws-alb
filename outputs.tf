@@ -18,6 +18,16 @@ output "alb_listener_http_id" {
   value       = "${element(concat(aws_alb_listener.frontend_http.*.id, list("")), 0)}"
 }
 
+output "alb_listener_http_arn" {
+description = "The ARN of the HTTP ALB Listener we created."
+value       = "${element(concat(aws_alb_listener.frontend_http.*.arn, list("")), 0)}"
+}
+
+output "alb_listener_https_arn" {
+description = "The ARN of the HTTPS ALB Listener we created."
+value       = "${element(concat(aws_alb_listener.frontend_https.*.arn, list("")), 0)}"
+}
+
 output "alb_zone_id" {
   description = "The zone_id of the ALB to assist with creating DNS records."
   value       = "${aws_alb.main.zone_id}"
