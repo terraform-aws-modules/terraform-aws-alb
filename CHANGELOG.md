@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.1] - 2017-12-18
+
+### Added
+
+* ARN outputs of listeners for reuse outside the module. (thanks, proj4spes! 👌)
+
 ## [2.1.1] - 2017-11-27
 
-#### Added
+### Added
 
 * variable `health_check_matcher` determines a set or range of successful HTTP
   status codes for target group health checks (🧀 @mbolek).
@@ -15,7 +21,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.1.0] - 2017-11-16
 
-#### Added
+### Added
 
 * outputs added for listeners - these can be useful for ECR integration (🍰
   @mbolek).
@@ -24,12 +30,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.0.0] - 2017-11-06
 
-#### Added
+### Added
 
 * added `create_log_bucket` and `enable_logging` to help control logging more
   granularly.
 
-#### Changed
+### Changed
 
 * existing log-related variables made more descriptive (this is the breaking
   change)
@@ -37,7 +43,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.0.3] - 2017-10-19
 
-#### Added
+### Added
 
 * TravisCI configuration added and now passing.
 * badge added to docs.
@@ -45,7 +51,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 * placeholder shell script added for CI deployment. Eventually this should
   conditionally release to the registry when those APIs become available.
 
-#### Changed
+### Changed
 
 * altered tf variable `aws_region` to `region`.
 * replaced hardcoding the region to instead use a random region as retrieved by
@@ -56,7 +62,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.0.2] - 2017-10-12
 
-#### Added
+### Added
 
 * moved data sources to dedicated `data.tf` file.
 * `aws_caller_identity` now used to gather account_id rather than using a
@@ -65,7 +71,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 * input variables added for health checks, bucket policy,
   force_destroy_log_bucket - increasing flexibility.
 
-#### Changed
+### Changed
 
 * altered structure of module to conform to the new
   [Terraform registry standards](https://www.terraform.io/docs/registry/modules/publish.html#requirements)
@@ -84,17 +90,17 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.0.1] - 2017-09-14
 
-#### Added
+### Added
 
 * tag maps can now be provided (thanks @kwach)
 
-#### Changed
+### Changed
 
 * optional S3 logging (thanks @marocchino)
 
 ## [1.0.0] - 2017-03-16
 
-#### Added
+### Added
 
 * Tests and fixtures for ALB components using awspec and test kitchen
 * S3 log bucket and policy rendering for logging now in place
@@ -102,7 +108,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 * string lists moved to native list types
 * default region removed
 
-#### Changed
+### Changed
 
 * Restructured project templates to alb dir to add testing. This is a breaking
   change so upping major version.
@@ -111,6 +117,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1.0] - 2017-03-09
 
-#### Added
+### Added
 
 * Initial release.
