@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.3.1] - 2017-12-18
+## [v2.3.2] - 2017-12-18
 
 ### Added
 
 * ARN outputs of listeners for reuse outside the module. (thanks, proj4spes! 👌)
 
-## [2.1.1] - 2017-11-27
+## [v2.3.1] - 2017-11-27
 
 ### Added
 
@@ -19,7 +19,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
   status codes for target group health checks (🧀 @mbolek).
 * adapted test kitchen configuration to KT 3.0.x.
 
-## [2.1.0] - 2017-11-16
+## [v2.1.0] - 2017-11-16
 
 ### Added
 
@@ -28,7 +28,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 * Moved default `alb_protocols` to HTTP to lower barier of entry in getting
   started.
 
-## [2.0.0] - 2017-11-06
+## [v2.0.0] - 2017-11-06
 
 ### Added
 
@@ -41,7 +41,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
   change)
 * S3 policy related test made more explicit (⭐ @antonbabenko)
 
-## [1.0.3] - 2017-10-19
+## [v1.0.3] - 2017-10-19
 
 ### Added
 
@@ -60,7 +60,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
   various regions at once and not collide.
 * ruby version bump means `Rhcl` becomes `rhcl`.
 
-## [1.0.2] - 2017-10-12
+## [v1.0.2] - 2017-10-12
 
 ### Added
 
@@ -88,7 +88,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
   `aws_iam_policy_document` resource or optionally a variable.
 * stringed list variables moved to native lists
 
-## [1.0.1] - 2017-09-14
+## [v1.0.1] - 2017-09-14
 
 ### Added
 
@@ -98,7 +98,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 * optional S3 logging (thanks @marocchino)
 
-## [1.0.0] - 2017-03-16
+## [v1.0.0] - 2017-03-16
 
 ### Added
 
@@ -115,7 +115,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 * Redundant examples dir removed
 * Updated documentation
 
-## [0.1.0] - 2017-03-09
+## [v0.1.0] - 2017-03-09
 
 ### Added
 
