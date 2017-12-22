@@ -4,7 +4,7 @@ output "alb_dns_name" {
 }
 
 output "alb_arn_suffix" {
-  description = "Name of the ALB we created."
+  description = "ARN suffix of our ALB - can be used with CloudWatch"
   value       = "${aws_alb.main.arn_suffix}"
 }
 
