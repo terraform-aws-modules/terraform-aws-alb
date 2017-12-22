@@ -3,6 +3,11 @@ output "alb_dns_name" {
   value       = "${aws_alb.main.dns_name}"
 }
 
+output "alb_name" {
+  description = "Name of the ALB we created."
+  value       = "${aws_alb.main.name}"
+}
+
 output "alb_id" {
   description = "The ID of the ALB we created."
   value       = "${aws_alb.main.id}"
