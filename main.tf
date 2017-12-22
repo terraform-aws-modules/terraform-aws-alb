@@ -2,7 +2,7 @@
 
 provider "aws" {
   region  = "${var.region}"
-  version = "~> 1.0.0"
+  version = ">= 1.0.0"
 }
 
 resource "aws_alb" "main" {
@@ -17,25 +17,8 @@ resource "aws_alb" "main" {
     prefix  = "${var.log_location_prefix}"
     enabled = "${var.enable_logging}"
   }
-}
 
-data "aws_iam_policy_document" "bucket_policy" {
-  statement {
-    sid = "AllowToPutLoadBalancerLogsToS3Bucket"
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${var.log_bucket_name}/${var.log_location_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
-    ]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_elb_service_account.main.id}:root"]
-    }
-  }
+  depends_on = ["aws_s3_bucket.log_bucket"]
 }
 
 resource "aws_s3_bucket" "log_bucket" {
@@ -60,7 +43,7 @@ resource "aws_alb_target_group" "target_group" {
     unhealthy_threshold = "${var.health_check_unhealthy_threshold}"
     timeout             = "${var.health_check_timeout}"
     protocol            = "${var.backend_protocol}"
-    matcher             = "${var.health_check_code}"
+    matcher             = "${var.health_check_matcher}"
   }
 
   stickiness {

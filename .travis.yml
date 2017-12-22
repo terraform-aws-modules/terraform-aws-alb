@@ -1,9 +1,6 @@
 language: ruby
-
 sudo: false
-
 dist: trusty
-
 rvm:
   - 2.4.2
 
@@ -20,67 +17,40 @@ install:
 
 before_script:
   - echo 'before_script'
-  # Get a random variable from the awscli and use it through the remainder of the test cycle.
+  # Get a random region from the awscli and use it through the remainder of the test cycle.
   - export AWS_REGION=$(docker run --env AWS_DEFAULT_REGION=us-east-2 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} garland/aws-cli-docker aws ec2 describe-regions --query 'Regions[].{Name:RegionName}' --output text | shuf | head -n1)
-  - echo "using AWS_REGION=${AWS_REGION}"
   - export TF_VAR_region=${AWS_REGION}
-  - wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
-  - unzip terraform_0.10.7_linux_amd64
-  - chmod +x terraform
-  - mkdir -p ${HOME}/bin
-  - export PATH=${PATH}:${HOME}/bin
-  - mv terraform ${HOME}/bin/
-  - rm -f terraform_*
+  - echo "using AWS_REGION=${AWS_REGION}"
+  - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.0/terraform_0.11.0_linux_amd64.zip
+  - sha256sum terraform.zip  | grep "402b4333792967986383670134bb52a8948115f83ab6bda35f57fa2c3c9e9279" -q
+  - unzip terraform.zip ; rm -f terraform.zip; chmod +x terraform
+  - mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
   - terraform -v
 
 script:
   - echo 'script'
-  # no terraform through docker until kitchen-terraform supports it
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light validate
   - terraform init
   - terraform fmt -check=true
   - terraform validate -var "region=${AWS_REGION}" -var "certificate_arn=arn:aws:iam::123456789012:server-certificate/test_cert-123456789012" -var "health_check_path=/" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "alb_name=my-alb" -var "alb_security_groups=[]"
   - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
   - cd examples/test_fixtures
-  # this line is to change the source of the root module to 2 dirs back which works when validating in CI but when running through test kitchen, we need to source from 3 dirs up, oddly
-  - sed -i.bak 's/\.\.\/\.\.\/\.\./\.\.\/\.\./g' main.tf
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light init
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light fmt -check=true
-  # - docker run -i -t -v $(pwd):/app/ -w /app/ hashicorp/terraform:light validate
   - terraform init
   - terraform fmt -check=true
   - terraform validate
-  # FIXME: tflint is unhappy with sourcing a module from a relative dir here.
-  # - docker run --rm -v $(pwd):/data --workdir=/data -t wata727/tflint --error-with-issues
-  - mv main.tf.bak main.tf
   - cd -
-  - pwd
-  - ls -lah
   - terraform -v
-  - kitchen test --destroy always
-
-# after_success:
-#   - echo 'after_success'
-
-# after_failure:
-#   - echo 'after_failure'
-
-before_deploy:
-# check if this is new release and conditionally continue?
-  - echo 'before_deploy phase'
+  - bundle exec kitchen test --destroy always
 
 deploy:
-# likely want to publish to the registry
+# publish to the registry when those APIs are documented
   provider: script
   script: ci/deploy.sh
   on:
-    branch: dev
+    branch: master
 
-# after_deploy:
-# notify of success/failure provide links
-#   - echo 'after_deploy'
-
-# after_script:
-#   - echo 'after_script'
+notifications:
+  email:
+    recipients:
+      - brandon@atscale.run
+    on_success: change
+    on_failure: change
