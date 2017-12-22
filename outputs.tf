@@ -3,9 +3,9 @@ output "alb_dns_name" {
   value       = "${aws_alb.main.dns_name}"
 }
 
-output "alb_name" {
+output "alb_arn_suffix" {
   description = "Name of the ALB we created."
-  value       = "${aws_alb.main.name}"
+  value       = "${aws_alb.main.arn_suffix}"
 }
 
 output "alb_id" {
