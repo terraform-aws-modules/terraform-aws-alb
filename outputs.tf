@@ -3,6 +3,11 @@ output "alb_dns_name" {
   value       = "${aws_alb.main.dns_name}"
 }
 
+output "alb_arn_suffix" {
+  description = "ARN suffix of our ALB - can be used with CloudWatch"
+  value       = "${aws_alb.main.arn_suffix}"
+}
+
 output "alb_id" {
   description = "The ID of the ALB we created."
   value       = "${aws_alb.main.id}"
