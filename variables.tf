@@ -18,10 +18,6 @@ variable "alb_security_groups" {
   type        = "list"
 }
 
-variable "region" {
-  description = "AWS region to use."
-}
-
 variable "backend_port" {
   description = "The port the service on the EC2 instances listen on."
   default     = 80
