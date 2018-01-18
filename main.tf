@@ -30,10 +30,11 @@ resource "aws_s3_bucket" "log_bucket" {
 }
 
 resource "aws_alb_target_group" "target_group" {
-  name     = "${var.alb_name}-tg"
-  port     = "${var.backend_port}"
-  protocol = "${upper(var.backend_protocol)}"
-  vpc_id   = "${var.vpc_id}"
+  name                 = "${var.alb_name}-tg"
+  port                 = "${var.backend_port}"
+  protocol             = "${upper(var.backend_protocol)}"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = "${var.deregistration_delay}"
 
   health_check {
     interval            = "${var.health_check_interval}"

@@ -46,6 +46,11 @@ variable "cookie_duration" {
   default     = 1
 }
 
+variable "deregistration_delay" {
+  description = "The amount time to wait before changing the state of a deregistering target from draining to unused."
+  default     = 300
+}
+
 variable "force_destroy_log_bucket" {
   description = "If set to true and if the log bucket already exists, it will be destroyed and recreated."
   default     = false
