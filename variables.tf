@@ -42,9 +42,19 @@ variable "cookie_duration" {
   default     = 1
 }
 
+variable "create_log_bucket" {
+  description = "Create the S3 bucket (named with the log_bucket_name var) and attach a policy to allow ALB logging."
+  default     = false
+}
+
 variable "deregistration_delay" {
   description = "The amount time to wait before changing the state of a deregistering target from draining to unused."
   default     = 300
+}
+
+variable "enable_logging" {
+  default     = false
+  description = "Enable the ALB to write log entries to S3."
 }
 
 variable "force_destroy_log_bucket" {
@@ -84,16 +94,6 @@ variable "health_check_unhealthy_threshold" {
 variable "health_check_matcher" {
   description = "The HTTP codes that are a success when checking TG health."
   default     = "200-299"
-}
-
-variable "create_log_bucket" {
-  description = "Create the S3 bucket (named with the log_bucket_name var) and attach a policy to allow ALB logging."
-  default     = false
-}
-
-variable "enable_logging" {
-  default     = false
-  description = "Enable the ALB to write log entries to S3."
 }
 
 variable "log_bucket_name" {

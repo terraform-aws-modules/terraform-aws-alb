@@ -1,11 +1,9 @@
-### ALB resources
-
 resource "aws_alb" "main" {
   name            = "${var.alb_name}"
   subnets         = ["${var.subnets}"]
   security_groups = ["${var.alb_security_groups}"]
   internal        = "${var.alb_is_internal}"
-  tags            = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
+  tags            = "${merge(var.tags, map("Name", var.alb_name))}"
 
   access_logs {
     bucket  = "${var.log_bucket_name}"
@@ -21,7 +19,7 @@ resource "aws_s3_bucket" "log_bucket" {
   policy        = "${var.bucket_policy == "" ? data.aws_iam_policy_document.bucket_policy.json : var.bucket_policy}"
   force_destroy = "${var.force_destroy_log_bucket}"
   count         = "${var.create_log_bucket ? 1 : 0}"
-  tags          = "${merge(var.tags, map("Name", format("%s", var.log_bucket_name)))}"
+  tags          = "${merge(var.tags, map("Name", var.log_bucket_name))}"
 }
 
 resource "aws_alb_target_group" "target_group" {
@@ -48,7 +46,7 @@ resource "aws_alb_target_group" "target_group" {
     enabled         = "${ var.cookie_duration == 1 ? false : true}"
   }
 
-  tags = "${merge(var.tags, map("Name", format("%s-tg", var.alb_name)))}"
+  tags = "${merge(var.tags, map("Name", "${var.alb_name}-tg"))}"
 }
 
 resource "aws_alb_listener" "frontend_http" {

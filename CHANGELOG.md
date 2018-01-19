@@ -5,9 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v2.4.0] - Unreleased
+## [v2.4.0] - 2018-01-19
 
 * Remove `region` input. If you'd like to customise the AWS provider configuration, this is supported using the new `providers` input which is a core Terraform feature. [Read more.](https://www.terraform.io/docs/modules/usage.html#providers-within-modules)
+* update CI to use terraform 0.11.2 and KT 3.1.0.
+* `alb_arn_suffix` output added for external consumption.
+* Several formatting changes to adhere to convention.
 
 ## [v2.3.2] - 2017-12-18
 
@@ -114,8 +117,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-* Restructured project templates to alb dir to add testing. This is a breaking
-  change so upping major version.
+* Restructured project templates to alb dir to add testing. This is a breaking change so upping major version.
 * Redundant examples dir removed
 * Updated documentation
 

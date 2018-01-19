@@ -19,4 +19,4 @@ suites:
     verifier:
       name: "awspec"
       patterns:
-      - "test/integration/default/local_alb.rb"
+      - "test/integration/default/test_alb.rb"
