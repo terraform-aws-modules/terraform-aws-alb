@@ -21,8 +21,8 @@ before_script:
   - export AWS_REGION=$(docker run --env AWS_DEFAULT_REGION=us-east-2 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} garland/aws-cli-docker aws ec2 describe-regions --query 'Regions[].{Name:RegionName}' --output text | shuf | head -n1)
   - export TF_VAR_region=${AWS_REGION}
   - echo "using AWS_REGION=${AWS_REGION}"
-  - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.0/terraform_0.11.0_linux_amd64.zip
-  - sha256sum terraform.zip  | grep "402b4333792967986383670134bb52a8948115f83ab6bda35f57fa2c3c9e9279" -q
+  - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.2/terraform_0.11.2_linux_amd64.zip
+  - sha256sum terraform.zip  | grep "f728fa73ff2a4c4235a28de4019802531758c7c090b6ca4c024d48063ab8537b" -q
   - unzip terraform.zip ; rm -f terraform.zip; chmod +x terraform
   - mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
   - terraform -v

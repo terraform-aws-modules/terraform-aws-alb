@@ -1,12 +1,15 @@
 # test_fixtures example
+
 This set of templates serves two purposes:
 
-0. it shows developers how to use the module in a straightforward way as integrated with other terraform community supported modules.
+1. it shows developers how to use the module in a straightforward way as integrated with other terraform community supported modules.
 1. serves as the test infrastructure for CI on the project.
 
 ## IAM Permissions
+
 The following IAM policy is the minimum needed to execute the module from the test suite.
-```
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -103,5 +106,4 @@ The following IAM policy is the minimum needed to execute the module from the te
         }
     ]
 }
-
 ```
