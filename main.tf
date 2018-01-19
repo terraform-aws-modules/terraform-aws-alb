@@ -1,10 +1,5 @@
 ### ALB resources
 
-provider "aws" {
-  region  = "${var.region}"
-  version = ">= 1.0.0"
-}
-
 resource "aws_alb" "main" {
   name            = "${var.alb_name}"
   subnets         = ["${var.subnets}"]

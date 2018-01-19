@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.4.0] - Unreleased
+
+* Remove `region` input. If you'd like to customise the AWS provider configuration, this is supported using the new `providers` input which is a core Terraform feature. [Read more.](https://www.terraform.io/docs/modules/usage.html#providers-within-modules)
+
 ## [v2.3.2] - 2017-12-18
 
 ### Added
