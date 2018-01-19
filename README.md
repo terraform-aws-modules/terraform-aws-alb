@@ -12,8 +12,8 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registr
 * You want to create a set of resources for the ALB: namely an associated target group and listener.
 * You've created a Virtual Private Cloud (VPC) + subnets where you intend to put this ALB.
 * You have one or more security groups to attach to the ALB.
-* You want to configure a listener for HTTPS/HTTP
-* You've uploaded an SSL certificate to AWS IAM if using HTTPS
+* You want to configure a listener for HTTPS/HTTP.
+* You've uploaded an SSL certificate to AWS IAM if using HTTPS.
 
 The module supports both (mutually exclusive):
 
@@ -43,22 +43,17 @@ A full example leveraging other community modules is contained in the [examples/
 module "alb" {
   source                        = "terraform-aws-modules/alb/aws"
   alb_name                      = "my-alb"
-  region                        = "us-east-2"
-  alb_security_groups           = ["sg-edcd9784", "sg-edcd9785"]
-  vpc_id                        = "vpc-abcde012"
-  subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
   alb_protocols                 = ["HTTPS"]
+  alb_security_groups           = ["sg-edcd9784", "sg-edcd9785"]
   certificate_arn               = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
   create_log_bucket             = true
   enable_logging                = true
+  health_check_path             = "/"
   log_bucket_name               = "logs-us-east-2-123456789012"
   log_location_prefix           = "my-alb-logs
-  health_check_path             = "/"
-
-  tags {
-    "Terraform" = "true"
-    "Env"       = "${terraform.workspace}"
-  }
+  subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
+  tags                          = "${map("Environment", "test")}"
+  vpc_id                        = "vpc-abcde012"
 }
 ```
 
