@@ -40,6 +40,8 @@ resource "aws_alb_target_group" "target_group" {
     matcher             = "${var.health_check_matcher}"
   }
 
+  target_type = "${var.target_type}"
+
   stickiness {
     type            = "lb_cookie"
     cookie_duration = "${var.cookie_duration}"
@@ -47,6 +49,8 @@ resource "aws_alb_target_group" "target_group" {
   }
 
   tags = "${merge(var.tags, map("Name", "${var.alb_name}-tg"))}"
+
+  depends_on = ["aws_alb.main"]
 }
 
 resource "aws_alb_listener" "frontend_http" {
@@ -59,6 +63,8 @@ resource "aws_alb_listener" "frontend_http" {
     target_group_arn = "${aws_alb_target_group.target_group.id}"
     type             = "forward"
   }
+
+  depends_on = ["aws_alb.main"]
 }
 
 resource "aws_alb_listener" "frontend_https" {
@@ -73,4 +79,6 @@ resource "aws_alb_listener" "frontend_https" {
     target_group_arn = "${aws_alb_target_group.target_group.id}"
     type             = "forward"
   }
+
+  depends_on = ["aws_alb.main"]
 }
