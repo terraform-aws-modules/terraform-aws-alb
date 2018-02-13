@@ -50,7 +50,7 @@ module "alb" {
   enable_logging                = true
   health_check_path             = "/"
   log_bucket_name               = "logs-us-east-2-123456789012"
-  log_location_prefix           = "my-alb-logs
+  log_location_prefix           = "my-alb-logs"
   subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
   tags                          = "${map("Environment", "test")}"
   vpc_id                        = "vpc-abcde012"
