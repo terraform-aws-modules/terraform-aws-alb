@@ -124,3 +124,8 @@ variable "tags" {
 variable "vpc_id" {
   description = "VPC id where the ALB and other resources will be deployed."
 }
+
+variable "target_type" {
+  description = "The type of target that you must specify when registering targets with this target group. The possible values are instance (targets are specified by instance ID) or ip (targets are specified by IP address). "
+  default     = "instance"
+}
