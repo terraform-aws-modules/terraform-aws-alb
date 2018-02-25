@@ -56,7 +56,7 @@ resource "aws_alb_target_group" "target_group" {
 
 resource "aws_alb_listener" "frontend_http" {
   load_balancer_arn = "${aws_alb.main.arn}"
-  port              = "80"
+  port              = "${80+count.index}"
   protocol          = "HTTP"
   count             = "${(contains(var.alb_protocols, "HTTP") ? 1 : 0) == 1 ? var.tg_count : 0}"
 
@@ -70,7 +70,7 @@ resource "aws_alb_listener" "frontend_http" {
 
 resource "aws_alb_listener" "frontend_https" {
   load_balancer_arn = "${aws_alb.main.arn}"
-  port              = "443"
+  port              = "${443+count.index}"
   protocol          = "HTTPS"
   certificate_arn   = "${var.certificate_arn}"
   ssl_policy        = "${var.security_policy}"
