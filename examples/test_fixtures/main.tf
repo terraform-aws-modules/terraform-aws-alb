@@ -57,4 +57,6 @@ module "alb" {
   subnets                  = "${module.vpc.public_subnets}"
   tags                     = "${local.tags}"
   vpc_id                   = "${module.vpc.vpc_id}"
+  tg_count                 = 2
+  tg_name_suffix           = ["-blu", "-grn"]
 }
