@@ -52,3 +52,8 @@ output "target_group_arns" {
   description = "ARN of the target group. Useful for passing to your Auto Scaling group module."
   value       = ["${aws_alb_target_group.target_group.*.arn}"]
 }
+
+output "target_group_names" {
+  description = "ARN of the target group. Useful for passing to your Auto Scaling group module."
+  value       = ["${aws_alb_target_group.target_group.*.name}"]
+}
