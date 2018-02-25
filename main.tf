@@ -23,11 +23,12 @@ resource "aws_s3_bucket" "log_bucket" {
 }
 
 resource "aws_alb_target_group" "target_group" {
-  name                 = "${var.alb_name}-tg"
+  name                 = "${var.alb_name}-tg${var.tg_name_suffix[count.index]}"
   port                 = "${var.backend_port}"
   protocol             = "${upper(var.backend_protocol)}"
   vpc_id               = "${var.vpc_id}"
   deregistration_delay = "${var.deregistration_delay}"
+  count                = "${var.tg_count}"
 
   health_check {
     interval            = "${var.health_check_interval}"
@@ -45,7 +46,7 @@ resource "aws_alb_target_group" "target_group" {
   stickiness {
     type            = "lb_cookie"
     cookie_duration = "${var.cookie_duration}"
-    enabled         = "${ var.cookie_duration == 1 ? false : true}"
+    enabled         = "${var.cookie_duration == 1 ? false : true}"
   }
 
   tags = "${merge(var.tags, map("Name", "${var.alb_name}-tg"))}"
@@ -57,10 +58,10 @@ resource "aws_alb_listener" "frontend_http" {
   load_balancer_arn = "${aws_alb.main.arn}"
   port              = "80"
   protocol          = "HTTP"
-  count             = "${contains(var.alb_protocols, "HTTP") ? 1 : 0}"
+  count             = "${(contains(var.alb_protocols, "HTTP") ? 1 : 0) == 1 ? var.tg_count : 0}"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.target_group.id}"
+    target_group_arn = "${aws_alb_target_group.target_group.*.id[count.index]}"
     type             = "forward"
   }
 
@@ -73,10 +74,10 @@ resource "aws_alb_listener" "frontend_https" {
   protocol          = "HTTPS"
   certificate_arn   = "${var.certificate_arn}"
   ssl_policy        = "${var.security_policy}"
-  count             = "${contains(var.alb_protocols, "HTTPS") ? 1 : 0}"
+  count             = "${(contains(var.alb_protocols, "HTTPS") ? 1 : 0) == 1 ? var.tg_count : 0}"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.target_group.id}"
+    target_group_arn = "${aws_alb_target_group.target_group.*.id[count.index]}"
     type             = "forward"
   }
 

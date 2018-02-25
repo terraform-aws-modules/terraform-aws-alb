@@ -129,3 +129,14 @@ variable "target_type" {
   description = "The type of target that you must specify when registering targets with this target group. The possible values are instance (targets are specified by instance ID) or ip (targets are specified by IP address). "
   default     = "instance"
 }
+
+variable "tg_count" {
+  description = "Number of target groups to be created"
+  default = 1
+}
+
+variable "tg_name_suffix" {
+  description = "Suffix to add to the target group name e.g. -blu, -grn"
+  type = "list"
+  default = [""]
+}
