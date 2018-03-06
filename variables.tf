@@ -3,6 +3,16 @@ variable "alb_is_internal" {
   default     = false
 }
 
+variable "alb_http_port" {
+  description = "The port the Load Balancer listen when HTTP is used"
+  default     = 80
+}
+
+variable "alb_https_port" {
+  description = "The port the Load Balancer listen when HTTPS is used"
+  default     = 443
+}
+
 variable "alb_name" {
   description = "The name of the ALB as will show in the AWS EC2 ELB console."
 }
