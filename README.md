@@ -65,7 +65,7 @@ This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tes
 1. Install bundler and the gems from our Gemfile:
 
 ```bash
-gem install bundler; bundle install
+gem install bundler && bundle install
 ```
 
 1. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).

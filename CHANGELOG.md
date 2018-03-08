@@ -5,18 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.5.0] - 2018-03-07
+
+### Added
+
+* `target_type` variable for targeting IPs rather than instances (nice, @angusfz 👌)
+* Added variables for controlling front door ALB listening ports (thanks, @egarbi ✨)
+* output for `target_group_name` for external consumption (boom! @ndench 🐱‍🐉)
+
+### Changed
+
+* Clarified variable description and bucket policy (right on, @angstwad 👏)
+* Docs and var description updates (everything helps, @tehmaspc 🦑)
+
 ## [v2.4.0] - 2018-01-19
 
-* Remove `region` input. If you'd like to customise the AWS provider configuration, this is supported using the new `providers` input which is a core Terraform feature. [Read more.](https://www.terraform.io/docs/modules/usage.html#providers-within-modules)
+### Added
+
+* `alb_arn_suffix` output added for external consumption. (props, @mbolek 🐱‍🏍)
+* variables to control listener ports (wunderbar, @egarbi 🙌)
+
+### Changed
+
+* Remove `region` input. If you'd like to customise the AWS provider configuration,
+  this is supported using the new `providers` input which is a core Terraform feature.
+  [Read more.](https://www.terraform.io/docs/modules/usage.html#providers-within-modules)
 * update CI to use terraform 0.11.2 and KT 3.1.0.
-* `alb_arn_suffix` output added for external consumption.
 * Several formatting changes to adhere to convention.
 
 ## [v2.3.2] - 2017-12-18
 
 ### Added
 
-* ARN outputs of listeners for reuse outside the module. (thanks, proj4spes! 👌)
+* ARN outputs of listeners for reuse outside the module. (thanks, @proj4spes! 👌)
 
 ## [v2.3.1] - 2017-11-27
 
@@ -117,7 +138,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-* Restructured project templates to alb dir to add testing. This is a breaking change so upping major version.
+* Restructured project templates to alb dir to add testing. This is a breaking
+  change so upping major version.
 * Redundant examples dir removed
 * Updated documentation
 
