@@ -10,15 +10,29 @@ log_location_prefix = module_vars['variable']['log_location_prefix']['default']
 state_file = 'terraform.tfstate.d/kitchen-terraform-default-aws/terraform.tfstate'
 tf_state = JSON.parse(File.open(state_file).read)
 principal_account_id = tf_state['modules'][0]['outputs']['principal_account_id']['value']
-# rubocop:enable LineLength
-account_id = tf_state['modules'][0]['outputs']['account_id']['value']
-vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
-security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
 account_id = tf_state['modules'][0]['outputs']['account_id']['value']
 region = tf_state['modules'][0]['outputs']['region']['value']
 ENV['AWS_REGION'] = region
 # this must match the format in examples/test_fixtures/locals.tf
 log_bucket_name = 'logs-' + region + '-' + account_id
+policy = "{
+    \"Version\": \"2012-10-17\",
+    \"Statement\": [
+        {
+            \"Sid\": \"AllowToPutLoadBalancerLogsToS3Bucket\",
+            \"Effect\": \"Allow\",
+            \"Principal\": {
+                \"AWS\": \"arn:aws:iam::#{principal_account_id}:root\"
+            },
+            \"Action\": \"s3:PutObject\",
+            \"Resource\": \"arn:aws:s3:::#{log_bucket_name}/#{log_location_prefix}/AWSLogs/#{account_id}/*\"
+        }
+    ]
+}"
+# rubocop:enable LineLength
+log_object = "#{log_location_prefix}/AWSLogs/#{account_id}/ELBAccessLogTestFile"
+vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
+security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
 
 describe alb('test-alb') do
   it { should exist }
@@ -42,25 +56,6 @@ end
 
 describe s3_bucket(log_bucket_name) do
   it { should exist }
-  # rubocop:disable LineLength
-  it { should have_object("#{log_location_prefix}/AWSLogs/#{account_id}/ELBAccessLogTestFile") }
-  it do
-    should have_policy <<~POLICY
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "AllowToPutLoadBalancerLogsToS3Bucket",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "arn:aws:iam::#{principal_account_id}:root"
-            },
-            "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::#{log_bucket_name}/#{log_location_prefix}/AWSLogs/#{account_id}/*"
-        }
-    ]
-}
-    POLICY
-  end
-  # rubocop:enable LineLength
+  it { should have_object(log_object) }
+  it { should have_policy(policy) }
 end
