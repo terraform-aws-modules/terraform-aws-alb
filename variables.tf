@@ -108,7 +108,6 @@ variable "health_check_matcher" {
 
 variable "log_bucket_name" {
   description = "S3 bucket for storing ALB access logs. To create the bucket \"create_log_bucket\" should be set to true."
-  default     = ""
 }
 
 variable "log_location_prefix" {
