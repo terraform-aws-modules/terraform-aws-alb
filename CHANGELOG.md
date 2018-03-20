@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v3.0.0] - 2018-03-20
+
+### Added
+
+* default values added for most target group and listener attributes.
+* new application load balancer attributes added as variables with defaults.
+
+### Changed
+
+* listeners and target groups now defined by lists of maps allowing many-to-many relationships of those resources.
+* listeners and target groups now more flexibly created based on data provided through variable input.
+* `name_prefix` used where possible to avoid naming conflicts in resource testing.
+
 ## [v2.5.0] - 2018-03-07
 
 ### Added

@@ -3,30 +3,23 @@ locals {
   name_prefix   = "${substr(var.lb_name, 0, local.prefix_length)}"
 }
 
-resource "aws_lb" "main" {
-  name_prefix                      = "${local.name_prefix}"
-  internal                         = "${var.lb_is_internal}"
-  load_balancer_type               = "${var.load_balancer_type}"
-  security_groups                  = ["${var.lb_security_groups}"]
-  subnets                          = ["${var.subnets}"]
-  idle_timeout                     = "${var.idle_timeout}"
-  enable_cross_zone_load_balancing = "${var.enable_cross_zone_load_balancing}"
-  enable_deletion_protection       = "${var.enable_deletion_protection}"
-  enable_http2                     = "${var.enable_http2}"
-  ip_address_type                  = "${var.ip_address_type}"
-  tags                             = "${merge(var.tags, map("Name", var.lb_name))}"
+resource "aws_lb" "application" {
+  load_balancer_type         = "application"
+  name_prefix                = "${local.name_prefix}"
+  internal                   = "${var.lb_is_internal}"
+  security_groups            = ["${var.lb_security_groups}"]
+  subnets                    = ["${var.subnets}"]
+  idle_timeout               = "${var.idle_timeout}"
+  enable_deletion_protection = "${var.enable_deletion_protection}"
+  enable_http2               = "${var.enable_http2}"
+  ip_address_type            = "${var.ip_address_type}"
+  tags                       = "${merge(var.tags, map("Name", var.lb_name))}"
 
   access_logs {
     enabled = true
     bucket  = "${var.log_bucket_name}"
     prefix  = "${var.log_location_prefix}"
   }
-
-  #XXX can these be defined?
-  #  subnet_mapping {
-  #    subnet_id     = "${}"
-  #    allocation_id = "${}"
-  #  }
 
   timeouts {
     create = "${var.load_balancer_create_timeout}"
@@ -35,7 +28,7 @@ resource "aws_lb" "main" {
   }
 }
 
-resource "aws_lb_target_group" "target_group" {
+resource "aws_lb_target_group" "main" {
   name                 = "${lookup(var.target_groups[count.index], "name")}"
   vpc_id               = "${var.vpc_id}"
   port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
@@ -60,27 +53,26 @@ resource "aws_lb_target_group" "target_group" {
     enabled         = "${lookup(var.target_groups[count.index], "stickiness_enabled", lookup(var.target_groups_defaults, "stickiness_enabled"))}"
   }
 
-  tags       = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
-  count      = "${var.target_groups_count}"
-  depends_on = ["aws_lb.main"]
+  tags  = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
+  count = "${var.target_groups_count}"
+
+  depends_on = ["aws_lb.application"]
 }
 
 resource "aws_lb_listener" "frontend_http_tcp" {
-  load_balancer_arn = "${aws_lb.main.arn}"
+  load_balancer_arn = "${aws_lb.application.arn}"
   port              = "${lookup(var.http_tcp_listeners[count.index], "port")}"
   protocol          = "${lookup(var.http_tcp_listeners[count.index], "protocol")}"
   count             = "${var.http_tcp_listeners_count}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.target_group.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index")]}"
+    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
     type             = "forward"
   }
-
-  depends_on = ["aws_lb.main"]
 }
 
 resource "aws_lb_listener" "frontend_https" {
-  load_balancer_arn = "${aws_lb.main.arn}"
+  load_balancer_arn = "${aws_lb.application.arn}"
   port              = "${lookup(var.https_listeners[count.index], "port")}"
   protocol          = "HTTPS"
   certificate_arn   = "${lookup(var.https_listeners[count.index], "certificate_arn")}"
@@ -88,9 +80,7 @@ resource "aws_lb_listener" "frontend_https" {
   count             = "${var.https_listeners_count}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.target_group.*.id[lookup(var.https_listeners[count.index], "target_group_index")]}"
+    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
     type             = "forward"
   }
-
-  depends_on = ["aws_lb.main"]
 }

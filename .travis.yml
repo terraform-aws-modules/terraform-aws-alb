@@ -33,7 +33,7 @@ script:
   - terraform fmt -check=true
   - terraform validate -var "region=${AWS_REGION}" -var "certificate_arn=arn:aws:iam::123456789012:server-certificate/test_cert-123456789012" -var "health_check_path=/" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "lb_name=my-lb" -var "lb_security_groups=[]"
   - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
-  - cd examples/test_fixtures
+  - cd examples/alb_test_fixture
   - terraform init
   - terraform fmt -check=true
   - terraform validate

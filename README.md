@@ -9,11 +9,10 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registr
 
 ## Assumptions
 
-* You want to create a set of resources for the ALB: namely an associated target group and listener.
-* You've created a Virtual Private Cloud (VPC) + subnets where you intend to put this ALB.
+* You want to create a set of resources around an application load balancer: namely associated target groups and listeners.
+* You've created a Virtual Private Cloud (VPC) and subnets where you intend to put this ALB.
 * You have one or more security groups to attach to the ALB.
-* You want to configure a listener for HTTPS/HTTP.
-* You've uploaded an SSL certificate to AWS IAM if using HTTPS.
+* Additionally, if you plan to use an HTTPS listener, the ARN of an SSL certificate is required.
 
 The module supports both (mutually exclusive):
 
@@ -27,9 +26,10 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 ## Why ALB instead of ELB
 
 The use-case presented here appears almost identical to how one would use an ELB
-but we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
-documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/).
-For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
+but we inherit a few bonuses by moving to ALB like the ability to leverage WAF.
+[AWS's documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) has a more
+exhastive set of reasons. Alternatively, if using ALB with ECS look no further than
+the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
 ## Resources, inputs, outputs
 
@@ -37,39 +37,41 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 
 ## Usage example
 
-A full example leveraging other community modules is contained in the [examples/test_fixtures directory](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/test_fixtures). Here's the gist of using it via the Terraform registry:
+A full example leveraging other community modules is contained in the [examples/alb_test_fixture directory](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/alb_test_fixture). Here's the gist of using it via the Terraform registry:
 
 ```hcl
 module "alb" {
   source                        = "terraform-aws-modules/alb/aws"
   alb_name                      = "my-alb"
-  alb_protocols                 = ["HTTPS"]
-  alb_security_groups           = ["sg-edcd9784", "sg-edcd9785"]
-  certificate_arn               = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
-  create_log_bucket             = true
-  enable_logging                = true
-  health_check_path             = "/"
+  lb_security_groups            = ["sg-edcd9784", "sg-edcd9785"]
+  load_balancer_type            = "application"
   log_bucket_name               = "logs-us-east-2-123456789012"
   log_location_prefix           = "my-alb-logs"
-  subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
+  subnets                       = ["subnet-abcde012", subnet-bcde012a"]
   tags                          = "${map("Environment", "test")}"
   vpc_id                        = "vpc-abcde012"
+  https_listeners               = "${list(map("certificate_arn", "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012", "port", 443))}"
+  https_listeners_count         = "1"
+  http_tcp_listeners            =
+  http_tcp_listeners_count      = "1"
+  target_groups                 = "${local.target_groups}"
+  target_groups_count           = "1"
 }
 ```
 
 ## Testing
 
-This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through test kitchen. To run them:
+This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through [kitchen](https://kitchen.ci/) and [kitchen-terraform](https://newcontext-oss.github.io/kitchen-terraform/). To run them:
 
 1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/Gemfile).
-1. Install bundler and the gems from our Gemfile:
+2. Install bundler and the gems from our Gemfile:
 
-```bash
-gem install bundler && bundle install
-```
+    ```bash
+    gem install bundler && bundle install
+    ```
 
-1. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
-1. Test using `kitchen test` from the root of the repo.
+3. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
+4. Test using `bundle exec kitchen test` from the root of the repo.
 
 ## Contributing
 
@@ -79,15 +81,15 @@ Pull requests are welcome! Ideally create a feature branch and issue for every
 individual change made. These are the steps:
 
 1. Fork the repo to a personal space or org.
-1. Create your feature branch from master (`git checkout -b my-new-feature`).
-1. Commit your awesome changes (`git commit -am 'Added some feature'`).
-1. Push to the branch (`git push origin my-new-feature`).
-1. Create a new Pull Request and tell us about your changes.
+2. Create your feature branch from master (`git checkout -b my-new-feature`).
+3. Commit your awesome changes (`git commit -am 'Added some feature'`).
+4. Push to the branch (`git push origin my-new-feature`).
+5. Create a new Pull Request and tell us about your changes.
 
 ## IAM Permissions
 
 Testing and using this repo requires a minimum set of IAM permissions. Test permissions
-are listed in the [test_fixtures README](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/test_fixtures/README.md).
+are listed in the [alb_test_fixture README](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/alb_test_fixture/README.md).
 
 ## Change log
 

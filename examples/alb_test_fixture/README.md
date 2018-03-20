@@ -1,4 +1,4 @@
-# test_fixtures example
+# alb_test_fixture example
 
 This set of templates serves two purposes:
 

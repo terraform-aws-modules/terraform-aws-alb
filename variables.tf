@@ -3,6 +3,9 @@ variable "lb_is_internal" {
   default     = false
 }
 
+# XXX alpha
+# XXX  descriptions
+
 variable "load_balancer_type" {
   description = "The type of load balancer to create. Possible values are application or network."
   default     = "application"
@@ -21,11 +24,6 @@ variable "load_balancer_delete_timeout" {
 variable "load_balancer_update_timeout" {
   description = ""
   default     = "10m"
-}
-
-variable "enable_cross_zone_load_balancing" {
-  description = "If true, cross-zone load balancing of the load balancer will be enabled. This is a network load balancer feature. Defaults to false."
-  default     = false
 }
 
 variable "idle_timeout" {

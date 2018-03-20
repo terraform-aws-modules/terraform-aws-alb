@@ -13,3 +13,15 @@ output "sg_id" {
 output "vpc_id" {
   value = "${module.vpc.vpc_id}"
 }
+
+output "alb_id" {
+  value = "${module.alb.lb_id}"
+}
+
+output "http_tcp_listener_arns" {
+  value = "${module.alb.http_tcp_listener_arns}"
+}
+
+output "https_listener_arns" {
+  value = "${module.alb.https_listener_arns}"
+}

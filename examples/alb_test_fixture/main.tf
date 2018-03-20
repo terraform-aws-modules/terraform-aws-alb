@@ -1,16 +1,16 @@
 terraform {
-  required_version = ">= 0.11.2"
+  required_version = ">= 0.11.4"
 }
 
 provider "aws" {
-  version = ">= 1.0.0"
+  version = ">= 1.10.0"
   region  = "${var.region}"
 }
 
 resource "aws_iam_server_certificate" "fixture_cert" {
   name             = "test_cert-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
-  certificate_body = "${file("${path.module}/../../examples/test_fixtures/certs/example.crt.pem")}"
-  private_key      = "${file("${path.module}/../../examples/test_fixtures/certs/example.key.pem")}"
+  certificate_body = "${file("${path.module}/../../examples/alb_test_fixture/certs/example.crt.pem")}"
+  private_key      = "${file("${path.module}/../../examples/alb_test_fixture/certs/example.key.pem")}"
 
   lifecycle {
     create_before_destroy = true
@@ -54,13 +54,10 @@ module "security_group" {
   tags    = "${local.tags}"
 }
 
-module "lb" {
-  source             = "../.."
-  lb_name            = "test"
-  lb_security_groups = ["${module.security_group.this_security_group_id}"]
-
-  # lb_security_groups  = []
-  load_balancer_type       = "application"
+module "alb" {
+  source                   = "../.."
+  lb_name                  = "test-alb"
+  lb_security_groups       = ["${module.security_group.this_security_group_id}"]
   log_bucket_name          = "${aws_s3_bucket.log_bucket.id}"
   log_location_prefix      = "${var.log_location_prefix}"
   subnets                  = "${module.vpc.public_subnets}"
