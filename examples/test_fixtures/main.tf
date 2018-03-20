@@ -2,10 +2,6 @@ terraform {
   required_version = ">= 0.11.2"
 }
 
-locals {
-  tags = "${map("Environment", "test", "GithubRepo", "tf-aws-alb", "GithubOrg", "terraform-aws-modules", "Workspace", "${terraform.workspace}")}"
-}
-
 provider "aws" {
   version = ">= 1.0.0"
   region  = "${var.region}"
@@ -18,6 +14,22 @@ resource "aws_iam_server_certificate" "fixture_cert" {
 
   lifecycle {
     create_before_destroy = true
+  }
+}
+
+resource "aws_s3_bucket" "log_bucket" {
+  bucket        = "${local.log_bucket_name}"
+  policy        = "${data.aws_iam_policy_document.bucket_policy.json}"
+  force_destroy = true
+  tags          = "${local.tags}"
+
+  lifecycle_rule {
+    id      = "log-expiration"
+    enabled = "true"
+
+    expiration {
+      days = "7"
+    }
   }
 }
 
@@ -34,7 +46,7 @@ module "vpc" {
   tags               = "${local.tags}"
 }
 
-module "security-group" {
+module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "1.12.0"
   name    = "test-sg-https"
@@ -42,19 +54,22 @@ module "security-group" {
   tags    = "${local.tags}"
 }
 
-module "alb" {
-  source                   = "../.."
-  alb_protocols            = ["HTTPS"]
-  alb_name                 = "test-alb"
-  alb_security_groups      = ["${module.security-group.this_security_group_id}"]
-  certificate_arn          = "${aws_iam_server_certificate.fixture_cert.arn}"
-  create_log_bucket        = true
-  enable_logging           = true
-  force_destroy_log_bucket = true
-  health_check_path        = "/"
-  log_bucket_name          = "logs-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+module "lb" {
+  source             = "../.."
+  lb_name            = "test"
+  lb_security_groups = ["${module.security_group.this_security_group_id}"]
+
+  # lb_security_groups  = []
+  load_balancer_type       = "application"
+  log_bucket_name          = "${aws_s3_bucket.log_bucket.id}"
   log_location_prefix      = "${var.log_location_prefix}"
   subnets                  = "${module.vpc.public_subnets}"
   tags                     = "${local.tags}"
   vpc_id                   = "${module.vpc.vpc_id}"
+  https_listeners          = "${local.https_listeners}"
+  https_listeners_count    = "${local.https_listeners_count}"
+  http_tcp_listeners       = "${local.http_tcp_listeners}"
+  http_tcp_listeners_count = "${local.http_tcp_listeners_count}"
+  target_groups            = "${local.target_groups}"
+  target_groups_count      = "${local.target_groups_count}"
 }

@@ -1,30 +1,59 @@
-variable "alb_is_internal" {
-  description = "Boolean determining if the ALB is internal or externally facing."
+variable "lb_is_internal" {
+  description = "Boolean determining if the LB is internal or externally facing."
   default     = false
 }
 
-variable "alb_http_port" {
-  description = "The port the Load Balancer listen when HTTP is used"
-  default     = 80
+variable "load_balancer_type" {
+  description = "The type of load balancer to create. Possible values are application or network."
+  default     = "application"
 }
 
-variable "alb_https_port" {
-  description = "The port the Load Balancer listen when HTTPS is used"
-  default     = 443
+variable "load_balancer_create_timeout" {
+  description = ""
+  default     = "10m"
 }
 
-variable "alb_name" {
-  description = "The name of the ALB as will show in the AWS EC2 ELB console."
+variable "load_balancer_delete_timeout" {
+  description = ""
+  default     = "10m"
 }
 
-variable "alb_protocols" {
-  description = "The protocols the ALB accepts. e.g.: [\"HTTP\"]"
-  type        = "list"
-  default     = ["HTTP"]
+variable "load_balancer_update_timeout" {
+  description = ""
+  default     = "10m"
 }
 
-variable "alb_security_groups" {
-  description = "The security groups with which we associate the ALB. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
+variable "enable_cross_zone_load_balancing" {
+  description = "If true, cross-zone load balancing of the load balancer will be enabled. This is a network load balancer feature. Defaults to false."
+  default     = false
+}
+
+variable "idle_timeout" {
+  description = "The time in seconds that the connection is allowed to be idle."
+  default     = 60
+}
+
+variable "enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  default     = false
+}
+
+variable "enable_http2" {
+  description = "Indicates whether HTTP/2 is enabled in application load balancers."
+  default     = true
+}
+
+variable "ip_address_type" {
+  description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack."
+  default     = "ipv4"
+}
+
+variable "lb_name" {
+  description = "The name prefix and name tag of the LB."
+}
+
+variable "lb_security_groups" {
+  description = "The security groups with which we associate the LB. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
   type        = "list"
 }
 
@@ -38,77 +67,30 @@ variable "backend_protocol" {
   default     = "HTTP"
 }
 
-variable "bucket_policy" {
-  description = "An S3 bucket policy to apply to the log bucket. If not provided, a minimal policy will be generated from other variables."
-  default     = ""
+variable "http_tcp_listeners" {
+  description = ""
+  type        = "list"
+  default     = []
 }
 
-variable "certificate_arn" {
-  description = "The ARN of the SSL Certificate. e.g. \"arn:aws:iam::123456789012:server-certificate/ProdServerCert\""
+variable "http_tcp_listeners_count" {
+  description = ""
+  default     = 0
 }
 
-variable "cookie_duration" {
-  description = "If load balancer connection stickiness is desired, set this to the duration in seconds that cookie should be valid (e.g. 300). Otherwise, if no stickiness is desired, leave the default."
-  default     = 1
+variable "https_listeners" {
+  description = ""
+  type        = "list"
+  default     = []
 }
 
-variable "create_log_bucket" {
-  description = "Create the S3 bucket (named with the log_bucket_name var) and attach a policy to allow ALB logging."
-  default     = false
-}
-
-variable "deregistration_delay" {
-  description = "The amount time to wait before changing the state of a deregistering target from draining to unused."
-  default     = 300
-}
-
-variable "enable_logging" {
-  default     = false
-  description = "Enable the ALB to write log entries to S3."
-}
-
-variable "force_destroy_log_bucket" {
-  description = "A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
-  default     = false
-}
-
-variable "health_check_healthy_threshold" {
-  description = "Number of consecutive positive health checks before a backend instance is considered healthy."
-  default     = 3
-}
-
-variable "health_check_interval" {
-  description = "Interval in seconds on which the health check against backend hosts is tried."
-  default     = 10
-}
-
-variable "health_check_path" {
-  description = "The URL the ELB should use for health checks. e.g. /health"
-}
-
-variable "health_check_port" {
-  description = "The port used by the health check if different from the traffic-port."
-  default     = "traffic-port"
-}
-
-variable "health_check_timeout" {
-  description = "Seconds to leave a health check waiting before terminating it and calling the check unhealthy."
-  default     = 5
-}
-
-variable "health_check_unhealthy_threshold" {
-  description = "Number of consecutive positive health checks before a backend instance is considered unhealthy."
-  default     = 3
-}
-
-variable "health_check_matcher" {
-  description = "The HTTP codes that are a success when checking TG health."
-  default     = "200-299"
+variable "https_listeners_count" {
+  description = ""
+  default     = 0
 }
 
 variable "log_bucket_name" {
-  description = "S3 bucket for storing ALB access logs. To create the bucket \"create_log_bucket\" should be set to true."
-  default     = ""
+  description = "S3 bucket for storing LB access logs."
 }
 
 variable "log_location_prefix" {
@@ -116,13 +98,13 @@ variable "log_location_prefix" {
   default     = ""
 }
 
-variable "security_policy" {
-  description = "The security policy if using HTTPS externally on the ALB. See: https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html"
+variable "listener_ssl_policy_default" {
+  description = "The security policy if using HTTPS externally on the LB. See: https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html"
   default     = "ELBSecurityPolicy-2016-08"
 }
 
 variable "subnets" {
-  description = "A list of subnets to associate with the ALB. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
+  description = "A list of subnets to associate with the LB. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
   type        = "list"
 }
 
@@ -131,11 +113,36 @@ variable "tags" {
   default     = {}
 }
 
-variable "vpc_id" {
-  description = "VPC id where the ALB and other resources will be deployed."
+variable "target_groups" {
+  description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these is important and the index of these are to be referenced in listenr definitions."
+  type        = "list"
+  default     = []
 }
 
-variable "target_type" {
-  description = "The type of target that you must specify when registering targets with this target group. The possible values are instance (targets are specified by instance ID) or ip (targets are specified by IP address). "
-  default     = "instance"
+variable "target_groups_count" {
+  description = ""
+  default     = 0
+}
+
+variable "target_groups_defaults" {
+  description = "Default values for target groups as defined by the list of maps."
+  type        = "map"
+
+  default = {
+    "cookie_duration"                  = 86400
+    "deregistration_delay"             = 300
+    "health_check_interval"            = 10
+    "health_check_healthy_threshold"   = 3
+    "health_check_path"                = "/"
+    "health_check_port"                = "traffic-port"
+    "health_check_timeout"             = 5
+    "health_check_unhealthy_threshold" = 3
+    "health_check_matcher"             = "200-299"
+    "stickiness_enabled"               = true
+    "target_type"                      = "instance"
+  }
+}
+
+variable "vpc_id" {
+  description = "VPC id where the LB and other resources will be deployed."
 }

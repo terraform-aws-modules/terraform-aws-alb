@@ -2,6 +2,7 @@
 
 require 'awspec'
 require 'rhcl'
+require 'Aws'
 
 module_vars = Rhcl.parse(File.open('examples/test_fixtures/variables.tf'))
 log_location_prefix = module_vars['variable']['log_location_prefix']['default']
@@ -34,9 +35,9 @@ log_object = "#{log_location_prefix}/AWSLogs/#{account_id}/ELBAccessLogTestFile"
 vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
 security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
 
-describe alb('test-alb') do
+describe alb('test-lb') do
   it { should exist }
-  its(:load_balancer_name) { should eq 'test-alb' }
+  its(:load_balancer_name) { should eq 'test-lb' }
   its(:vpc_id) { should eq vpc_id }
   it { should belong_to_vpc('test-vpc') }
   its(:type) { should eq 'application' }
@@ -45,7 +46,7 @@ describe alb('test-alb') do
   it { should have_security_group(security_group_id) }
 end
 
-describe alb_target_group('test-alb-tg') do
+describe alb_target_group('test-lb-tg') do
   it { should exist }
   its(:health_check_path) { should eq '/' }
   its(:health_check_port) { should eq 'traffic-port' }
