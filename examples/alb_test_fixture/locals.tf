@@ -19,32 +19,32 @@ locals {
   http_tcp_listeners_count = 3
 
   http_tcp_listeners = "${list(
-                              map(
-                                  "port", 80,
-                                  "protocol", "HTTP"
-                              ),
-                              map(
-                                  "port", 8080,
-                                  "protocol", "HTTP",
-                                  "target_group_index", 0
-                              ),
-                              map(
-                                  "port", 8081,
-                                  "protocol", "HTTP",
-                                  "target_group_index", 1
-                              )
+                            map(
+                                "port", 80,
+                                "protocol", "HTTP"
+                            ),
+                            map(
+                                "port", 8080,
+                                "protocol", "HTTP",
+                                "target_group_index", 0
+                            ),
+                            map(
+                                "port", 8081,
+                                "protocol", "HTTP",
+                                "target_group_index", 1
+                            )
     )}"
 
   target_groups_count = 2
 
   target_groups = "${list(
-                          map("name", "foo",
-                              "backend_protocol", "HTTP",
-                              "backend_port", 80
-                          ),
-                          map("name", "bar",
-                              "backend_protocol", "HTTP",
-                              "backend_port", 8080
-                          )
+                        map("name", "foo",
+                            "backend_protocol", "HTTP",
+                            "backend_port", 80
+                        ),
+                        map("name", "bar",
+                            "backend_protocol", "HTTP",
+                            "backend_port", 8080
+                        )
   )}"
 }

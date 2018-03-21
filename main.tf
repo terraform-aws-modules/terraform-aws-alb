@@ -1,19 +1,19 @@
 locals {
-  prefix_length = "${length(var.lb_name) < 6 ? length(var.lb_name) : 6 }"
-  name_prefix   = "${substr(var.lb_name, 0, local.prefix_length)}"
+  prefix_length = "${length(var.load_balancer_name) < 6 ? length(var.load_balancer_name) : 6 }"
+  name_prefix   = "${substr(var.load_balancer_name, 0, local.prefix_length)}"
 }
 
 resource "aws_lb" "application" {
   load_balancer_type         = "application"
   name_prefix                = "${local.name_prefix}"
-  internal                   = "${var.lb_is_internal}"
-  security_groups            = ["${var.lb_security_groups}"]
+  internal                   = "${var.load_balancer_is_internal}"
+  security_groups            = ["${var.load_balancer_security_groups}"]
   subnets                    = ["${var.subnets}"]
   idle_timeout               = "${var.idle_timeout}"
   enable_deletion_protection = "${var.enable_deletion_protection}"
   enable_http2               = "${var.enable_http2}"
   ip_address_type            = "${var.ip_address_type}"
-  tags                       = "${merge(var.tags, map("Name", var.lb_name))}"
+  tags                       = "${merge(var.tags, map("Name", var.load_balancer_name))}"
 
   access_logs {
     enabled = true

@@ -1,36 +1,3 @@
-variable "lb_is_internal" {
-  description = "Boolean determining if the LB is internal or externally facing."
-  default     = false
-}
-
-# XXX alpha
-# XXX  descriptions
-
-variable "load_balancer_type" {
-  description = "The type of load balancer to create. Possible values are application or network."
-  default     = "application"
-}
-
-variable "load_balancer_create_timeout" {
-  description = ""
-  default     = "10m"
-}
-
-variable "load_balancer_delete_timeout" {
-  description = ""
-  default     = "10m"
-}
-
-variable "load_balancer_update_timeout" {
-  description = ""
-  default     = "10m"
-}
-
-variable "idle_timeout" {
-  description = "The time in seconds that the connection is allowed to be idle."
-  default     = 60
-}
-
 variable "enable_deletion_protection" {
   description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
   default     = false
@@ -41,54 +8,79 @@ variable "enable_http2" {
   default     = true
 }
 
-variable "ip_address_type" {
-  description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack."
-  default     = "ipv4"
-}
-
-variable "lb_name" {
-  description = "The name prefix and name tag of the LB."
-}
-
-variable "lb_security_groups" {
-  description = "The security groups with which we associate the LB. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
-  type        = "list"
-}
-
-variable "backend_port" {
-  description = "The port the service on the EC2 instances listen on."
-  default     = 80
-}
-
-variable "backend_protocol" {
-  description = "The protocol the backend service speaks. Options: HTTP, HTTPS, TCP, SSL (secure tcp)."
-  default     = "HTTP"
-}
-
-variable "http_tcp_listeners" {
-  description = ""
-  type        = "list"
-  default     = []
-}
-
-variable "http_tcp_listeners_count" {
-  description = ""
-  default     = 0
-}
-
 variable "https_listeners" {
-  description = ""
+  description = "A list of maps describing the HTTPS listeners for this ALB. Required keys: port, certificate_arn. Optional keys: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0)"
   type        = "list"
   default     = []
 }
 
 variable "https_listeners_count" {
-  description = ""
+  description = "A manually provided count/length of the https_listeners list of maps since the list cannot be computed."
   default     = 0
 }
 
+variable "http_tcp_listeners" {
+  description = "A list of maps describing the HTTPS listeners for this ALB. Required keys: port, protocol. Optional keys: target_group_index (defaults to 0)"
+  type        = "list"
+  default     = []
+}
+
+variable "http_tcp_listeners_count" {
+  description = "A manually provided count/length of the http_tcp_listeners list of maps since the list cannot be computed."
+  default     = 0
+}
+
+variable "idle_timeout" {
+  description = "The time in seconds that the connection is allowed to be idle."
+  default     = 60
+}
+
+variable "ip_address_type" {
+  description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack."
+  default     = "ipv4"
+}
+
+variable "listener_ssl_policy_default" {
+  description = "The security policy if using HTTPS externally on the load balancer. See: https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html"
+  default     = "ELBSecurityPolicy-2016-08"
+}
+
+variable "load_balancer_is_internal" {
+  description = "Boolean determining if the load balancer is internal or externally facing."
+  default     = false
+}
+
+variable "load_balancer_type" {
+  description = "The type of load balancer to create. Possible values are application or network."
+  default     = "application"
+}
+
+variable "load_balancer_create_timeout" {
+  description = "Timeout value when creating the ALB."
+  default     = "10m"
+}
+
+variable "load_balancer_delete_timeout" {
+  description = "Timeout value when deleting the ALB."
+  default     = "10m"
+}
+
+variable "load_balancer_name" {
+  description = "The name prefix and name tag of the load balancer."
+}
+
+variable "load_balancer_update_timeout" {
+  description = "Timeout value when updating the ALB."
+  default     = "10m"
+}
+
+variable "load_balancer_security_groups" {
+  description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
+  type        = "list"
+}
+
 variable "log_bucket_name" {
-  description = "S3 bucket for storing LB access logs."
+  description = "S3 bucket (externally created) for storing load balancer access logs."
 }
 
 variable "log_location_prefix" {
@@ -96,13 +88,8 @@ variable "log_location_prefix" {
   default     = ""
 }
 
-variable "listener_ssl_policy_default" {
-  description = "The security policy if using HTTPS externally on the LB. See: https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html"
-  default     = "ELBSecurityPolicy-2016-08"
-}
-
 variable "subnets" {
-  description = "A list of subnets to associate with the LB. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
+  description = "A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
   type        = "list"
 }
 
@@ -112,13 +99,13 @@ variable "tags" {
 }
 
 variable "target_groups" {
-  description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these is important and the index of these are to be referenced in listenr definitions."
+  description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required map values: name, backend_protocol, backend_port. Optional key/values found in the target_groups_defaults variable."
   type        = "list"
   default     = []
 }
 
 variable "target_groups_count" {
-  description = ""
+  description = "A manually provided count/length of the target_groups list of maps since the list cannot be computed."
   default     = 0
 }
 
@@ -142,5 +129,5 @@ variable "target_groups_defaults" {
 }
 
 variable "vpc_id" {
-  description = "VPC id where the LB and other resources will be deployed."
+  description = "VPC id where the load balancer and other resources will be deployed."
 }

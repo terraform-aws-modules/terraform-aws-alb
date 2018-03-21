@@ -11,6 +11,7 @@ state_file = 'terraform.tfstate.d/kitchen-terraform-default-aws/terraform.tfstat
 tf_state = JSON.parse(File.open(state_file).read)
 http_tcp_listener_arns = tf_state['modules'][0]['outputs']['http_tcp_listener_arns']['value']
 https_listener_arns = tf_state['modules'][0]['outputs']['https_listener_arns']['value']
+target_group_arns = tf_state['modules'][0]['outputs']['target_group_arns']['value']
 # rubocop:enable LineLength
 alb_arn = tf_state['modules'][0]['outputs']['alb_id']['value']
 alb_name = alb_arn.split('/')[-2]
@@ -32,18 +33,43 @@ describe alb(alb_name) do
 end
 
 describe alb_target_group('foo') do
-  it { should exist }
-  its(:health_check_path) { should eq '/' }
-  its(:health_check_port) { should eq 'traffic-port' }
-  its(:health_check_protocol) { should eq 'HTTP' }
-  it { should belong_to_alb(alb_name) }
-  it { should belong_to_vpc('test-vpc') }
+  its(:port) { should eq 80 }
 end
 
-puts http_tcp_listener_arns
-puts https_listener_arns
-# describe alb_listener(alb_arn) do
-#   it { should exist }
-#   its(:port) { should eq 80 }
-#   its(:protocol) { should eq 'HTTPS' }
-# end
+describe alb_target_group('bar') do
+  its(:port) { should eq 8080 }
+end
+
+target_group_arns.each do |tg_arn|
+  tg_name = tg_arn.split('/')[-2]
+  describe alb_target_group(tg_name) do
+    it { should exist }
+    it { should belong_to_alb(alb_name) }
+    it { should belong_to_vpc('test-vpc') }
+    its(:protocol) { should eq 'HTTP' }
+    its(:health_check_protocol) { should eq 'HTTP' }
+    its(:health_check_interval_seconds) { should eq 10 }
+    its(:health_check_timeout_seconds) { should eq 5 }
+    its(:healthy_threshold_count) { should eq 3 }
+    its(:health_check_path) { should eq '/' }
+    its(:unhealthy_threshold_count) { should eq 3 }
+    its(:target_type) { should eq 'instance' }
+    its(:health_check_port) { should eq 'traffic-port' }
+  end
+end
+
+https_listener_arns.each do |listener|
+  describe alb_listener(listener) do
+    it { should exist }
+    its(:protocol) { should eq 'HTTPS' }
+    its(:port) { should eq(443).or(eq(8443)) }
+  end
+end
+
+http_tcp_listener_arns.each do |listener|
+  describe alb_listener(listener) do
+    it { should exist }
+    its(:protocol) { should eq 'HTTP' }
+    its(:port) { should eq(80).or(eq(8080).or(eq(8081))) }
+  end
+end
