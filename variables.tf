@@ -50,11 +50,6 @@ variable "load_balancer_is_internal" {
   default     = false
 }
 
-variable "load_balancer_type" {
-  description = "The type of load balancer to create. Possible values are application or network."
-  default     = "application"
-}
-
 variable "load_balancer_create_timeout" {
   description = "Timeout value when creating the ALB."
   default     = "10m"
