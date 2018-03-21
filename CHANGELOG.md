@@ -5,13 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v3.0.0] - 2018-03-
+## [v3.1.0] - 2018-03-21
+
+### Added
+
+* extra certs can now be applied to HTTPS listeners via the `extra_ssl_certs` variable.
+
+## [v3.0.0] - 2018-03-20
 
 ### Added
 
 * default values added for most target group and listener attributes.
 * new application load balancer attributes added as variables with defaults.
-* tests now covering listeners.
+* tests now cover listeners.
 
 ### Changed
 

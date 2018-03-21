@@ -84,3 +84,10 @@ resource "aws_lb_listener" "frontend_https" {
     type             = "forward"
   }
 }
+
+#XXX do these count.indexes need to be offset by 1?
+resource "aws_lb_listener_certificate" "https_listener" {
+  listener_arn    = "${aws_lb_listener.frontend_https.*.arn[lookup(var.extra_ssl_certs[count.index], "https_listener_index")]}"
+  certificate_arn = "${lookup(var.extra_ssl_certs[count.index], "certificate_arn")}"
+  count           = "${var.extra_ssl_certs_count}"
+}
