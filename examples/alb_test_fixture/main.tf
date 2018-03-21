@@ -1,0 +1,72 @@
+terraform {
+  required_version = ">= 0.11.3"
+}
+
+provider "aws" {
+  version = ">= 1.10.0"
+  region  = "${var.region}"
+}
+
+resource "aws_iam_server_certificate" "fixture_cert" {
+  name             = "test_cert-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
+  certificate_body = "${file("${path.module}/../../examples/alb_test_fixture/certs/example.crt.pem")}"
+  private_key      = "${file("${path.module}/../../examples/alb_test_fixture/certs/example.key.pem")}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_s3_bucket" "log_bucket" {
+  bucket        = "${local.log_bucket_name}"
+  policy        = "${data.aws_iam_policy_document.bucket_policy.json}"
+  force_destroy = true
+  tags          = "${local.tags}"
+
+  lifecycle_rule {
+    id      = "log-expiration"
+    enabled = "true"
+
+    expiration {
+      days = "7"
+    }
+  }
+}
+
+module "vpc" {
+  source             = "terraform-aws-modules/vpc/aws"
+  version            = "1.14.0"
+  name               = "test-vpc"
+  cidr               = "10.0.0.0/16"
+  azs                = ["${data.aws_availability_zones.available.names[0]}", "${data.aws_availability_zones.available.names[1]}"]
+  private_subnets    = ["10.0.1.0/24", "10.0.2.0/24"]
+  public_subnets     = ["10.0.3.0/24", "10.0.4.0/24"]
+  enable_nat_gateway = true
+  single_nat_gateway = true
+  tags               = "${local.tags}"
+}
+
+module "security_group" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "1.12.0"
+  name    = "test-sg-https"
+  vpc_id  = "${module.vpc.vpc_id}"
+  tags    = "${local.tags}"
+}
+
+module "alb" {
+  source                        = "../.."
+  load_balancer_name            = "test-alb"
+  load_balancer_security_groups = ["${module.security_group.this_security_group_id}"]
+  log_bucket_name               = "${aws_s3_bucket.log_bucket.id}"
+  log_location_prefix           = "${var.log_location_prefix}"
+  subnets                       = "${module.vpc.public_subnets}"
+  tags                          = "${local.tags}"
+  vpc_id                        = "${module.vpc.vpc_id}"
+  https_listeners               = "${local.https_listeners}"
+  https_listeners_count         = "${local.https_listeners_count}"
+  http_tcp_listeners            = "${local.http_tcp_listeners}"
+  http_tcp_listeners_count      = "${local.http_tcp_listeners_count}"
+  target_groups                 = "${local.target_groups}"
+  target_groups_count           = "${local.target_groups_count}"
+}

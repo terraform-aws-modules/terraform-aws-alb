@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v3.0.0] - 2018-03-
+
+### Added
+
+* default values added for most target group and listener attributes.
+* new application load balancer attributes added as variables with defaults.
+* tests now covering listeners.
+
+### Changed
+
+* listeners and target groups now defined by lists of maps allowing many-to-many relationships of those resources.
+* listeners and target groups creation is now data driven through variables giving greater flexibility.
+* `name_prefix` used where possible to avoid naming conflicts in resource testing.
+* logging to S3 now made manditory and done outside the module as this is better practice.
+* terraform 0.11.3 now used in CI. 0.11.4 seems to have warnings on plan that become errors in CI.
+
 ## [v2.5.0] - 2018-03-07
 
 ### Added

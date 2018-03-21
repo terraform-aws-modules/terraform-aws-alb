@@ -1,59 +1,49 @@
-output "alb_arn" {
-  description = "ARN of the ALB itself. Useful for debug output, for example when attaching a WAF."
-  value       = "${aws_alb.main.arn}"
+output "dns_name" {
+  description = "The DNS name of the load balancer."
+  value       = "${aws_lb.application.dns_name}"
 }
 
-output "alb_arn_suffix" {
-  description = "ARN suffix of our ALB - can be used with CloudWatch"
-  value       = "${aws_alb.main.arn_suffix}"
+output "http_tcp_listener_arns" {
+  description = "The ARN of the TCP and HTTP load balancer listeners created."
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.arn, list("")), 0, var.http_tcp_listeners_count)}"
 }
 
-output "alb_dns_name" {
-  description = "The DNS name of the ALB presumably to be used with a friendlier CNAME."
-  value       = "${aws_alb.main.dns_name}"
+output "http_tcp_listener_ids" {
+  description = "The IDs of the TCP and HTTP load balancer listeners created."
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.id, list("")), 0, var.http_tcp_listeners_count)}"
 }
 
-output "alb_id" {
-  description = "The ID of the ALB we created."
-  value       = "${aws_alb.main.id}"
+output "https_listener_arns" {
+  description = "The ARN of the HTTPS load balancer listeners created."
+  value       = "${slice(concat(aws_lb_listener.frontend_https.*.arn, list("")), 0, var.https_listeners_count)}"
 }
 
-output "alb_listener_https_arn" {
-  description = "The ARN of the HTTPS ALB Listener we created."
-  value       = "${element(concat(aws_alb_listener.frontend_https.*.arn, list("")), 0)}"
+output "https_listner_ids" {
+  description = "The ID of the load balancer listeners created."
+  value       = "${slice(concat(aws_lb_listener.frontend_https.*.id, list("")), 0, var.https_listeners_count)}"
 }
 
-output "alb_listener_http_arn" {
-  description = "The ARN of the HTTP ALB Listener we created."
-  value       = "${element(concat(aws_alb_listener.frontend_http.*.arn, list("")), 0)}"
+output "load_balancer_arn_suffix" {
+  description = "ARN suffix of our load balancer - can be used with CloudWatch."
+  value       = "${aws_lb.application.arn_suffix}"
 }
 
-output "alb_listener_https_id" {
-  description = "The ID of the ALB Listener we created."
-  value       = "${element(concat(aws_alb_listener.frontend_https.*.id, list("")), 0)}"
+output "load_balancer_id" {
+  description = "The ID and ARN of the load balancer we created."
+  value       = "${aws_lb.application.id}"
 }
 
-output "alb_listener_http_id" {
-  description = "The ID of the ALB Listener we created."
-  value       = "${element(concat(aws_alb_listener.frontend_http.*.id, list("")), 0)}"
+output "load_balancer_zone_id" {
+  description = "The zone_id of the load balancer to assist with creating DNS records."
+  value       = "${aws_lb.application.zone_id}"
 }
 
-output "alb_zone_id" {
-  description = "The zone_id of the ALB to assist with creating DNS records."
-  value       = "${aws_alb.main.zone_id}"
-}
-
-output "principal_account_id" {
-  description = "The AWS-owned account given permissions to write your ALB logs to S3."
-  value       = "${data.aws_elb_service_account.main.id}"
-}
-
-output "target_group_arn" {
+output "target_group_arns" {
   description = "ARN of the target group. Useful for passing to your Auto Scaling group module."
-  value       = "${aws_alb_target_group.target_group.arn}"
+  value       = "${slice(concat(aws_lb_target_group.main.*.arn, list("")), 0, var.target_groups_count)}"
 }
 
-output "target_group_name" {
+output "target_group_names" {
   description = "Name of the target group. Useful for passing to your CodeDeploy Deployment Group."
-  value       = "${aws_alb_target_group.target_group.name}"
+  value       = "${slice(concat(aws_lb_target_group.main.*.name, list("")), 0, var.target_groups_count)}"
 }

@@ -1,12 +1,10 @@
 ---
 driver:
   name: "terraform"
-  root_module_directory: "examples/test_fixtures"
+  root_module_directory: "examples/alb_test_fixture"
 
 provisioner:
   name: "terraform"
-  variable_files:
-    - "examples/test_fixtures/terraform.tfvars"
 
 platforms:
   - name: "aws"
