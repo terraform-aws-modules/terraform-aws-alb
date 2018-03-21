@@ -18,7 +18,7 @@ output "https_listener_arns" {
   value       = "${slice(concat(aws_lb_listener.frontend_https.*.arn, list("")), 0, var.https_listeners_count)}"
 }
 
-output "https_listner_ids" {
+output "https_listener_ids" {
   description = "The ID of the load balancer listeners created."
   value       = "${slice(concat(aws_lb_listener.frontend_https.*.id, list("")), 0, var.https_listeners_count)}"
 }
