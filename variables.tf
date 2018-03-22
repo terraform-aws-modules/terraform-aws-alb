@@ -72,17 +72,12 @@ variable "load_balancer_delete_timeout" {
 }
 
 variable "load_balancer_name" {
-  description = "The name prefix and name tag of the load balancer."
+  description = "The Name tag of the load balancer and a likely truncated name_prefix."
 }
 
 variable "load_balancer_update_timeout" {
   description = "Timeout value when updating the ALB."
   default     = "10m"
-}
-
-variable "load_balancer_security_groups" {
-  description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
-  type        = "list"
 }
 
 variable "log_bucket_name" {
@@ -102,6 +97,11 @@ variable "subnets" {
 variable "tags" {
   description = "A map of tags to add to all resources"
   default     = {}
+}
+
+variable "security_groups" {
+  description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
+  type        = "list"
 }
 
 variable "target_groups" {

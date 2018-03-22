@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.11.3"
+  required_version = ">= 0.11.5"
 }
 
 provider "aws" {
@@ -8,13 +8,15 @@ provider "aws" {
 }
 
 resource "aws_iam_server_certificate" "fixture_cert" {
-  name             = "test_cert-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
+  name_prefix      = "test_cert-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
   certificate_body = "${file("${path.module}/../../examples/alb_test_fixture/certs/example.crt.pem")}"
   private_key      = "${file("${path.module}/../../examples/alb_test_fixture/certs/example.key.pem")}"
 
   lifecycle {
     create_before_destroy = true
   }
+
+  count = 24
 }
 
 resource "aws_s3_bucket" "log_bucket" {
@@ -55,18 +57,20 @@ module "security_group" {
 }
 
 module "alb" {
-  source                        = "../.."
-  load_balancer_name            = "test-alb"
-  load_balancer_security_groups = ["${module.security_group.this_security_group_id}"]
-  log_bucket_name               = "${aws_s3_bucket.log_bucket.id}"
-  log_location_prefix           = "${var.log_location_prefix}"
-  subnets                       = "${module.vpc.public_subnets}"
-  tags                          = "${local.tags}"
-  vpc_id                        = "${module.vpc.vpc_id}"
-  https_listeners               = "${local.https_listeners}"
-  https_listeners_count         = "${local.https_listeners_count}"
-  http_tcp_listeners            = "${local.http_tcp_listeners}"
-  http_tcp_listeners_count      = "${local.http_tcp_listeners_count}"
-  target_groups                 = "${local.target_groups}"
-  target_groups_count           = "${local.target_groups_count}"
+  source                   = "../.."
+  load_balancer_name       = "test-alb"
+  security_groups          = ["${module.security_group.this_security_group_id}"]
+  log_bucket_name          = "${aws_s3_bucket.log_bucket.id}"
+  log_location_prefix      = "${var.log_location_prefix}"
+  subnets                  = "${module.vpc.public_subnets}"
+  tags                     = "${local.tags}"
+  vpc_id                   = "${module.vpc.vpc_id}"
+  https_listeners          = "${local.https_listeners}"
+  https_listeners_count    = "${local.https_listeners_count}"
+  http_tcp_listeners       = "${local.http_tcp_listeners}"
+  http_tcp_listeners_count = "${local.http_tcp_listeners_count}"
+  target_groups            = "${local.target_groups}"
+  target_groups_count      = "${local.target_groups_count}"
+  extra_ssl_certs          = "${local.extra_ssl_certs}"
+  extra_ssl_certs_count    = "${local.extra_ssl_certs_count}"
 }

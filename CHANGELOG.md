@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v3.1.0] - 2018-03-21
+## [v3.1.0] - 2018-03-22
 
 ### Added
 
-* extra certs can now be applied to HTTPS listeners via the `extra_ssl_certs` variable.
+* extra certs can now be applied to HTTPS listeners via the `extra_ssl_certs` list variable.
+
+### Changed
+
+* `load_balancer_security_groups` moved to more simply `security_groups`.
+* `target_group`s now use `name_prefix` as intended with the previous release. This helps avoid name collisions.
+* upgraded terraform and kitchen terraform
 
 ## [v3.0.0] - 2018-03-20
 

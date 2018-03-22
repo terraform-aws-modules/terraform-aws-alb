@@ -7,7 +7,7 @@ resource "aws_lb" "application" {
   load_balancer_type         = "application"
   name_prefix                = "${local.name_prefix}"
   internal                   = "${var.load_balancer_is_internal}"
-  security_groups            = ["${var.load_balancer_security_groups}"]
+  security_groups            = ["${var.security_groups}"]
   subnets                    = ["${var.subnets}"]
   idle_timeout               = "${var.idle_timeout}"
   enable_deletion_protection = "${var.enable_deletion_protection}"
@@ -29,7 +29,7 @@ resource "aws_lb" "application" {
 }
 
 resource "aws_lb_target_group" "main" {
-  name                 = "${lookup(var.target_groups[count.index], "name")}"
+  name_prefix          = "${lookup(var.target_groups[count.index], "name")}"
   vpc_id               = "${var.vpc_id}"
   port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
   protocol             = "${upper(lookup(var.target_groups[count.index], "backend_protocol"))}"
