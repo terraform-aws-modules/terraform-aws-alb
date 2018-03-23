@@ -1,11 +1,6 @@
-locals {
-  prefix_length = "${length(var.load_balancer_name) < 6 ? length(var.load_balancer_name) : 6 }"
-  name_prefix   = "${substr(var.load_balancer_name, 0, local.prefix_length)}"
-}
-
 resource "aws_lb" "application" {
   load_balancer_type         = "application"
-  name_prefix                = "${local.name_prefix}"
+  name                       = "${var.load_balancer_name}"
   internal                   = "${var.load_balancer_is_internal}"
   security_groups            = ["${var.load_balancer_security_groups}"]
   subnets                    = ["${var.subnets}"]
