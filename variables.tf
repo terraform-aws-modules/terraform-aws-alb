@@ -72,7 +72,7 @@ variable "load_balancer_delete_timeout" {
 }
 
 variable "load_balancer_name" {
-  description = "The Name tag of the load balancer and a likely truncated name_prefix."
+  description = "The resource name and Name tag of the load balancer."
 }
 
 variable "load_balancer_update_timeout" {

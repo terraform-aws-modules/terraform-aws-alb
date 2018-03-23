@@ -1,11 +1,6 @@
-locals {
-  prefix_length = "${length(var.load_balancer_name) < 6 ? length(var.load_balancer_name) : 6 }"
-  name_prefix   = "${substr(var.load_balancer_name, 0, local.prefix_length)}"
-}
-
 resource "aws_lb" "application" {
   load_balancer_type         = "application"
-  name_prefix                = "${local.name_prefix}"
+  name                       = "${var.load_balancer_name}"
   internal                   = "${var.load_balancer_is_internal}"
   security_groups            = ["${var.security_groups}"]
   subnets                    = ["${var.subnets}"]
@@ -29,7 +24,7 @@ resource "aws_lb" "application" {
 }
 
 resource "aws_lb_target_group" "main" {
-  name_prefix          = "${lookup(var.target_groups[count.index], "name")}"
+  name                 = "${lookup(var.target_groups[count.index], "name")}"
   vpc_id               = "${var.vpc_id}"
   port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
   protocol             = "${upper(lookup(var.target_groups[count.index], "backend_protocol"))}"
@@ -85,7 +80,6 @@ resource "aws_lb_listener" "frontend_https" {
   }
 }
 
-#XXX do these count.indexes need to be offset by 1?
 resource "aws_lb_listener_certificate" "https_listener" {
   listener_arn    = "${aws_lb_listener.frontend_https.*.arn[lookup(var.extra_ssl_certs[count.index], "https_listener_index")]}"
   certificate_arn = "${lookup(var.extra_ssl_certs[count.index], "certificate_arn")}"

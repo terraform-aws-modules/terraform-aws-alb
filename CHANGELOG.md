@@ -14,7 +14,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * `load_balancer_security_groups` moved to more simply `security_groups`.
-* `target_group`s now use `name_prefix` as intended with the previous release. This helps avoid name collisions.
+* `name_prefix` changed back to `name` as the inflexibility of a 6 character prefix is overly restricting. Name conflicts must be dealt with by the developer.
 * upgraded terraform and kitchen terraform
 
 ## [v3.0.0] - 2018-03-20

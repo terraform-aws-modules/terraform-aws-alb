@@ -7,6 +7,14 @@ provider "aws" {
   region  = "${var.region}"
 }
 
+provider "random" {
+  version = "= 1.1.0"
+}
+
+resource "random_id" "alb_name_suffix" {
+  length = 16
+}
+
 resource "aws_iam_server_certificate" "fixture_cert" {
   name_prefix      = "test_cert-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
   certificate_body = "${file("${path.module}/../../examples/alb_test_fixture/certs/example.crt.pem")}"
@@ -16,7 +24,7 @@ resource "aws_iam_server_certificate" "fixture_cert" {
     create_before_destroy = true
   }
 
-  count = 24
+  count = 4
 }
 
 resource "aws_s3_bucket" "log_bucket" {
@@ -58,7 +66,7 @@ module "security_group" {
 
 module "alb" {
   source                   = "../.."
-  load_balancer_name       = "test-alb"
+  load_balancer_name       = "test-alb-${random_id.alb_name_suffix.hex}"
   security_groups          = ["${module.security_group.this_security_group_id}"]
   log_bucket_name          = "${aws_s3_bucket.log_bucket.id}"
   log_location_prefix      = "${var.log_location_prefix}"
