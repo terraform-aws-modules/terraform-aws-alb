@@ -4,9 +4,6 @@ dist: trusty
 rvm:
   - 2.4.2
 
-services:
-  - docker
-
 before_install:
   - echo "before_install"
 
@@ -20,18 +17,20 @@ before_script:
   # Get a random region from the awscli and use it through the remainder of the test cycle.
   - export AWS_REGION=$(docker run --env AWS_DEFAULT_REGION=us-east-2 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} garland/aws-cli-docker aws ec2 describe-regions --query 'Regions[].{Name:RegionName}' --output text | shuf | head -n1)
   - export TF_VAR_region=${AWS_REGION}
+  - export TF_WARN_OUTPUT_ERRORS=1
   - echo "using AWS_REGION=${AWS_REGION}"
-  - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.3/terraform_0.11.3_linux_amd64.zip
-  - sha256sum terraform.zip  | grep "6b8a7b83954597d36bbed23913dd51bc253906c612a070a21db373eab71b277b" -q
+  - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.5/terraform_0.11.5_linux_amd64.zip
+  - sha256sum terraform.zip  | grep "131c440263382c79c7f783b70ff35cd1d03eb31c44f7738d153d95a0b8436ac9" -q
   - unzip terraform.zip ; rm -f terraform.zip; chmod +x terraform
   - mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
   - terraform -v
 
 script:
   - echo 'script'
+  -
   - terraform init
   - terraform fmt -check=true
-  - terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "load_balancer_security_groups=[]"
+  - terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
   - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
   - cd examples/alb_test_fixture
   - terraform init

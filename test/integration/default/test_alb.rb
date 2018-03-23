@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 require 'awspec'
-require 'rhcl'
-
-module_vars = Rhcl.parse(File.open('examples/alb_test_fixture/variables.tf'))
-log_location_prefix = module_vars['variable']['log_location_prefix']['default']
 
 # rubocop:disable LineLength
 state_file = 'terraform.tfstate.d/kitchen-terraform-default-aws/terraform.tfstate'
@@ -15,7 +11,6 @@ target_group_arns = tf_state['modules'][0]['outputs']['target_group_arns']['valu
 # rubocop:enable LineLength
 alb_arn = tf_state['modules'][0]['outputs']['alb_id']['value']
 alb_name = alb_arn.split('/')[-2]
-account_id = tf_state['modules'][0]['outputs']['account_id']['value']
 region = tf_state['modules'][0]['outputs']['region']['value']
 ENV['AWS_REGION'] = region
 vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']

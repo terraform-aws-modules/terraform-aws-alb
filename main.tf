@@ -2,7 +2,7 @@ resource "aws_lb" "application" {
   load_balancer_type         = "application"
   name                       = "${var.load_balancer_name}"
   internal                   = "${var.load_balancer_is_internal}"
-  security_groups            = ["${var.load_balancer_security_groups}"]
+  security_groups            = ["${var.security_groups}"]
   subnets                    = ["${var.subnets}"]
   idle_timeout               = "${var.idle_timeout}"
   enable_deletion_protection = "${var.enable_deletion_protection}"
@@ -78,4 +78,10 @@ resource "aws_lb_listener" "frontend_https" {
     target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
     type             = "forward"
   }
+}
+
+resource "aws_lb_listener_certificate" "https_listener" {
+  listener_arn    = "${aws_lb_listener.frontend_https.*.arn[lookup(var.extra_ssl_certs[count.index], "https_listener_index")]}"
+  certificate_arn = "${lookup(var.extra_ssl_certs[count.index], "certificate_arn")}"
+  count           = "${var.extra_ssl_certs_count}"
 }

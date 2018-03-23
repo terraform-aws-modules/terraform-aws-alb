@@ -5,20 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v3.0.0] - 2018-03-
+## [v3.1.0] - 2018-03-22
+
+### Added
+
+* extra certs can now be applied to HTTPS listeners via the `extra_ssl_certs` list variable and corresponding `extra_ssl_certs_count`.
+
+### Changed
+
+* `load_balancer_security_groups` moved to simpler `security_groups`.
+* `name_prefix` changed back to `name` as the inflexibility of a 6 character prefix is overly restricting. Name conflicts must be dealt with by the developer. (cheers, @michaelmoussa 🎉)
+* upgraded terraform and kitchen terraform. terraform 0.11.4 and above errors out on warnings but has been mitigated with `TF_WARN_OUTPUT_ERRORS=1` per [this issue](https://github.com/hashicorp/terraform/issues/17655).
+
+## [v3.0.0] - 2018-03-20
 
 ### Added
 
 * default values added for most target group and listener attributes.
 * new application load balancer attributes added as variables with defaults.
-* tests now covering listeners.
+* tests now cover listeners.
 
 ### Changed
 
 * listeners and target groups now defined by lists of maps allowing many-to-many relationships of those resources.
 * listeners and target groups creation is now data driven through variables giving greater flexibility.
 * `name_prefix` used where possible to avoid naming conflicts in resource testing.
-* logging to S3 now made manditory and done outside the module as this is better practice.
+* logging to S3 now made manditory and done outside the module as this is better practice. (thanks, @alexjurkiewicz 🥂)
 * terraform 0.11.3 now used in CI. 0.11.4 seems to have warnings on plan that become errors in CI.
 
 ## [v2.5.0] - 2018-03-07

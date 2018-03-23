@@ -8,8 +8,19 @@ variable "enable_http2" {
   default     = true
 }
 
+variable "extra_ssl_certs" {
+  description = "A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward)."
+  type        = "list"
+  default     = []
+}
+
+variable "extra_ssl_certs_count" {
+  description = "A manually provided count/length of the extra_ssl_certs list of maps since the list cannot be computed."
+  default     = 0
+}
+
 variable "https_listeners" {
-  description = "A list of maps describing the HTTPS listeners for this ALB. Required keys: port, certificate_arn. Optional keys: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0)"
+  description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0)"
   type        = "list"
   default     = []
 }
@@ -20,7 +31,7 @@ variable "https_listeners_count" {
 }
 
 variable "http_tcp_listeners" {
-  description = "A list of maps describing the HTTPS listeners for this ALB. Required keys: port, protocol. Optional keys: target_group_index (defaults to 0)"
+  description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
   type        = "list"
   default     = []
 }
@@ -61,17 +72,12 @@ variable "load_balancer_delete_timeout" {
 }
 
 variable "load_balancer_name" {
-  description = "The name prefix and name tag of the load balancer."
+  description = "The resource name and Name tag of the load balancer."
 }
 
 variable "load_balancer_update_timeout" {
   description = "Timeout value when updating the ALB."
   default     = "10m"
-}
-
-variable "load_balancer_security_groups" {
-  description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
-  type        = "list"
 }
 
 variable "log_bucket_name" {
@@ -93,8 +99,13 @@ variable "tags" {
   default     = {}
 }
 
+variable "security_groups" {
+  description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
+  type        = "list"
+}
+
 variable "target_groups" {
-  description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required map values: name, backend_protocol, backend_port. Optional key/values found in the target_groups_defaults variable."
+  description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable."
   type        = "list"
   default     = []
 }
