@@ -14,12 +14,12 @@ output "http_tcp_listener_ids" {
 }
 
 output "https_listener_arns" {
-  description = "The ARN of the HTTPS load balancer listeners created."
+  description = "The ARNs of the HTTPS load balancer listeners created."
   value       = "${slice(concat(aws_lb_listener.frontend_https.*.arn, list("")), 0, var.https_listeners_count)}"
 }
 
 output "https_listener_ids" {
-  description = "The ID of the load balancer listeners created."
+  description = "The IDs of the load balancer listeners created."
   value       = "${slice(concat(aws_lb_listener.frontend_https.*.id, list("")), 0, var.https_listeners_count)}"
 }
 
@@ -39,7 +39,7 @@ output "load_balancer_zone_id" {
 }
 
 output "target_group_arns" {
-  description = "ARN of the target group. Useful for passing to your Auto Scaling group module."
+  description = "ARNs of the target groups. Useful for passing to your Auto Scaling group."
   value       = "${slice(concat(aws_lb_target_group.main.*.arn, list("")), 0, var.target_groups_count)}"
 }
 

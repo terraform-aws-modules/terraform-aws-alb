@@ -17,6 +17,11 @@ The following IAM policy is the minimum needed to execute the module from the te
             "Sid": "Stmt1507789535000",
             "Effect": "Allow",
             "Action": [
+                "autoscaling:*LoadBalancerTargetGroups",
+                "autoscaling:*AutoScalingGroup",
+                "autoscaling:*LaunchConfiguration",
+                "autoscaling:*AutoScalingGroups",
+                "autoscaling:*LaunchConfigurations",
                 "ec2:AllocateAddress",
                 "ec2:AssignIpv6Addresses",
                 "ec2:AssignPrivateIpAddresses",

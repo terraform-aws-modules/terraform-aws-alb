@@ -16,12 +16,18 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registr
 
 The module supports both (mutually exclusive):
 
-* Internal IP ALBs
-* External IP ALBs
+* Internal ALBs
+* External ALBs
 
 It's recommended you use this module with [terraform-aws-vpc](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws),
 [terraform-aws-security-group](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws), and
 [terraform-aws-autoscaling](https://registry.terraform.io/modules/terraform-aws-modules/autoscaling/aws/).
+
+Note:
+
+It's strongly recommended that the autoscaling module is instantiated in the same
+state as the ALB module as in flight changes to active target groups need to be propagated
+to the ASG immediately or will result in failure. The value of `target_group[n][name]` also must change any time there are modifications to existing `target_groups`.
 
 ## Why ALB instead of ELB
 
@@ -43,7 +49,7 @@ A full example leveraging other community modules is contained in the [examples/
 module "alb" {
   source                        = "terraform-aws-modules/alb/aws"
   load_balancer_name            = "my-alb"
-  load_balancer_security_groups = ["sg-edcd9784", "sg-edcd9785"]
+  security_groups               = ["sg-edcd9784", "sg-edcd9785"]
   log_bucket_name               = "logs-us-east-2-123456789012"
   log_location_prefix           = "my-alb-logs"
   subnets                       = ["subnet-abcde012", subnet-bcde012a"]
@@ -51,9 +57,9 @@ module "alb" {
   vpc_id                        = "vpc-abcde012"
   https_listeners               = "${list(map("certificate_arn", "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012", "port", 443))}"
   https_listeners_count         = "1"
-  target_groups                 = "${list(map("name", "foo", "backend_protocol", "HTTP", "backend_port", "80"))}"
-  http_tcp_listeners_count      = "1"
   http_tcp_listeners            = "${list(map("port", "80", "protocol", "HTTP"))}"
+  http_tcp_listeners_count      = "1"
+  target_groups                 = "${list(map("name", "foo", "backend_protocol", "HTTP", "backend_port", "80"))}"
   target_groups_count           = "1"
 }
 ```
