@@ -65,6 +65,23 @@ module "security_group" {
   tags    = "${local.tags}"
 }
 
+resource "aws_autoscaling_group" "test" {
+  name_prefix          = "test-alb"
+  max_size             = 1
+  min_size             = 1
+  launch_configuration = "${aws_launch_configuration.as_conf.name}"
+  health_check_type    = "EC2"
+  target_group_arns    = ["${module.alb.target_group_arns}"]
+  force_delete         = true
+  vpc_zone_identifier  = ["${module.vpc.public_subnets}"]
+}
+
+resource "aws_launch_configuration" "as_conf" {
+  name          = "web_config"
+  image_id      = "${data.aws_ami.ubuntu.id}"
+  instance_type = "t2.micro"
+}
+
 module "alb" {
   source                   = "../.."
   load_balancer_name       = "test-alb-${random_string.suffix.result}"

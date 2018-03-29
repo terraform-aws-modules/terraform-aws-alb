@@ -48,9 +48,8 @@ resource "aws_lb_target_group" "main" {
     enabled         = "${lookup(var.target_groups[count.index], "stickiness_enabled", lookup(var.target_groups_defaults, "stickiness_enabled"))}"
   }
 
-  tags  = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
-  count = "${var.target_groups_count}"
-
+  tags       = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
+  count      = "${var.target_groups_count}"
   depends_on = ["aws_lb.application"]
 
   lifecycle {
