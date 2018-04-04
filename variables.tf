@@ -87,6 +87,7 @@ variable "log_enable" {
 
 variable "log_bucket_name" {
   description = "S3 bucket (externally created) for storing load balancer access logs."
+  default     = ""
 }
 
 variable "log_location_prefix" {
