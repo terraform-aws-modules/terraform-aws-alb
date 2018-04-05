@@ -82,7 +82,7 @@ variable "load_balancer_update_timeout" {
 
 variable "log_enable" {
   description = "Enable logging"
-  default     = false
+  default     = true
 }
 
 variable "log_bucket_name" {
