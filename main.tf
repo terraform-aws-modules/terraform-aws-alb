@@ -11,7 +11,7 @@ resource "aws_lb" "application" {
   tags                       = "${merge(var.tags, map("Name", var.load_balancer_name))}"
 
   access_logs {
-    enabled = "${var.log_enable}"
+    enabled = true
     bucket  = "${var.log_bucket_name}"
     prefix  = "${var.log_location_prefix}"
   }

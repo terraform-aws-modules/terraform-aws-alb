@@ -30,7 +30,7 @@ script:
   -
   - terraform init
   - terraform fmt -check=true
-  - terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_enable=true" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
+  - terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
   - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
   - cd examples/alb_test_fixture
   - terraform init
