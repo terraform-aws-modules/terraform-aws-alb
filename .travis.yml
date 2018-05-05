@@ -22,7 +22,6 @@ before_script:
 - echo "using AWS_REGION=${AWS_REGION}"
 - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
 - sha256sum terraform.zip  | grep "6b8ce67647a59b2a3f70199c304abca0ddec0e49fd060944c26f666298e23418"
-  -q
 - unzip terraform.zip ; rm -f terraform.zip; chmod +x terraform
 - mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
 - terraform -v
