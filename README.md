@@ -3,8 +3,8 @@
 A Terraform module containing common configurations for an AWS Application Load
 Balancer (ALB) running over HTTP/HTTPS. Available through the [terraform registry](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws).
 
-| Branch | Build status |
-| --- | --- |
+| Branch | Build status                                                                                                                                                      |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | master | [![build Status](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb) |
 
 ## Assumptions
@@ -34,8 +34,8 @@ to the ASG immediately or will result in failure. The value of `target_group[n][
 The use-case presented here appears almost identical to how one would use an ELB
 but we inherit a few bonuses by moving to ALB like the ability to leverage WAF.
 [AWS's documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) has a more
-exhastive set of reasons. Alternatively, if using ALB with ECS look no further than
-the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
+exhaustive set of reasons. Alternatively, if using ALB with ECS look no further than
+the [Hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
 ## Resources, inputs, outputs
 
@@ -68,28 +68,21 @@ module "alb" {
 
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through [kitchen](https://kitchen.ci/) and [kitchen-terraform](https://newcontext-oss.github.io/kitchen-terraform/). To run them:
 
-1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/Gemfile).
-2. Install bundler and the gems from our Gemfile:
+1.  Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/Gemfile).
+2.  Install bundler and the gems from our Gemfile:
 
     ```bash
     gem install bundler && bundle install
     ```
 
-3. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
-4. Test using `bundle exec kitchen test` from the root of the repo.
+3.  Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
+4.  Test using `bundle exec kitchen test` from the root of the repo.
 
 ## Contributing
 
-Report issues/questions/feature requests on in the [Issues](https://github.com/terraform-aws-modules/terraform-aws-alb/issues) section.
+Report issues/questions/feature requests on in the [issues](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/new) section.
 
-Pull requests are welcome! Ideally create a feature branch and issue for every
-individual change made. These are the steps:
-
-1. Fork the repo to a personal space or org.
-2. Create your feature branch from master (`git checkout -b my-new-feature`).
-3. Commit your awesome changes (`git commit -am 'Added some feature'`).
-4. Push to the branch (`git push origin my-new-feature`).
-5. Create a new Pull Request and tell us about your changes.
+Full contributing [guidelines are covered here](https://github.com/terraform-aws-modules/terraform-aws-alb/blob/master/CONTRIBUTING.md).
 
 ## IAM Permissions
 
@@ -103,7 +96,7 @@ The [changelog](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/
 ## Authors
 
 Created and maintained by [Brandon O'Connor](https://github.com/brandoconnor) - brandon@atscale.run.
-Many thanks to [the contributers listed here](https://github.com/terraform-aws-modules/terraform-aws-alb/graphs/contributors)!
+Many thanks to [the contributors listed here](https://github.com/terraform-aws-modules/terraform-aws-alb/graphs/contributors)!
 
 ## License
 
