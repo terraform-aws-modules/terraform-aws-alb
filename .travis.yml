@@ -13,15 +13,12 @@ install:
 - bundle install
 before_script:
 - echo 'before_script'
-- export AWS_REGION=$(docker run --env AWS_DEFAULT_REGION=us-east-2 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-  --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} garland/aws-cli-docker aws ec2 describe-regions
-  --query 'Regions[].{Name:RegionName}' --output text | shuf | head -n1)
+- export AWS_REGION=$(docker run --env AWS_DEFAULT_REGION=us-east-2 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} garland/aws-cli-docker aws ec2 describe-regions --query 'Regions[].{Name:RegionName}' --output text | shuf | head -n1)
 - export TF_VAR_region=${AWS_REGION}
-- export TF_WARN_OUTPUT_ERRORS=1
 - echo "using AWS_REGION=${AWS_REGION}"
+- export TF_WARN_OUTPUT_ERRORS=1
 - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
 - sha256sum terraform.zip  | grep "6b8ce67647a59b2a3f70199c304abca0ddec0e49fd060944c26f666298e23418"
-  -q
 - unzip terraform.zip ; rm -f terraform.zip; chmod +x terraform
 - mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
 - terraform -v
@@ -29,8 +26,7 @@ script:
 - echo 'script'
 - terraform init
 - terraform fmt -check=true
-- terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012"
-  -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
+- terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
 - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
 - cd examples/alb_test_fixture
 - terraform init
@@ -50,7 +46,3 @@ notifications:
     - brandon@atscale.run
     on_success: change
     on_failure: change
-secret:
-  secure: PVcAmalsUV5cKSU1jVG51nfJaOoy6s9f6ZK7mZlhnl+gNlYumu+e+KURSNS7zAdgdlEJwGwvnOvSuKdWDhR+dRuSmMQT47NwtMMDsWOWUTQff9Dzj1+vcuhwd5tHltjL+WpKWM/t69Ka5nMzmcj2GjMjmGl084dWIZkqGp3AV3MNKIBO4Pv+kLI9iP195FppBgET7kO2EYKTFslyBkXUW4vZvLtICIOhOKUJae6c9QA/gXnKaZSSs42LuEstBtBBnTObLM+MzheT3mQHRG5eARo1JuoGIkgA5yetP6XFrIM6tUuawGkbXDyB0J5Vsi7V9FYKXCy9uUuuUTbOr7JjxvT+NnB0ujWZe+0/7j3aHRhTUD1tt3zjXOMSM3WP8Y+2OkKWCf685vmlHXRfWBmzB6Fi9HAh1P5JnBx7eDIhvelNRjxuqmETX68UIexU0jT8ft3jbm0ctgDIf2rAGM6SLx712lq5YPJVkBPj+W3BrSZVMTI232+i4Ic6vHyF4m1/ZHAEdpJyDQT2f84OEkENEZkzHURmlsm0kIzq+DJ5k5NrXEUjaGdYQKpQsdyJhpAGzVLS5jjDHv6RC3o9v4q9jVq7lf4ppZY3kypz3ZuOem25kkCZbhIwkUtN3ocA3YRvLTMJ07MXc7lRvcZSC1v9Rwd9/tJNwqTiGwRW4atNkUk=
-id:
-  secure: B8lds7kkeef9kAkynrLM7+Em61IUdVUWpr0UdRtSEgp5O0KdvBmE3SVuBiz4wMMVbyhwcMUwPda8kWDbUi+qcPZbMpNnkq900QXrBfbQjynKFR5clO3mAuvl8tlAR2zdg4w/MlBCXrrxceCpcLl0WQ/CgxnVO/+rGZGlsW63jVYfvJFEucdJdHmYTHfmTclHG4/kWn/P9ODTbf2TPrCUIlyJTR00ev6kNBmnEj8mDa5yy8LS/8l511ybBBA6W1w7u7hPOJXTpOVY84SnqcHzYkwyYmjUsQ+n9IcESxsJjzviz1Z5c/raRQox8zYG/utcIXpM6rm5QYtDrH6Ud4Gq/vpz3a4O9RqncJEWKQLaqeG5945MCf6qlC82tF/8Fj78oZOhiLEeG2I7nSHWOZ9ylcmtCJSVjJ4agAwZ8k6Vw2t4l/DAkIb0ATaYpzcnn0xA5YAjMHqK8HSRM9KWKdL6fz2/5AdN5raFhPNibwvdf4RnTIduJSlFILKBihRzlloGtSud4r1Zo+CIVYodqlkmYwC+6iV5hcktnVEsfrWg2gA0l5EymWh62T4pgBqM/kjDOqEOHukuWvNZwljjnXthjwR2PYw1qAFLtXULWJPyfEnpL0OW1CH1t22olhpuWgV4X50SdUaT3Z1HdnPLuVJ1ew97w6g6AX0u/4GDAyqwQ2c=
