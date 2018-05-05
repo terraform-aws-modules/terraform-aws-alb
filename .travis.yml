@@ -30,7 +30,6 @@ before_script:
 
 script:
   - echo 'script'
-  -
   - terraform init
   - terraform fmt -check=true
   - terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
