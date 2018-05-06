@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [[v3.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.0...v3.3.1)] - 2018-05-06]
+
+### Changed
+
+* sliced outputs were appended with a `- 1` in debugging. This introduced a bug which was fixed and verified through test.
+
 ## [[v3.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.2.0...v3.3.0)] - 2018-05-04]
 
 ### Added

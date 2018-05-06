@@ -29,3 +29,15 @@ output "target_group_arns" {
 output "vpc_id" {
   value = "${module.vpc.vpc_id}"
 }
+
+output "target_groups_count" {
+  value = "${local.target_groups_count}"
+}
+
+output "https_listeners_count" {
+  value = "${local.https_listeners_count}"
+}
+
+output "http_tcp_listeners_count" {
+  value = "${local.http_tcp_listeners_count}"
+}

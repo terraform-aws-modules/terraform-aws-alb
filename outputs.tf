@@ -5,22 +5,22 @@ output "dns_name" {
 
 output "http_tcp_listener_arns" {
   description = "The ARN of the TCP and HTTP load balancer listeners created."
-  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.arn, list("")), 0, var.http_tcp_listeners_count - 1)}"
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.arn, list("")), 0, var.http_tcp_listeners_count)}"
 }
 
 output "http_tcp_listener_ids" {
   description = "The IDs of the TCP and HTTP load balancer listeners created."
-  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.id, list("")), 0, var.http_tcp_listeners_count - 1)}"
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.id, list("")), 0, var.http_tcp_listeners_count)}"
 }
 
 output "https_listener_arns" {
   description = "The ARNs of the HTTPS load balancer listeners created."
-  value       = "${slice(concat(aws_lb_listener.frontend_https.*.arn, list("")), 0, var.https_listeners_count - 1)}"
+  value       = "${slice(concat(aws_lb_listener.frontend_https.*.arn, list("")), 0, var.https_listeners_count)}"
 }
 
 output "https_listener_ids" {
   description = "The IDs of the load balancer listeners created."
-  value       = "${slice(concat(aws_lb_listener.frontend_https.*.id, list("")), 0, var.https_listeners_count - 1)}"
+  value       = "${slice(concat(aws_lb_listener.frontend_https.*.id, list("")), 0, var.https_listeners_count)}"
 }
 
 output "load_balancer_arn_suffix" {
@@ -40,7 +40,7 @@ output "load_balancer_zone_id" {
 
 output "target_group_arns" {
   description = "ARNs of the target groups. Useful for passing to your Auto Scaling group."
-  value       = "${slice(concat(aws_lb_target_group.main.*.arn, list("")), 0, var.target_groups_count - 1)}"
+  value       = "${slice(concat(aws_lb_target_group.main.*.arn, list("")), 0, var.target_groups_count)}"
 }
 
 output "target_group_arn_suffixes" {
@@ -50,5 +50,5 @@ output "target_group_arn_suffixes" {
 
 output "target_group_names" {
   description = "Name of the target group. Useful for passing to your CodeDeploy Deployment Group."
-  value       = "${slice(concat(aws_lb_target_group.main.*.name, list("")), 0, var.target_groups_count - 1)}"
+  value       = "${slice(concat(aws_lb_target_group.main.*.name, list("")), 0, var.target_groups_count)}"
 }
