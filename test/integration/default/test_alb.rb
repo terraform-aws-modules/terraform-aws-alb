@@ -78,7 +78,7 @@ end
 count_cases.each do |test_case|
   describe test_case[0] do
     it 'should be predetermined length' do
-      expect(test_case[0].length).to == test_case[1].to_i
+      expect(test_case[0].length).to eq(test_case[1].to_i)
     end
   end
 end
