@@ -8,6 +8,9 @@ tf_state = JSON.parse(File.open(state_file).read)
 http_tcp_listener_arns = tf_state['modules'][0]['outputs']['http_tcp_listener_arns']['value']
 https_listener_arns = tf_state['modules'][0]['outputs']['https_listener_arns']['value']
 target_group_arns = tf_state['modules'][0]['outputs']['target_group_arns']['value']
+http_tcp_listeners_count = tf_state['modules'][0]['outputs']['http_tcp_listeners_count']['value']
+https_listeners_count = tf_state['modules'][0]['outputs']['https_listeners_count']['value']
+target_groups_count = tf_state['modules'][0]['outputs']['target_groups_count']['value']
 # rubocop:enable LineLength
 alb_arn = tf_state['modules'][0]['outputs']['alb_id']['value']
 alb_name = alb_arn.split('/')[-2]
@@ -15,6 +18,9 @@ region = tf_state['modules'][0]['outputs']['region']['value']
 ENV['AWS_REGION'] = region
 vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
 security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
+count_cases = [[target_group_arns, target_groups_count],
+               [http_tcp_listener_arns, http_tcp_listeners_count],
+               [https_listener_arns, https_listeners_count]]
 
 describe alb(alb_name) do
   it { should exist }
@@ -66,5 +72,13 @@ http_tcp_listener_arns.each do |listener|
     it { should exist }
     its(:protocol) { should eq 'HTTP' }
     its(:port) { should eq(80).or(eq(8080).or(eq(8081))) }
+  end
+end
+
+count_cases.each do |test_case|
+  describe test_case[0] do
+    it 'should be predetermined length' do
+      expect(test_case[0].length).to eq(test_case[1].to_i)
+    end
   end
 end
