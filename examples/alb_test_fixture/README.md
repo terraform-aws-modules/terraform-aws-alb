@@ -112,3 +112,31 @@ The following IAM policy is the minimum needed to execute the module from the te
     ]
 }
 ```
+
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| log_bucket_name |  | string | `test-log-bucket` | no |
+| log_location_prefix |  | string | `my-lb-logs` | no |
+| region |  | string | `us-west-2` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| account_id |  |
+| alb_id |  |
+| http_tcp_listener_arns |  |
+| http_tcp_listeners_count |  |
+| https_listener_arns |  |
+| https_listeners_count |  |
+| region |  |
+| sg_id |  |
+| target_group_arns |  |
+| target_groups_count |  |
+| vpc_id |  |
+
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
