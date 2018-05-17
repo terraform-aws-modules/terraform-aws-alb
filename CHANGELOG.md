@@ -11,7 +11,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 * resources supporting the not logging scenario added. Outputs now accommodate.
 * reorganized the resource explosion to separate files.
-* tests reorganized to sweep cruft into a corner.
+* tests reorganized to confine cruft.
 * `terraform-docs` now supported and generating documentation. (Kiitos, @antonbabenko 🍒)
 
 ## [[v3.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.0...v3.3.1)] - 2018-05-06]
