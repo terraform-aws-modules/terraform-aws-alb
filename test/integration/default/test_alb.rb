@@ -1,36 +1,17 @@
 # frozen_string_literal: true
 
 require 'awspec'
+require_relative 'setup'
 
-# rubocop:disable LineLength
-state_file = 'terraform.tfstate.d/kitchen-terraform-default-aws/terraform.tfstate'
-tf_state = JSON.parse(File.open(state_file).read)
-http_tcp_listener_arns = tf_state['modules'][0]['outputs']['http_tcp_listener_arns']['value']
-https_listener_arns = tf_state['modules'][0]['outputs']['https_listener_arns']['value']
-target_group_arns = tf_state['modules'][0]['outputs']['target_group_arns']['value']
-http_tcp_listeners_count = tf_state['modules'][0]['outputs']['http_tcp_listeners_count']['value']
-https_listeners_count = tf_state['modules'][0]['outputs']['https_listeners_count']['value']
-target_groups_count = tf_state['modules'][0]['outputs']['target_groups_count']['value']
-# rubocop:enable LineLength
-alb_arn = tf_state['modules'][0]['outputs']['alb_id']['value']
-alb_name = alb_arn.split('/')[-2]
-region = tf_state['modules'][0]['outputs']['region']['value']
-ENV['AWS_REGION'] = region
-vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
-security_group_id = tf_state['modules'][0]['outputs']['sg_id']['value']
-count_cases = [[target_group_arns, target_groups_count],
-               [http_tcp_listener_arns, http_tcp_listeners_count],
-               [https_listener_arns, https_listeners_count]]
-
-describe alb(alb_name) do
+describe alb(ALB_NAME) do
   it { should exist }
-  its(:load_balancer_name) { should eq alb_name }
-  its(:vpc_id) { should eq vpc_id }
+  its(:load_balancer_name) { should eq ALB_NAME }
+  its(:vpc_id) { should eq VPC_ID }
   it { should belong_to_vpc('test-vpc') }
   its(:type) { should eq 'application' }
   its(:scheme) { should eq 'internet-facing' }
   its(:ip_address_type) { should eq 'ipv4' }
-  it { should have_security_group(security_group_id) }
+  it { should have_security_group(SECURITY_GROUP_ID) }
 end
 
 describe alb_target_group('foo') do
@@ -41,11 +22,11 @@ describe alb_target_group('bar') do
   its(:port) { should eq 8080 }
 end
 
-target_group_arns.each do |tg_arn|
+@target_group_arns.each do |tg_arn|
   tg_name = tg_arn.split('/')[-2]
   describe alb_target_group(tg_name) do
     it { should exist }
-    it { should belong_to_alb(alb_name) }
+    it { should belong_to_alb(ALB_NAME) }
     it { should belong_to_vpc('test-vpc') }
     its(:protocol) { should eq 'HTTP' }
     its(:health_check_protocol) { should eq 'HTTP' }
@@ -59,7 +40,7 @@ target_group_arns.each do |tg_arn|
   end
 end
 
-https_listener_arns.each do |listener|
+@https_listener_arns.each do |listener|
   describe alb_listener(listener) do
     it { should exist }
     its(:protocol) { should eq 'HTTPS' }
@@ -67,7 +48,7 @@ https_listener_arns.each do |listener|
   end
 end
 
-http_tcp_listener_arns.each do |listener|
+@http_tcp_listener_arns.each do |listener|
   describe alb_listener(listener) do
     it { should exist }
     its(:protocol) { should eq 'HTTP' }
@@ -75,7 +56,7 @@ http_tcp_listener_arns.each do |listener|
   end
 end
 
-count_cases.each do |test_case|
+@count_cases.each do |test_case|
   describe test_case[0] do
     it 'should be predetermined length' do
       expect(test_case[0].length).to eq(test_case[1].to_i)

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [[v3.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.1...v3.4.0)] - 2018-05-17]
+
+### Changed
+
+* resources supporting the not logging scenario added. Outputs now accommodate.
+* reorganized the resource explosion to separate files.
+* tests reorganized to sweep cruft into a corner.
+* `terraform-docs` now supported and generating documentation. (Kiitos, @antonbabenko 🍒)
+
 ## [[v3.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.0...v3.3.1)] - 2018-05-06]
 
 ### Changed
