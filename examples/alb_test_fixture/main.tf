@@ -76,6 +76,12 @@ resource "aws_autoscaling_group" "test" {
   vpc_zone_identifier  = ["${module.vpc.public_subnets}"]
 }
 
+resource "aws_launch_configuration" "test" {
+  name_prefix   = "test_lc"
+  image_id      = "${data.aws_ami.ubuntu.id}"
+  instance_type = "t2.micro"
+}
+
 resource "aws_launch_configuration" "as_conf" {
   name          = "web_config"
   image_id      = "${data.aws_ami.ubuntu.id}"
@@ -86,6 +92,7 @@ module "alb" {
   source                   = "../.."
   load_balancer_name       = "test-alb-${random_string.suffix.result}"
   security_groups          = ["${module.security_group.this_security_group_id}"]
+  logging_enabled          = true
   log_bucket_name          = "${aws_s3_bucket.log_bucket.id}"
   log_location_prefix      = "${var.log_location_prefix}"
   subnets                  = "${module.vpc.public_subnets}"

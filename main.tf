@@ -1,90 +1,111 @@
-resource "aws_lb" "application" {
-  load_balancer_type         = "application"
-  name                       = "${var.load_balancer_name}"
-  internal                   = "${var.load_balancer_is_internal}"
-  security_groups            = ["${var.security_groups}"]
-  subnets                    = ["${var.subnets}"]
-  idle_timeout               = "${var.idle_timeout}"
-  enable_deletion_protection = "${var.enable_deletion_protection}"
-  enable_http2               = "${var.enable_http2}"
-  ip_address_type            = "${var.ip_address_type}"
-  tags                       = "${merge(var.tags, map("Name", var.load_balancer_name))}"
+/**
+* # terraform-aws-alb
 
-  access_logs {
-    enabled = true
-    bucket  = "${var.log_bucket_name}"
-    prefix  = "${var.log_location_prefix}"
-  }
+* A Terraform module containing common configurations for an AWS Application Load
+Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registry](https://registry.terraform.io/modules/terraform-aws-modules/alb/aws).
 
-  timeouts {
-    create = "${var.load_balancer_create_timeout}"
-    delete = "${var.load_balancer_delete_timeout}"
-    update = "${var.load_balancer_update_timeout}"
-  }
-}
+* | Branch | Build status                                                                                                                                                      |
+* | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+* | master | [![build Status](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb) |
 
-resource "aws_lb_target_group" "main" {
-  name                 = "${lookup(var.target_groups[count.index], "name")}"
-  vpc_id               = "${var.vpc_id}"
-  port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
-  protocol             = "${upper(lookup(var.target_groups[count.index], "backend_protocol"))}"
-  deregistration_delay = "${lookup(var.target_groups[count.index], "deregistration_delay", lookup(var.target_groups_defaults, "deregistration_delay"))}"
-  target_type          = "${lookup(var.target_groups[count.index], "target_type", lookup(var.target_groups_defaults, "target_type"))}"
+* ## Assumptions
 
-  health_check {
-    interval            = "${lookup(var.target_groups[count.index], "health_check_interval", lookup(var.target_groups_defaults, "health_check_interval"))}"
-    path                = "${lookup(var.target_groups[count.index], "health_check_path", lookup(var.target_groups_defaults, "health_check_path"))}"
-    port                = "${lookup(var.target_groups[count.index], "health_check_port", lookup(var.target_groups_defaults, "health_check_port"))}"
-    healthy_threshold   = "${lookup(var.target_groups[count.index], "health_check_healthy_threshold", lookup(var.target_groups_defaults, "health_check_healthy_threshold"))}"
-    unhealthy_threshold = "${lookup(var.target_groups[count.index], "health_check_unhealthy_threshold", lookup(var.target_groups_defaults, "health_check_unhealthy_threshold"))}"
-    timeout             = "${lookup(var.target_groups[count.index], "health_check_timeout", lookup(var.target_groups_defaults, "health_check_timeout"))}"
-    protocol            = "${upper(lookup(var.target_groups[count.index], "healthcheck_protocol", lookup(var.target_groups[count.index], "backend_protocol")))}"
-    matcher             = "${lookup(var.target_groups[count.index], "health_check_matcher", lookup(var.target_groups_defaults, "health_check_matcher"))}"
-  }
+** You want to create a set of resources around an application load balancer: namely associated target groups and listeners.
+** You've created a Virtual Private Cloud (VPC) and subnets where you intend to put this ALB.
+** You have one or more security groups to attach to the ALB.
+** Additionally, if you plan to use an HTTPS listener, the ARN of an SSL certificate is required.
 
-  stickiness {
-    type            = "lb_cookie"
-    cookie_duration = "${lookup(var.target_groups[count.index], "cookie_duration", lookup(var.target_groups_defaults, "cookie_duration"))}"
-    enabled         = "${lookup(var.target_groups[count.index], "stickiness_enabled", lookup(var.target_groups_defaults, "stickiness_enabled"))}"
-  }
+* The module supports both (mutually exclusive):
 
-  tags       = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
-  count      = "${var.target_groups_count}"
-  depends_on = ["aws_lb.application"]
+** Internal ALBs
+** External ALBs
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+* It's recommended you use this module with [terraform-aws-vpc](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws),
+* [terraform-aws-security-group](https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws), and
+* [terraform-aws-autoscaling](https://registry.terraform.io/modules/terraform-aws-modules/autoscaling/aws/).
 
-resource "aws_lb_listener" "frontend_http_tcp" {
-  load_balancer_arn = "${aws_lb.application.arn}"
-  port              = "${lookup(var.http_tcp_listeners[count.index], "port")}"
-  protocol          = "${lookup(var.http_tcp_listeners[count.index], "protocol")}"
-  count             = "${var.http_tcp_listeners_count}"
+* Note:
 
-  default_action {
-    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
-    type             = "forward"
-  }
-}
+* It's strongly recommended that the autoscaling module is instantiated in the same
+* state as the ALB module as in flight changes to active target groups need to be propagated
+* to the ASG immediately or will result in failure. The value of `target_group[n][name]` also must change any time there are modifications to existing `target_groups`.
 
-resource "aws_lb_listener" "frontend_https" {
-  load_balancer_arn = "${aws_lb.application.arn}"
-  port              = "${lookup(var.https_listeners[count.index], "port")}"
-  protocol          = "HTTPS"
-  certificate_arn   = "${lookup(var.https_listeners[count.index], "certificate_arn")}"
-  ssl_policy        = "${lookup(var.https_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)}"
-  count             = "${var.https_listeners_count}"
+* ## Why ALB instead of ELB
 
-  default_action {
-    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
-    type             = "forward"
-  }
-}
+* ALB has the ability to replace what several ELBs can do by routing based on URI matchers.
+* Additionally, operating at layer 7 opens the ability to shape traffic using WAF.
+* [AWS's documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/) has a more
+* exhaustive set of reasons. Alternatively, if using ALB with ECS look no further than
+* the [HashiCorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
-resource "aws_lb_listener_certificate" "https_listener" {
-  listener_arn    = "${aws_lb_listener.frontend_https.*.arn[lookup(var.extra_ssl_certs[count.index], "https_listener_index")]}"
-  certificate_arn = "${lookup(var.extra_ssl_certs[count.index], "certificate_arn")}"
-  count           = "${var.extra_ssl_certs_count}"
-}
+* ## Usage example
+
+* A full example leveraging other community modules is contained in the [examples/alb_test_fixture directory](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/alb_test_fixture). Here's the gist of using it via the Terraform registry:
+
+* ```hcl
+* module "alb" {
+*   source                        = "terraform-aws-modules/alb/aws"
+*   load_balancer_name            = "my-alb"
+*   security_groups               = ["sg-edcd9784", "sg-edcd9785"]
+*   log_bucket_name               = "logs-us-east-2-123456789012"
+*   log_location_prefix           = "my-alb-logs"
+*   subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
+*   tags                          = "${map("Environment", "test")}"
+*   vpc_id                        = "vpc-abcde012"
+*   https_listeners               = "${list(map("certificate_arn", "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012", "port", 443))}"
+*   https_listeners_count         = "1"
+*   http_tcp_listeners            = "${list(map("port", "80", "protocol", "HTTP"))}"
+*   http_tcp_listeners_count      = "1"
+*   target_groups                 = "${list(map("name", "foo", "backend_protocol", "HTTP", "backend_port", "80"))}"
+*   target_groups_count           = "1"
+* }
+* ```
+
+* ## Testing
+
+* This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through [kitchen](https://kitchen.ci/) and [kitchen-terraform](https://newcontext-oss.github.io/kitchen-terraform/). To run them:
+
+* 1. Install [rvm](https://rvm.io/rvm/install) and the ruby version specified in the [Gemfile](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/Gemfile).
+* 2. Install bundler and the gems from our Gemfile:
+*
+*     ```bash
+*     gem install bundler && bundle install
+*     ```
+*
+* 3. Ensure your AWS environment is configured (i.e. credentials and region) for test and set TF_VAR_region to a valid AWS region (e.g. `export TF_VAR_region=${AWS_REGION}`).
+* 4. Test using `bundle exec kitchen test` from the root of the repo.
+
+* ## Doc generation
+
+* Documentation should be modified within `main.tf` and generated using [terraform-docs](https://github.com/segmentio/terraform-docs).
+* Generate them like so:
+
+* ```bash
+* terraform-docs md ./ | cat -s | ghead -n -1 > README.md
+* ```
+
+* ## Contributing
+
+* Report issues/questions/feature requests on in the [issues](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/new) section.
+
+* Full contributing [guidelines are covered here](https://github.com/terraform-aws-modules/terraform-aws-alb/blob/master/CONTRIBUTING.md).
+
+* ## IAM Permissions
+
+* Testing and using this repo requires a minimum set of IAM permissions. Test permissions
+* are listed in the [alb_test_fixture README](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/alb_test_fixture/README.md).
+
+* ## Change log
+
+* The [changelog](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/CHANGELOG.md) captures all important release notes.
+
+* ## Authors
+
+* Created and maintained by [Brandon O'Connor](https://github.com/brandoconnor) - brandon@atscale.run.
+* Many thanks to [the contributors listed here](https://github.com/terraform-aws-modules/terraform-aws-alb/graphs/contributors)!
+
+* ## License
+
+* MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/LICENSE) for full details.
+*/
+

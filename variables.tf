@@ -52,7 +52,7 @@ variable "ip_address_type" {
 }
 
 variable "listener_ssl_policy_default" {
-  description = "The security policy if using HTTPS externally on the load balancer. See: https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html"
+  description = "The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html)."
   default     = "ELBSecurityPolicy-2016-08"
 }
 
@@ -80,8 +80,14 @@ variable "load_balancer_update_timeout" {
   default     = "10m"
 }
 
+variable "logging_enabled" {
+  description = "Controls if the ALB will log requests to S3."
+  default     = true
+}
+
 variable "log_bucket_name" {
-  description = "S3 bucket (externally created) for storing load balancer access logs."
+  description = "S3 bucket (externally created) for storing load balancer access logs. Required if logging_enabled is true."
+  default     = ""
 }
 
 variable "log_location_prefix" {
