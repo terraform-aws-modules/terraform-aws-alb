@@ -1,5 +1,5 @@
 locals {
-  create_alb_with_logging_enabled = "${var.logging_enabled && var.create_alb ? 1 : 0}"
+  create_alb_with_logging_enabled = "${var.logging_enabled == true && var.create_alb == true ? 1 : 0}"
 }
 
 resource "aws_lb" "application" {
