@@ -65,7 +65,7 @@ module "alb" {
 Sometimes you need to have a way to create ALB resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_alb`.
 
 ```hcl
-# This VPC will not be created
+# This ALB will not be created
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
 
