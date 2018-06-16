@@ -8,6 +8,11 @@ variable "enable_http2" {
   default     = true
 }
 
+variable "enable_cross_zone_load_balancing" {
+  description = "Indicates whether cross zone load balancing should be enabled in application load balancers."
+  default     = false
+}
+
 variable "extra_ssl_certs" {
   description = "A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward)."
   type        = "list"
