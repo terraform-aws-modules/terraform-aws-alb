@@ -118,7 +118,7 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 | extra_ssl_certs_count | A manually provided count/length of the extra_ssl_certs list of maps since the list cannot be computed. | string | `0` | no |
 | http_tcp_listeners_forward | A list of maps describing the HTTP listeners with forward default action type for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list | `<list>` | no |
 | http_tcp_listeners_forward_count | A manually provided count/length of the http_tcp_listeners_forward list of maps since the list cannot be computed. | string | `0` | no |
-| http_tcp_listeners_redirect | A list of maps describing the HTTP listeners with forward default redirect for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list | `<list>` | no |
+| http_tcp_listeners_redirect | A list of maps describing the HTTP listeners with redirect default action type for this ALB. Optional key/values are in the default_action_redirect_defaults variable. | list | `<list>` | no |
 | http_tcp_listeners_redirect_count | A manually provided count/length of the http_tcp_listeners_redirect list of maps since the list cannot be computed. | string | `0` | no |
 | https_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0) | list | `<list>` | no |
 | https_listeners_count | A manually provided count/length of the https_listeners list of maps since the list cannot be computed. | string | `0` | no |
