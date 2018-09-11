@@ -43,20 +43,20 @@ A full example leveraging other community modules is contained in the [examples/
 
 ```hcl
 module "alb" {
-  source                        = "terraform-aws-modules/alb/aws"
-  load_balancer_name            = "my-alb"
-  security_groups               = ["sg-edcd9784", "sg-edcd9785"]
-  log_bucket_name               = "logs-us-east-2-123456789012"
-  log_location_prefix           = "my-alb-logs"
-  subnets                       = ["subnet-abcde012", "subnet-bcde012a"]
-  tags                          = "${map("Environment", "test")}"
-  vpc_id                        = "vpc-abcde012"
-  https_listeners               = "${list(map("certificate_arn", "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012", "port", 443))}"
-  https_listeners_count         = "1"
-  http_tcp_listeners            = "${list(map("port", "80", "protocol", "HTTP"))}"
-  http_tcp_listeners_count      = "1"
-  target_groups                 = "${list(map("name", "foo", "backend_protocol", "HTTP", "backend_port", "80"))}"
-  target_groups_count           = "1"
+  source                           = "terraform-aws-modules/alb/aws"
+  load_balancer_name               = "my-alb"
+  security_groups                  = ["sg-edcd9784", "sg-edcd9785"]
+  log_bucket_name                  = "logs-us-east-2-123456789012"
+  log_location_prefix              = "my-alb-logs"
+  subnets                          = ["subnet-abcde012", "subnet-bcde012a"]
+  tags                             = "${map("Environment", "test")}"
+  vpc_id                           = "vpc-abcde012"
+  https_listeners                  = "${list(map("certificate_arn", "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012", "port", 443))}"
+  https_listeners_count            = "1"
+  http_tcp_listeners_forward       = "${list(map("port", "80", "protocol", "HTTP"))}"
+  http_tcp_listeners_forward_count = "1"
+  target_groups                    = "${list(map("name", "foo", "backend_protocol", "HTTP", "backend_port", "80"))}"
+  target_groups_count              = "1"
 }
 ```
 
@@ -116,8 +116,10 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 | enable_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | string | `true` | no |
 | extra_ssl_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward). | list | `<list>` | no |
 | extra_ssl_certs_count | A manually provided count/length of the extra_ssl_certs list of maps since the list cannot be computed. | string | `0` | no |
-| http_tcp_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list | `<list>` | no |
-| http_tcp_listeners_count | A manually provided count/length of the http_tcp_listeners list of maps since the list cannot be computed. | string | `0` | no |
+| http_tcp_listeners_forward | A list of maps describing the HTTP listeners with forward default action type for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list | `<list>` | no |
+| http_tcp_listeners_forward_count | A manually provided count/length of the http_tcp_listeners_forward list of maps since the list cannot be computed. | string | `0` | no |
+| http_tcp_listeners_redirect | A list of maps describing the HTTP listeners with forward default redirect for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list | `<list>` | no |
+| http_tcp_listeners_redirect_count | A manually provided count/length of the http_tcp_listeners_redirect list of maps since the list cannot be computed. | string | `0` | no |
 | https_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0) | list | `<list>` | no |
 | https_listeners_count | A manually provided count/length of the https_listeners list of maps since the list cannot be computed. | string | `0` | no |
 | idle_timeout | The time in seconds that the connection is allowed to be idle. | string | `60` | no |
@@ -144,8 +146,10 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 | Name | Description |
 |------|-------------|
 | dns_name | The DNS name of the load balancer. |
-| http_tcp_listener_arns | The ARN of the TCP and HTTP load balancer listeners created. |
-| http_tcp_listener_ids | The IDs of the TCP and HTTP load balancer listeners created. |
+| http_tcp_listener_forward_arns | The ARN of the TCP and HTTP load balancer listeners created. |
+| http_tcp_listener_forward_ids | The IDs of the TCP and HTTP load balancer listeners created. |
+| http_tcp_listener_redirect_arns | The ARN of the TCP and HTTP load balancer listeners created. |
+| http_tcp_listener_redirect_ids | The IDs of the TCP and HTTP load balancer listeners created. |
 | https_listener_arns | The ARNs of the HTTPS load balancer listeners created. |
 | https_listener_ids | The IDs of the load balancer listeners created. |
 | load_balancer_arn_suffix | ARN suffix of our load balancer - can be used with CloudWatch. |

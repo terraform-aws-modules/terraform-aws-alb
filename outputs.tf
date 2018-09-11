@@ -3,14 +3,24 @@ output "dns_name" {
   value       = "${element(concat(aws_lb.application.*.dns_name, aws_lb.application_no_logs.*.dns_name), 0)}"
 }
 
-output "http_tcp_listener_arns" {
-  description = "The ARN of the TCP and HTTP load balancer listeners created."
-  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.arn, aws_lb_listener.frontend_http_tcp_no_logs.*.arn), 0, var.http_tcp_listeners_count)}"
+output "http_tcp_listener_forward_arns" {
+  description = "The ARN of the TCP and HTTP load balancer listeners with forward default action created."
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp_forward.*.arn, aws_lb_listener.frontend_http_tcp_forward_no_logs.*.arn), 0, var.http_tcp_listeners_forward_count)}"
 }
 
-output "http_tcp_listener_ids" {
-  description = "The IDs of the TCP and HTTP load balancer listeners created."
-  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp.*.id, aws_lb_listener.frontend_http_tcp_no_logs.*.id), 0, var.http_tcp_listeners_count)}"
+output "http_tcp_listener_forward_ids" {
+  description = "The IDs of the TCP and HTTP load balancer listeners with forward default action created."
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp_forward.*.id, aws_lb_listener.frontend_http_tcp_forward_no_logs.*.id), 0, var.http_tcp_listeners_forward_count)}"
+}
+
+output "http_tcp_listener_redirect_arns" {
+  description = "The ARN of the TCP and HTTP load balancer listeners with redirect default action created."
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp_redirect.*.arn, aws_lb_listener.frontend_http_tcp_redirect_no_logs.*.arn), 0, var.http_tcp_listeners_redirect_count)}"
+}
+
+output "http_tcp_listener_redirect_ids" {
+  description = "The IDs of the TCP and HTTP load balancer listeners with redirect default action created."
+  value       = "${slice(concat(aws_lb_listener.frontend_http_tcp_redirect.*.id, aws_lb_listener.frontend_http_tcp_redirect_no_logs.*.id), 0, var.http_tcp_listeners_redirect_count)}"
 }
 
 output "https_listener_arns" {

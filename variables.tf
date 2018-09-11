@@ -35,14 +35,25 @@ variable "https_listeners_count" {
   default     = 0
 }
 
-variable "http_tcp_listeners" {
-  description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
+variable "http_tcp_listeners_forward" {
+  description = "A list of maps describing the HTTP listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
   type        = "list"
   default     = []
 }
 
-variable "http_tcp_listeners_count" {
-  description = "A manually provided count/length of the http_tcp_listeners list of maps since the list cannot be computed."
+variable "http_tcp_listeners_forward_count" {
+  description = "A manually provided count/length of the http_tcp_listeners_forward list of maps since the list cannot be computed."
+  default     = 0
+}
+
+variable "http_tcp_listeners_redirect" {
+  description = "A list of maps describing the HTTP listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
+  type        = "list"
+  default     = []
+}
+
+variable "http_tcp_listeners_redirect_count" {
+  description = "A manually provided count/length of the http_tcp_listeners_redirect list of maps since the list cannot be computed."
   default     = 0
 }
 
@@ -151,7 +162,7 @@ variable "default_action_redirect_defaults" {
 
   default = {
     "host"        = "#{host}"
-    "path"        = "#{path}"
+    "path"        = "/#{path}"
     "port"        = "#{port}"
     "protocol"    = "#{protocol}"
     "query"       = "#{query}"

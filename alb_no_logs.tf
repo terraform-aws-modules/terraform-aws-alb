@@ -66,24 +66,35 @@ resource "aws_lb_target_group" "main_no_logs" {
 #   }
 # }
 
-resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
+resource "aws_lb_listener" "frontend_http_tcp_forward_no_logs" {
   load_balancer_arn = "${element(concat(aws_lb.application_no_logs.*.arn, list("")), 0)}"
-  port              = "${lookup(var.http_tcp_listeners[count.index], "port")}"
-  protocol          = "${lookup(var.http_tcp_listeners[count.index], "protocol")}"
-  count             = "${var.logging_enabled && var.enable_http_tcp_listener_redirect ? 0 : var.http_tcp_listeners_count}"
+  port              = "${lookup(var.http_tcp_listeners_forward[count.index], "port")}"
+  protocol          = "${lookup(var.http_tcp_listeners_forward[count.index], "protocol")}"
+  count             = "${var.logging_enabled ? 0 : var.http_tcp_listeners_forward_count}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
-    type             = "${lookup(var.http_tcp_listeners[count.index], "default_action_type", "forward")}"
+    target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.http_tcp_listeners_forward[count.index], "target_group_index", 0)]}"
+    type             = "forward"
+  }
+}
+
+resource "aws_lb_listener" "frontend_http_tcp_redirect_no_logs" {
+  load_balancer_arn = "${element(concat(aws_lb.application_no_logs.*.arn, list("")), 0)}"
+  port              = "${lookup(var.http_tcp_listeners_redirect[count.index], "port")}"
+  protocol          = "${lookup(var.http_tcp_listeners_redirect[count.index], "protocol")}"
+  count             = "${var.logging_enabled ? 0 : var.http_tcp_listeners_redirect_count}"
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.http_tcp_listeners_redirect[count.index], "target_group_index", 0)]}"
+    type             = "redirect"
 
     redirect {
-      count       = "${lookup(var.http_tcp_listeners[count.index], "default_action_type") == "redirect" ? 1 : 0}"
-      host        = "${lookup(var.http_tcp_listeners[count.index], "default_action_redirect_host", lookup(var.http_tcp_listeners_redirect_defaults, "host"))})}"
-      path        = "${lookup(var.http_tcp_listeners[count.index], "default_action_redirect_path", lookup(var.http_tcp_listeners_redirect_defaults, "path"))}"
-      port        = "${lookup(var.http_tcp_listeners[count.index], "default_action_redirect_port", lookup(var.http_tcp_listeners_redirect_defaults, "port"))}"
-      protocol    = "${lookup(var.http_tcp_listeners[count.index], "default_action_redirect_protocol", lookup(var.http_tcp_listeners_redirect_defaults, "protocol"))}"
-      query       = "${lookup(var.http_tcp_listeners[count.index], "default_action_redirect_query", lookup(var.http_tcp_listeners_redirect_defaults, "query"))}"
-      status_code = "${lookup(var.http_tcp_listeners[count.index], "default_action_redirect_status_code", lookup(var.http_tcp_listeners_redirect_defaults, "status_code"))}"
+      host        = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_host", lookup(var.default_action_redirect_defaults, "host"))})}"
+      path        = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_path", lookup(var.default_action_redirect_defaults, "path"))}"
+      port        = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_port", lookup(var.default_action_redirect_defaults, "port"))}"
+      protocol    = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_protocol", lookup(var.default_action_redirect_defaults, "protocol"))}"
+      query       = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_query", lookup(var.default_action_redirect_defaults, "query"))}"
+      status_code = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_status_code", lookup(var.default_action_redirect_defaults, "status_code"))}"
     }
   }
 }
@@ -98,17 +109,7 @@ resource "aws_lb_listener" "frontend_https_no_logs" {
 
   default_action {
     target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
-    type             = "${lookup(var.https_listeners[count.index], "default_action_type", "forward")}"
-
-    redirect {
-      count       = "${lookup(var.https_listeners[count.index], "default_action_type") == "redirect" ? 1 : 0}"
-      host        = "${lookup(var.https_listeners[count.index], "default_action_redirect_host", lookup(var.default_action_redirect_defaults, "host"))}"
-      path        = "${lookup(var.https_listeners[count.index], "default_action_redirect_path", lookup(var.default_action_redirect_defaults, "path"))}"
-      port        = "${lookup(var.https_listeners[count.index], "default_action_redirect_port", lookup(var.default_action_redirect_defaults, "port"))}"
-      protocol    = "${lookup(var.https_listeners[count.index], "default_action_redirect_protocol", lookup(var.default_action_redirect_defaults, "protocol"))}"
-      query       = "${lookup(var.https_listeners[count.index], "default_action_redirect_query", lookup(var.default_action_redirect_defaults, "query"))}"
-      status_code = "${lookup(var.https_listeners[count.index], "default_action_redirect_status_code", lookup(var.default_action_redirect_defaults, "status_code"))}"
-    }
+    type             = "forward"
   }
 }
 
