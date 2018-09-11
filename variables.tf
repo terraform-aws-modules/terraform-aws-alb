@@ -145,6 +145,20 @@ variable "target_groups_defaults" {
   }
 }
 
+variable "default_action_redirect_defaults" {
+  description = "Default values for default action redirect block as defined by the list of maps."
+  type        = "map"
+
+  default = {
+    "host"        = "#{host}"
+    "path"        = "#{path}"
+    "port"        = "#{port}"
+    "protocol"    = "#{protocol}"
+    "query"       = "#{query}"
+    "status_code" = "HTTP_301"
+  }
+}
+
 variable "vpc_id" {
   description = "VPC id where the load balancer and other resources will be deployed."
 }
