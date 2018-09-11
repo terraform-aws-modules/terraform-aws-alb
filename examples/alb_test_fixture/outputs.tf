@@ -6,8 +6,8 @@ output "account_id" {
   value = "${data.aws_caller_identity.current.account_id}"
 }
 
-output "http_tcp_listener_arns" {
-  value = "${module.alb.http_tcp_listener_arns}"
+output "http_tcp_listener_forward_arns" {
+  value = "${module.alb.http_tcp_listener_forward_arns}"
 }
 
 output "https_listener_arns" {
@@ -38,6 +38,6 @@ output "https_listeners_count" {
   value = "${local.https_listeners_count}"
 }
 
-output "http_tcp_listeners_count" {
-  value = "${local.http_tcp_listeners_count}"
+output "http_tcp_listeners_forward_count" {
+  value = "${local.http_tcp_listeners_forward_count}"
 }

@@ -22,9 +22,9 @@ locals {
                         ),
   )}"
 
-  http_tcp_listeners_count = 3
+  http_tcp_listeners_forward_count = 3
 
-  http_tcp_listeners = "${list(
+  http_tcp_listeners_forward = "${list(
                             map(
                                 "port", 80,
                                 "protocol", "HTTP",

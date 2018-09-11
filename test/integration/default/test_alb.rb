@@ -48,7 +48,7 @@ end
   end
 end
 
-@http_tcp_listener_arns.each do |listener|
+@http_tcp_listener_forward_arns.each do |listener|
   describe alb_listener(listener) do
     it { should exist }
     its(:protocol) { should eq 'HTTP' }
