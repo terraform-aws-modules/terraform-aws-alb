@@ -1,6 +1,6 @@
 output "dns_name" {
   description = "The DNS name of the load balancer."
-  value       = "${element(concat(aws_lb.application.*.dns_name, aws_lb.application_no_logs.*.dns_name), 0)}"
+  value       = "${element(concat(aws_lb.application.*.dns_name, aws_lb.application_no_logs.*.dns_name, list("")), 0)}"
 }
 
 output "http_tcp_listener_arns" {
@@ -25,17 +25,17 @@ output "https_listener_ids" {
 
 output "load_balancer_arn_suffix" {
   description = "ARN suffix of our load balancer - can be used with CloudWatch."
-  value       = "${element(concat(aws_lb.application.*.arn_suffix, aws_lb.application_no_logs.*.arn_suffix), 0)}"
+  value       = "${element(concat(aws_lb.application.*.arn_suffix, aws_lb.application_no_logs.*.arn_suffix, list("")), 0)}"
 }
 
 output "load_balancer_id" {
   description = "The ID and ARN of the load balancer we created."
-  value       = "${element(concat(aws_lb.application.*.id, aws_lb.application_no_logs.*.id), 0)}"
+  value       = "${element(concat(aws_lb.application.*.id, aws_lb.application_no_logs.*.id, list("")), 0)}"
 }
 
 output "load_balancer_zone_id" {
   description = "The zone_id of the load balancer to assist with creating DNS records."
-  value       = "${element(concat(aws_lb.application.*.zone_id, aws_lb.application_no_logs.*.zone_id), 0)}"
+  value       = "${element(concat(aws_lb.application.*.zone_id, aws_lb.application_no_logs.*.zone_id, list("")), 0)}"
 }
 
 output "target_group_arns" {
