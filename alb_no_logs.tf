@@ -17,7 +17,7 @@ resource "aws_lb" "application_no_logs" {
     update = "${var.load_balancer_update_timeout}"
   }
 
-  count = "${var.logging_enabled ? 0 : 1}"
+  count = "${var.create_alb && !var.logging_enabled ? 1 : 0}"
 }
 
 resource "aws_lb_target_group" "main_no_logs" {
@@ -47,7 +47,7 @@ resource "aws_lb_target_group" "main_no_logs" {
   }
 
   tags       = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
-  count      = "${var.logging_enabled ? 0 : var.target_groups_count}"
+  count      = "${var.create_alb && !var.logging_enabled ? var.target_groups_count : 0}"
   depends_on = ["aws_lb.application_no_logs"]
 
   lifecycle {
@@ -59,7 +59,7 @@ resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
   load_balancer_arn = "${element(concat(aws_lb.application_no_logs.*.arn, list("")), 0)}"
   port              = "${lookup(var.http_tcp_listeners[count.index], "port")}"
   protocol          = "${lookup(var.http_tcp_listeners[count.index], "protocol")}"
-  count             = "${var.logging_enabled ? 0 : var.http_tcp_listeners_count}"
+  count             = "${var.create_alb && !var.logging_enabled ? var.http_tcp_listeners_count : 0}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
@@ -73,7 +73,7 @@ resource "aws_lb_listener" "frontend_https_no_logs" {
   protocol          = "HTTPS"
   certificate_arn   = "${lookup(var.https_listeners[count.index], "certificate_arn")}"
   ssl_policy        = "${lookup(var.https_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)}"
-  count             = "${var.logging_enabled ? 0 : var.https_listeners_count}"
+  count             = "${var.create_alb && !var.logging_enabled ? var.https_listeners_count : 0}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
@@ -84,5 +84,5 @@ resource "aws_lb_listener" "frontend_https_no_logs" {
 resource "aws_lb_listener_certificate" "https_listener_no_logs" {
   listener_arn    = "${aws_lb_listener.frontend_https_no_logs.*.arn[lookup(var.extra_ssl_certs[count.index], "https_listener_index")]}"
   certificate_arn = "${lookup(var.extra_ssl_certs[count.index], "certificate_arn")}"
-  count           = "${var.logging_enabled ? 0 : var.extra_ssl_certs_count}"
+  count           = "${var.create_alb && !var.logging_enabled ? var.extra_ssl_certs_count : 0}"
 }
