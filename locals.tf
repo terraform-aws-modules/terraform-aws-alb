@@ -11,6 +11,7 @@ locals {
     health_check_matcher             = "200-299"
     stickiness_enabled               = true
     target_type                      = "instance"
+    slow_start                       = 0
   }
 
   target_groups_defaults = "${merge(local.target_groups_default_configs, var.target_groups_defaults)}"
