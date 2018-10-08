@@ -74,9 +74,10 @@ resource "aws_lb_listener" "frontend_http_no_logs_redirect" {
 
   default_action {
     type = "redirect"
+
     redirect {
-      port = "443"
-      protocol = "HTTPS"
+      port        = "443"
+      protocol    = "HTTPS"
       status_code = "${var.http_listeners_redirected_to_https_status_code}"
     }
   }
