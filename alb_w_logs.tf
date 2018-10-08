@@ -72,6 +72,22 @@ resource "aws_lb_listener" "frontend_http_tcp" {
   }
 }
 
+resource "aws_lb_listener" "frontend_http_redirected" {
+  load_balancer_arn = "${element(concat(aws_lb.application.*.arn, list("")), 0)}"
+  port              = "${var.http_listeners_redirected_to_https[count.index]}"
+  protocol          = "HTTP"
+  count             = "${var.logging_enabled ? length(var.http_listeners_redirected_to_https) : 0}"
+
+  default_action {
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "${var.http_listeners_redirected_to_https_status_code}"
+    }
+  }
+}
+
 resource "aws_lb_listener" "frontend_https" {
   load_balancer_arn = "${element(concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn), 0)}"
   port              = "${lookup(var.https_listeners[count.index], "port")}"

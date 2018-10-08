@@ -66,6 +66,22 @@ resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
   }
 }
 
+resource "aws_lb_listener" "frontend_http_no_logs_redirect" {
+  load_balancer_arn = "${element(concat(aws_lb.application_no_logs.*.arn, list("")), 0)}"
+  port              = "${var.http_listeners_redirected_to_https[count.index]}"
+  protocol          = "HTTP"
+  count             = "${var.logging_enabled ? 0 : length(var.http_listeners_redirected_to_https)}"
+
+  default_action {
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "${var.http_listeners_redirected_to_https_status_code}"
+    }
+  }
+}
+
 resource "aws_lb_listener" "frontend_https_no_logs" {
   load_balancer_arn = "${element(concat(aws_lb.application_no_logs.*.arn, list("")), 0)}"
   port              = "${lookup(var.https_listeners[count.index], "port")}"

@@ -35,8 +35,19 @@ variable "https_listeners_count" {
   default     = 0
 }
 
+variable "http_listeners_redirected_to_https" {
+  description = "A list of HTTP ports redirected to HTTPS"
+  type        = "list"
+  default     = []
+}
+
+variable "http_listeners_redirected_to_https_status_code" {
+  description = "The HTTP redirect code. The redirect is either permanent (HTTP_301) or temporary (HTTP_302)"
+  default     = "HTTP_301"
+}
+
 variable "http_tcp_listeners" {
-  description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
+  description = "A list of maps describing the HTTP listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
   type        = "list"
   default     = []
 }
