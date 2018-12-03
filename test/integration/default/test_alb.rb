@@ -37,6 +37,7 @@ end
     its(:unhealthy_threshold_count) { should eq 3 }
     its(:target_type) { should eq 'instance' }
     its(:health_check_port) { should eq 'traffic-port' }
+    its(:slow_start) { should eq 0 }
   end
 end
 
