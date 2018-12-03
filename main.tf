@@ -81,7 +81,7 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registr
 * Generate them like so:
 
 * ```bash
-* terraform-docs md ./ | cat -s | ghead -n -1 > README.md
+* terraform-docs md ./ | cat -s | sed '${/^$/d;}' > README.md
 * ```
 
 * ## Contributing
