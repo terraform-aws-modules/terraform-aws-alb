@@ -47,10 +47,12 @@ locals {
                         map("name", "foo",
                             "backend_protocol", "HTTP",
                             "backend_port", 80,
+                            "slow_start", 0,
                         ),
                         map("name", "bar",
                             "backend_protocol", "HTTP",
                             "backend_port", 8080,
+                            "slow_start", 100,
                         ),
   )}"
 
