@@ -110,3 +110,8 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registr
 
 * MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/LICENSE) for full details.
 */
+
+resource "aws_security_group" default {
+  description = local.security_group_description
+  vpc_id      = var.vpc_id
+}

@@ -2,7 +2,7 @@ resource "aws_lb" "application_no_logs" {
   load_balancer_type               = "application"
   name                             = var.load_balancer_name
   internal                         = var.load_balancer_is_internal
-  security_groups                  = var.security_groups
+  security_groups                  = compact(concat(var.security_groups, [aws_security_group.default.id]))
   subnets                          = var.subnets
   idle_timeout                     = var.idle_timeout
   enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing

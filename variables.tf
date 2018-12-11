@@ -134,9 +134,15 @@ variable "tags" {
   default     = {}
 }
 
+variable "security_group_description" {
+  description = "The description for the default security group for the alb"
+  default     = ""
+}
+
 variable "security_groups" {
   description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
   type        = list(string)
+  default     = [""]
 }
 
 variable "target_groups" {

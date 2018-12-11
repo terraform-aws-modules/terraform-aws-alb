@@ -94,6 +94,11 @@ output "load_balancer_zone_id" {
   )
 }
 
+output "sg_id" {
+  description = "The id of the default security group."
+  value       = "${aws_security_group.default.id}"
+}
+
 output "target_group_arns" {
   description = "ARNs of the target groups. Useful for passing to your Auto Scaling group."
   value = slice(
