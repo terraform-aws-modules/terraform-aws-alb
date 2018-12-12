@@ -58,6 +58,17 @@ variable "http_tcp_listeners_count" {
   default     = 0
 }
 
+variable "http_tcp_listeners_redirect" {
+  description = "A list of maps describing the HTTP redirect listeners for this ALB. Required key/values: port, protocol."
+  type        = "list"
+  default     = []
+}
+
+variable "http_tcp_listeners_redirect_count" {
+  description = "A manually provided count/length of the http_tcp_listeners_redirect list of maps since the list cannot be computed."
+  default     = 0
+}
+
 variable "idle_timeout" {
   description = "The time in seconds that the connection is allowed to be idle."
   type        = number

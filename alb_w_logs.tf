@@ -140,6 +140,23 @@ resource "aws_lb_listener" "frontend_http_tcp" {
   }
 }
 
+resource "aws_lb_listener" "frontend_http_tcp_redirect" {
+  load_balancer_arn = "${element(concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn), 0)}"
+  port              = "${lookup(var.http_tcp_listeners_redirect[count.index], "port")}"
+  protocol          = "${lookup(var.http_tcp_listeners_redirect[count.index], "protocol")}"
+  count             = "${var.logging_enabled ? var.http_tcp_listeners_redirect_count : 0}"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_port")}"
+      protocol    = "${lookup(var.http_tcp_listeners_redirect[count.index], "redirect_protocol")}"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
 resource "aws_lb_listener" "frontend_https" {
   load_balancer_arn = element(
     concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn),
