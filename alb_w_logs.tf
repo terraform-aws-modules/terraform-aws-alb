@@ -61,18 +61,6 @@ resource "aws_lb_target_group" "main" {
   }
 }
 
-# resource "aws_lb_listener" "frontend_http_tcp" {
-#   load_balancer_arn = "${element(concat(aws_lb.application.*.arn, aws_lb.application.*.arn), 0)}"
-#   port              = "${lookup(var.http_tcp_listeners[count.index], "port")}"
-#   protocol          = "${lookup(var.http_tcp_listeners[count.index], "protocol")}"
-#   count             = "${var.logging_enabled ? var.http_tcp_listeners_count : 0}"
-
-#   default_action {
-#     target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
-#     type             = "forward"
-#   }
-# }
-
 resource "aws_lb_listener" "frontend_http_tcp_forward" {
   load_balancer_arn = "${element(concat(aws_lb.application.*.arn, list("")), 0)}"
   port              = "${lookup(var.http_tcp_listeners_forward[count.index], "port")}"
