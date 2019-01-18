@@ -33,6 +33,11 @@ output "load_balancer_id" {
   value       = "${element(concat(aws_lb.application.*.id, aws_lb.application_no_logs.*.id), 0)}"
 }
 
+output "load_balancer_arn" {
+  description = "The ID and ARN of the load balancer we created."
+  value       = "${element(concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn), 0)}"
+}
+
 output "load_balancer_zone_id" {
   description = "The zone_id of the load balancer to assist with creating DNS records."
   value       = "${element(concat(aws_lb.application.*.zone_id, aws_lb.application_no_logs.*.zone_id), 0)}"
