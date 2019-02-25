@@ -1,6 +1,6 @@
 output "dns_name" {
   description = "The DNS name of the load balancer."
-  value       = "${element(concat(aws_lb.application.*.dns_name, aws_lb.application_no_logs.*.dns_name), 0)}"
+  value       = "${element(concat(aws_lb.application.*.dns_name, aws_lb.application_no_logs.*.dns_name, list("")), 0)}"
 }
 
 output "http_tcp_listener_arns" {
