@@ -52,3 +52,8 @@ output "target_group_names" {
   description = "Name of the target group. Useful for passing to your CodeDeploy Deployment Group."
   value       = "${slice(concat(aws_lb_target_group.main.*.name, aws_lb_target_group.main_no_logs.*.name), 0, var.target_groups_count)}"
 }
+
+output "security_groups" {
+  description = "List of Security Groups IDs"
+  value       = "${aws_lb.application_no_logs.*.security_groups}"
+}

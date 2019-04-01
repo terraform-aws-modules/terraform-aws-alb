@@ -134,3 +134,8 @@ variable "target_groups_defaults" {
 variable "vpc_id" {
   description = "VPC id where the load balancer and other resources will be deployed."
 }
+
+variable "enable_access_log_collection" {
+  description = "True if you want to collect LB access logs into S3 Bucket."
+  default     = "false"
+}
