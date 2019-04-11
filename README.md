@@ -111,6 +111,7 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| deregistration\_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused. | string | `30` | no |
 | enable\_cross\_zone\_load\_balancing | Indicates whether cross zone load balancing should be enabled in application load balancers. | string | `false` | no |
 | enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | string | `false` | no |
 | enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | string | `true` | no |
