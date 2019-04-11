@@ -25,7 +25,7 @@ resource "aws_lb_target_group" "main_no_logs" {
   vpc_id               = "${var.vpc_id}"
   port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
   protocol             = "${upper(lookup(var.target_groups[count.index], "backend_protocol"))}"
-  deregistration_delay = "${lookup(var.target_groups[count.index], "deregistration_delay", lookup(local.target_groups_defaults, "deregistration_delay"))}"
+  deregistration_delay = "${var.deregistration_delay}"
   target_type          = "${lookup(var.target_groups[count.index], "target_type", lookup(local.target_groups_defaults, "target_type"))}"
   slow_start           = "${lookup(var.target_groups[count.index], "slow_start", lookup(local.target_groups_defaults, "slow_start"))}"
 

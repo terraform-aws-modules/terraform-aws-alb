@@ -131,6 +131,11 @@ variable "target_groups_defaults" {
   default     = {}
 }
 
+variable "deregistration_delay" {
+  description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused."
+  default     = "30"
+}
+
 variable "vpc_id" {
   description = "VPC id where the load balancer and other resources will be deployed."
 }

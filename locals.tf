@@ -1,7 +1,6 @@
 locals {
   target_groups_default_configs = {
     cookie_duration                  = 86400
-    deregistration_delay             = 300
     health_check_interval            = 10
     health_check_healthy_threshold   = 3
     health_check_path                = "/"
