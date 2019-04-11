@@ -117,6 +117,8 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 | enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | string | `true` | no |
 | extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward). | list | `<list>` | no |
 | extra\_ssl\_certs\_count | A manually provided count/length of the extra_ssl_certs list of maps since the list cannot be computed. | string | `0` | no |
+| health\_check\_matcher | The HTTP response codes to indicate a healthy check. | string | `200-399` | no |
+| health\_check\_path | The destination for the health check request. | string | `/` | no |
 | http\_tcp\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list | `<list>` | no |
 | http\_tcp\_listeners\_count | A manually provided count/length of the http_tcp_listeners list of maps since the list cannot be computed. | string | `0` | no |
 | https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0) | list | `<list>` | no |

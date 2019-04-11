@@ -29,14 +29,14 @@ variable "extra_ssl_certs_count" {
   default     = 0
 }
 
-variable "health_check_path" {
-  description = "The destination for the health check request."
-  default     = "/"
-}
-
 variable "health_check_matcher" {
   description = "The HTTP response codes to indicate a healthy check."
   default     = "200-399"
+}
+
+variable "health_check_path" {
+  description = "The destination for the health check request."
+  default     = "/"
 }
 
 variable "https_listeners" {
