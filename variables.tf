@@ -1,3 +1,8 @@
+variable "deregistration_delay" {
+  description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused."
+  default     = "30"
+}
+
 variable "enable_deletion_protection" {
   description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
   default     = false
@@ -22,6 +27,16 @@ variable "extra_ssl_certs" {
 variable "extra_ssl_certs_count" {
   description = "A manually provided count/length of the extra_ssl_certs list of maps since the list cannot be computed."
   default     = 0
+}
+
+variable "health_check_path" {
+  description = "The destination for the health check request."
+  default     = "/"
+}
+
+variable "health_check_matcher" {
+  description = "The HTTP response codes to indicate a healthy check."
+  default     = "200-399"
 }
 
 variable "https_listeners" {
@@ -129,11 +144,6 @@ variable "target_groups_count" {
 variable "target_groups_defaults" {
   description = "Default values for target groups as defined by the list of maps."
   default     = {}
-}
-
-variable "deregistration_delay" {
-  description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused."
-  default     = "30"
 }
 
 variable "vpc_id" {
