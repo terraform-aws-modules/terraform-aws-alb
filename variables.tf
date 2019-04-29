@@ -1,3 +1,8 @@
+variable "create" {
+  description = "Controls if an ALB and all its related resources should be created"
+  default     = true
+}
+
 variable "enable_deletion_protection" {
   description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
   default     = false

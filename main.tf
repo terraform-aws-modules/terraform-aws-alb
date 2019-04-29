@@ -61,6 +61,20 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registr
 * }
 * ```
 
+* ## Conditional creation
+
+* Sometimes you need to have a way to create ALB resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create`.
+
+* ```hcl
+* # This ALB will not be created
+* module "alb" {
+*   source = "terraform-aws-modules/alb/aws"
+*
+*   create = false
+*   # ... omitted
+* }
+* ```
+
 * ## Testing
 
 * This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through [kitchen](https://kitchen.ci/) and [kitchen-terraform](https://newcontext-oss.github.io/kitchen-terraform/). To run them:
