@@ -95,7 +95,7 @@ module "alb" {
   logging_enabled          = true
   log_bucket_name          = "${aws_s3_bucket.log_bucket.id}"
   log_location_prefix      = "${var.log_location_prefix}"
-  subnets                  = "${module.vpc.public_subnets}"
+  subnets                  = ["${module.vpc.public_subnets}"]
   tags                     = "${local.tags}"
   vpc_id                   = "${module.vpc.vpc_id}"
   https_listeners          = "${local.https_listeners}"
