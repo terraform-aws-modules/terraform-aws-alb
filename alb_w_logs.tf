@@ -2,8 +2,8 @@ resource "aws_lb" "application" {
   load_balancer_type               = "application"
   name                             = "${var.load_balancer_name}"
   internal                         = "${var.load_balancer_is_internal}"
-  security_groups                  = ["${var.security_groups}"]
-  subnets                          = ["${var.subnets}"]
+  security_groups                  = "${var.security_groups}"
+  subnets                          = "${var.subnets}"
   idle_timeout                     = "${var.idle_timeout}"
   enable_cross_zone_load_balancing = "${var.enable_cross_zone_load_balancing}"
   enable_deletion_protection       = "${var.enable_deletion_protection}"
