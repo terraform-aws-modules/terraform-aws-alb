@@ -108,4 +108,3 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registr
 
 * MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/LICENSE) for full details.
 */
-
