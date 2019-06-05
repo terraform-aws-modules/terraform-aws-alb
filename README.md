@@ -60,6 +60,20 @@ module "alb" {
 }
 ```
 
+## Conditional creation
+
+ Sometimes you need to have a way to create ALB resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_alb`.
+
+ ```hcl
+# This ALB will not be created
+module "alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  create_alb = false
+  # ... omitted
+}
+```
+
 ## Testing
 
 This module has been packaged with [awspec](https://github.com/k1LoW/awspec) tests through [kitchen](https://kitchen.ci/) and [kitchen-terraform](https://newcontext-oss.github.io/kitchen-terraform/). To run them:
@@ -111,6 +125,7 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| create\_alb | Controls if the ALB should be created | string | `true` | no |
 | enable\_cross\_zone\_load\_balancing | Indicates whether cross zone load balancing should be enabled in application load balancers. | string | `false` | no |
 | enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | string | `false` | no |
 | enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | string | `true` | no |
