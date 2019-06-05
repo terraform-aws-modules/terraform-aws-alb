@@ -43,7 +43,7 @@ A full example leveraging other community modules is contained in the [examples/
 
 ```hcl
 module "alb" {
-  source                        = "terraform-aws-modules/alb/aws"
+  source                        = "git@github.com:terraform-aws-modules/terraform-aws-alb"
   load_balancer_name            = "my-alb"
   security_groups               = ["sg-edcd9784", "sg-edcd9785"]
   log_bucket_name               = "logs-us-east-2-123456789012"
