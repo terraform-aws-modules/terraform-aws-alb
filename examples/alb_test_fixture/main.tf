@@ -75,9 +75,9 @@ resource "aws_autoscaling_group" "test" {
   min_size             = 1
   launch_configuration = aws_launch_configuration.as_conf.name
   health_check_type    = "EC2"
-  target_group_arns = module.alb.target_group_arns
-  force_delete      = true
-  vpc_zone_identifier = module.vpc.public_subnets
+  target_group_arns    = module.alb.target_group_arns
+  force_delete         = true
+  vpc_zone_identifier  = module.vpc.public_subnets
 }
 
 resource "aws_launch_configuration" "test" {

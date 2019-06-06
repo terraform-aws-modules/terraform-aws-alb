@@ -24,7 +24,7 @@ variable "enable_cross_zone_load_balancing" {
 
 variable "extra_ssl_certs" {
   description = "A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward)."
-  type        = list(object({ certificate_arn=string, https_listener_index=number }))
+  type        = list(object({ certificate_arn = string, https_listener_index = number }))
   default     = []
 }
 
@@ -37,8 +37,8 @@ variable "extra_ssl_certs_count" {
 variable "https_listeners" {
   description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0)"
   # TODO: How to manage optional values?
-  type        = list(object({ port=number, certificate_arn=string }))
-  default     = []
+  type    = list(object({ port = number, certificate_arn = string }))
+  default = []
 }
 
 variable "https_listeners_count" {
@@ -50,8 +50,8 @@ variable "https_listeners_count" {
 variable "http_tcp_listeners" {
   description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
   # TODO: How to manage optional values?
-  type        = list(object({ port=number, protocol=string }))
-  default     = []
+  type    = list(object({ port = number, protocol = string }))
+  default = []
 }
 
 variable "http_tcp_listeners_count" {
@@ -144,8 +144,8 @@ variable "security_groups" {
 variable "target_groups" {
   description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable."
   # TODO: How to manage optional values?
-  type        = list(object({ name=string, backend_protocol=string, backend_port=number }))
-  default     = []
+  type    = list(object({ name = string, backend_protocol = string, backend_port = number }))
+  default = []
 }
 
 variable "target_groups_count" {
@@ -156,7 +156,7 @@ variable "target_groups_count" {
 
 variable "target_groups_defaults" {
   description = "Default values for target groups as defined by the list of maps."
-  type        = object(
+  type = object(
     {
       cookie_duration                  = number,
       deregistration_delay             = number,
