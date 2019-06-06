@@ -33,49 +33,49 @@ resource "aws_lb_target_group" "main_no_logs" {
   deregistration_delay = lookup(
     var.target_groups[count.index],
     "deregistration_delay",
-    local.target_groups_defaults["deregistration_delay"],
+    var.target_groups_defaults["deregistration_delay"],
   )
   target_type = lookup(
     var.target_groups[count.index],
     "target_type",
-    local.target_groups_defaults["target_type"],
+    var.target_groups_defaults["target_type"],
   )
   slow_start = lookup(
     var.target_groups[count.index],
     "slow_start",
-    local.target_groups_defaults["slow_start"],
+    var.target_groups_defaults["slow_start"],
   )
 
   health_check {
     interval = lookup(
       var.target_groups[count.index],
       "health_check_interval",
-      local.target_groups_defaults["health_check_interval"],
+      var.target_groups_defaults["health_check_interval"],
     )
     path = lookup(
       var.target_groups[count.index],
       "health_check_path",
-      local.target_groups_defaults["health_check_path"],
+      var.target_groups_defaults["health_check_path"],
     )
     port = lookup(
       var.target_groups[count.index],
       "health_check_port",
-      local.target_groups_defaults["health_check_port"],
+      var.target_groups_defaults["health_check_port"],
     )
     healthy_threshold = lookup(
       var.target_groups[count.index],
       "health_check_healthy_threshold",
-      local.target_groups_defaults["health_check_healthy_threshold"],
+      var.target_groups_defaults["health_check_healthy_threshold"],
     )
     unhealthy_threshold = lookup(
       var.target_groups[count.index],
       "health_check_unhealthy_threshold",
-      local.target_groups_defaults["health_check_unhealthy_threshold"],
+      var.target_groups_defaults["health_check_unhealthy_threshold"],
     )
     timeout = lookup(
       var.target_groups[count.index],
       "health_check_timeout",
-      local.target_groups_defaults["health_check_timeout"],
+      var.target_groups_defaults["health_check_timeout"],
     )
     protocol = upper(
       lookup(
@@ -87,7 +87,7 @@ resource "aws_lb_target_group" "main_no_logs" {
     matcher = lookup(
       var.target_groups[count.index],
       "health_check_matcher",
-      local.target_groups_defaults["health_check_matcher"],
+      var.target_groups_defaults["health_check_matcher"],
     )
   }
 
@@ -96,12 +96,12 @@ resource "aws_lb_target_group" "main_no_logs" {
     cookie_duration = lookup(
       var.target_groups[count.index],
       "cookie_duration",
-      local.target_groups_defaults["cookie_duration"],
+      var.target_groups_defaults["cookie_duration"],
     )
     enabled = lookup(
       var.target_groups[count.index],
       "stickiness_enabled",
-      local.target_groups_defaults["stickiness_enabled"],
+      var.target_groups_defaults["stickiness_enabled"],
     )
   }
 
