@@ -1,5 +1,10 @@
+terraform {
+  required_version = ">= 0.12"
+}
+
 provider "aws" {
-  region = "eu-west-1"
+  version = ">= 2.7.0"
+  region  = "eu-west-1"
 }
 
 ##########################################
@@ -15,3 +20,4 @@ module "alb_disabled" {
   security_groups    = ["sg-12345678"]
   subnets            = ["subnet-12345678"]
 }
+
