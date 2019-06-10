@@ -15,7 +15,6 @@ before_script:
 - echo 'before_script'
 - export AWS_REGION=$(docker run --env AWS_DEFAULT_REGION=us-east-2 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} garland/aws-cli-docker aws ec2 describe-regions --query 'Regions[].{Name:RegionName}' --output text | shuf | head -n1)
 - export TF_VAR_region=${AWS_REGION}
-- export AWS_DEFAULT_REGION=${AWS_REGION}
 - echo "using AWS_REGION=${AWS_REGION}"
 - export TF_WARN_OUTPUT_ERRORS=1
 - curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.12.0/terraform_0.12.0_linux_amd64.zip
@@ -27,7 +26,7 @@ script:
 - echo 'script'
 - terraform init
 - terraform fmt -check=true
-- terraform validate -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
+- terraform validate -var "region=${AWS_REGION}" -var "subnets=[]" -var "vpc_id=vpc-abcde012" -var "load_balancer_name=my-lb" -var "log_bucket_name=my-log-bucket" -var "security_groups=[]"
 - docker run --rm -v $(pwd):/app/ --workdir=/app/ -t wata727/tflint --error-with-issues
 - cd examples/alb_test_fixture
 - terraform init
