@@ -17,8 +17,8 @@ before_script:
 - export TF_VAR_region=${AWS_REGION}
 - echo "using AWS_REGION=${AWS_REGION}"
 - export TF_WARN_OUTPUT_ERRORS=1
-- curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
-- sha256sum terraform.zip  | grep "6b8ce67647a59b2a3f70199c304abca0ddec0e49fd060944c26f666298e23418"
+- curl --silent --output terraform.zip https://releases.hashicorp.com/terraform/0.12.1/terraform_0.12.1_linux_amd64.zip
+- sha256sum terraform.zip  | grep "c9a30d3e3abf751b3b3e323897e9c7cb411d5c4bb7473a3284a2a2b4b89f93ed"
 - unzip terraform.zip ; rm -f terraform.zip; chmod +x terraform
 - mkdir -p ${HOME}/bin ; export PATH=${PATH}:${HOME}/bin; mv terraform ${HOME}/bin/
 - terraform -v

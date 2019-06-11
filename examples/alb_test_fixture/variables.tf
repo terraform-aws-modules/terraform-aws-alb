@@ -9,3 +9,4 @@ variable "region" {
 variable "log_bucket_name" {
   default = "test-log-bucket"
 }
+

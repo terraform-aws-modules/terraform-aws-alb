@@ -44,7 +44,9 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registr
 
 * ```hcl
 * module "alb" {
-*   source                        = "terraform-aws-modules/alb/aws"
+*   source  = "terraform-aws-modules/alb/aws"
+*   version = "~> 4.0"
+*
 *   load_balancer_name            = "my-alb"
 *   security_groups               = ["sg-edcd9784", "sg-edcd9785"]
 *   log_bucket_name               = "logs-us-east-2-123456789012"
@@ -108,4 +110,3 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registr
 
 * MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/LICENSE) for full details.
 */
-

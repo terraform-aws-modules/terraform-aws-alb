@@ -43,7 +43,9 @@ A full example leveraging other community modules is contained in the [examples/
 
 ```hcl
 module "alb" {
-  source                        = "terraform-aws-modules/alb/aws"
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 4.0"
+
   load_balancer_name            = "my-alb"
   security_groups               = ["sg-edcd9784", "sg-edcd9785"]
   log_bucket_name               = "logs-us-east-2-123456789012"
@@ -125,17 +127,17 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| create\_alb | Controls if the ALB should be created | string | `true` | no |
-| enable\_cross\_zone\_load\_balancing | Indicates whether cross zone load balancing should be enabled in application load balancers. | string | `false` | no |
-| enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | string | `false` | no |
-| enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | string | `true` | no |
-| extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward). | list | `<list>` | no |
-| extra\_ssl\_certs\_count | A manually provided count/length of the extra_ssl_certs list of maps since the list cannot be computed. | string | `0` | no |
-| http\_tcp\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list | `<list>` | no |
-| http\_tcp\_listeners\_count | A manually provided count/length of the http_tcp_listeners list of maps since the list cannot be computed. | string | `0` | no |
-| https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0) | list | `<list>` | no |
-| https\_listeners\_count | A manually provided count/length of the https_listeners list of maps since the list cannot be computed. | string | `0` | no |
-| idle\_timeout | The time in seconds that the connection is allowed to be idle. | string | `60` | no |
+| create\_alb | Controls if the ALB should be created | bool | `true` | no |
+| enable\_cross\_zone\_load\_balancing | Indicates whether cross zone load balancing should be enabled in application load balancers. | bool | `false` | no |
+| enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | bool | `false` | no |
+| enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | bool | `true` | no |
+| extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward). | list(object) | `<list>` | no |
+| extra\_ssl\_certs\_count | A manually provided count/length of the extra_ssl_certs list of maps since the list cannot be computed. | number | `0` | no |
+| http\_tcp\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list(object) | `<list>` | no |
+| http\_tcp\_listeners\_count | A manually provided count/length of the http_tcp_listeners list of maps since the list cannot be computed. | number | `0` | no |
+| https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0) | list(object) | `<list>` | no |
+| https\_listeners\_count | A manually provided count/length of the https_listeners list of maps since the list cannot be computed. | number | `0` | no |
+| idle\_timeout | The time in seconds that the connection is allowed to be idle. | number | `60` | no |
 | ip\_address\_type | The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack. | string | `ipv4` | no |
 | listener\_ssl\_policy\_default | The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html). | string | `ELBSecurityPolicy-2016-08` | no |
 | load\_balancer\_create\_timeout | Timeout value when creating the ALB. | string | `10m` | no |
@@ -145,13 +147,13 @@ MIT Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-a
 | load\_balancer\_update\_timeout | Timeout value when updating the ALB. | string | `10m` | no |
 | log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if logging_enabled is true. | string | `` | no |
 | log\_location\_prefix | S3 prefix within the log_bucket_name under which logs are stored. | string | `` | no |
-| logging\_enabled | Controls if the ALB will log requests to S3. | string | `true` | no |
+| logging\_enabled | Controls if the ALB will log requests to S3. | bool | `true` | no |
 | security\_groups | The security groups to attach to the load balancer. e.g. ["sg-edcd9784","sg-edcd9785"] | list | - | yes |
-| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | list | - | yes |
-| tags | A map of tags to add to all resources | map | `<map>` | no |
-| target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable. | list | `<list>` | no |
+| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | list(string) | - | yes |
+| tags | A map of tags to add to all resources | map(string) | `<map>` | no |
+| target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable. | list(object) | `<list>` | no |
 | target\_groups\_count | A manually provided count/length of the target_groups list of maps since the list cannot be computed. | string | `0` | no |
-| target\_groups\_defaults | Default values for target groups as defined by the list of maps. | map | `<map>` | no |
+| target\_groups\_defaults | Default values for target groups as defined by the list of maps. | object | `<object>` | no |
 | vpc\_id | VPC id where the load balancer and other resources will be deployed. | string | - | yes |
 
 ## Outputs

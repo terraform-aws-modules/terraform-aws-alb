@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
-## [[vNEXT](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.5.0...HEAD)] - yyyy-mm-dd]
+## [[vNEXT](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.0.0...HEAD)] - yyyy-mm-dd]
+
+## [[v4.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.5.0...4.0.0)] - yyyy-mm-dd]
+
+### Changed
+
+- Upgrade module to support Terraform 0.12
 
 ## [[v3.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.4.0...v3.5.0)] - 2018-12-03]
 
