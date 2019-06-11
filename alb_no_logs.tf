@@ -9,6 +9,7 @@ resource "aws_lb" "application_no_logs" {
   enable_deletion_protection       = var.enable_deletion_protection
   enable_http2                     = var.enable_http2
   ip_address_type                  = var.ip_address_type
+
   tags = merge(
     var.tags,
     {

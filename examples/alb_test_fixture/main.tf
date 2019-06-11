@@ -1,14 +1,5 @@
-terraform {
-  required_version = ">= 0.12"
-}
-
 provider "aws" {
-  version = ">= 2.7.0"
-  region  = var.region
-}
-
-provider "random" {
-  version = "= 2.1.0"
+  region = var.region
 }
 
 resource "random_string" "suffix" {
@@ -49,24 +40,24 @@ resource "aws_s3_bucket" "log_bucket" {
 }
 
 module "vpc" {
-  source             = "terraform-aws-modules/vpc/aws"
-  version            = "2.5.0"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 2.0"
+
   name               = "test-vpc"
   cidr               = "10.0.0.0/16"
   azs                = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[1]]
-  private_subnets    = ["10.0.1.0/24", "10.0.2.0/24"]
   public_subnets     = ["10.0.3.0/24", "10.0.4.0/24"]
-  enable_nat_gateway = true
-  single_nat_gateway = true
+  enable_nat_gateway = false
   tags               = local.tags
 }
 
 module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "3.0.1"
-  name    = "test-sg-https"
-  vpc_id  = module.vpc.vpc_id
-  tags    = local.tags
+  version = "~> 3.0.1"
+
+  name   = "test-sg-https"
+  vpc_id = module.vpc.vpc_id
+  tags   = local.tags
 }
 
 resource "aws_autoscaling_group" "test" {
@@ -93,7 +84,7 @@ resource "aws_launch_configuration" "as_conf" {
 }
 
 module "alb" {
-  source                   = "../.."
+  source                   = "../../"
   load_balancer_name       = "test-alb-${random_string.suffix.result}"
   security_groups          = [module.security_group.this_security_group_id]
   logging_enabled          = true

@@ -36,8 +36,8 @@ variable "extra_ssl_certs_count" {
 
 variable "https_listeners" {
   description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0)"
-  type    = list(map(string))
-  default = []
+  type        = list(map(string))
+  default     = []
 }
 
 variable "https_listeners_count" {
@@ -48,8 +48,8 @@ variable "https_listeners_count" {
 
 variable "http_tcp_listeners" {
   description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
-  type    = list(map(string))
-  default = []
+  type        = list(map(string))
+  default     = []
 }
 
 variable "http_tcp_listeners_count" {
@@ -141,8 +141,8 @@ variable "security_groups" {
 
 variable "target_groups" {
   description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable."
-  type    = list(map(string))
-  default = []
+  type        = list(map(string))
+  default     = []
 }
 
 variable "target_groups_count" {
