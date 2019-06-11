@@ -1,223 +1,192 @@
-# Change Log
+<a name="unreleased"></a>
+## [Unreleased]
 
-All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
-project adheres to [Semantic Versioning](http://semver.org/).
 
-## [[vNEXT](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.0.0...HEAD)] - yyyy-mm-dd]
+<a name="v4.0.0"></a>
+## [v4.0.0] - 2019-06-11
 
-## [[v4.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.5.0...4.0.0)] - yyyy-mm-dd]
+- Upgrade module to support Terraform 0.12 ([#107](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/107))
 
-### Changed
 
-- Upgrade module to support Terraform 0.12
+<a name="v3.6.0"></a>
+## [v3.6.0] - 2019-06-05
 
-## [[v3.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.4.0...v3.5.0)] - 2018-12-03]
+- Added create_alb flag ([#104](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/104))
 
-### Changed
 
-- `slow_start` now exposed as a variable (thanks, @jwhitcraft 🥝)
-- `terraform-docs` doc generation process (and docs) updated as for the latest version.
-- tests repaired
+<a name="v3.5.0"></a>
+## [v3.5.0] - 2018-12-04
 
-## [[v3.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.1...v3.4.0)] - 2018-05-17]
+- Merge pull request [#91](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/91) from terraform-aws-modules/fix/tests
+- updated test to remove unsupported attribute
+- Merge pull request [#87](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/87) from jwhitcraft/slow_start
+- Add slow_start option
+- Merge pull request [#81](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/81) from alkalinecoffee/master
+- merge user-provided target_groups_defaults with our defaults
+- Add variable to support setting cross-zone-load-balancing ([#73](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/73))
+- tidying up
+- Move code of conduct to correct file
+- Update issue templates
 
-### Changed
 
-- resources supporting the not logging scenario added. Outputs now accommodate.
-- reorganized the resource explosion to separate files.
-- tests reorganized to confine cruft.
-- `terraform-docs` now supported and generating documentation. (Kiitos, @antonbabenko 🍒)
+<a name="v3.4.0"></a>
+## [v3.4.0] - 2018-05-17
 
-## [[v3.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.0...v3.3.1)] - 2018-05-06]
+- disabled logging now possible ([#69](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/69))
+- Added pre-commit hook to autogenerate terraform-docs ([#68](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/68))
 
-### Changed
 
-- sliced outputs were appended with a `- 1` in debugging. This introduced a bug which was fixed and verified through test.
+<a name="v3.3.1"></a>
+## [v3.3.1] - 2018-05-06
 
-## [[v3.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.2.0...v3.3.0)] - 2018-05-04]
+- outputs repaired and tests added to prove counts ([#67](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/67))
 
-### Added
 
-- `target_group_arn_suffixes` added to support monitoring through CloudWatch (props, @jeff-everett 🤗)
-- Contributor Covenant gives guidelines on contributions.
-- Issues and PR templates.
+<a name="v3.3.0"></a>
+## [v3.3.0] - 2018-05-05
 
+- Fix/ci ([#66](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/66))
+- tidy up to release ([#65](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/65))
+- add output target group arn suffixes ([#64](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/64))
+- Revert "Making logging configurable ([#60](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/60))" ([#62](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/62))
+- Added missing quotation mark in README.md example ([#63](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/63))
+- Making logging configurable ([#60](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/60))
+
+
+<a name="v3.2.0"></a>
 ## [v3.2.0] - 2018-03-28
 
-### Changed
+- release of target_group create_before_destroy to allow target_group changes in flight ([#59](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/59))
+- create_before_destroy target groups to allow in flight changes ([#58](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/58))
 
-- `create_before_destroy` lifecycle policy added to the target groups. This allows target groups to be modified, though means they're recreated anytime they're changed. A change MUST include a change to the `name` value or will fail on duplicates. (nice work, @egarbi 🦄)
 
+<a name="v3.1.0"></a>
 ## [v3.1.0] - 2018-03-22
 
-### Added
+- allow optional extra ssl certs ([#54](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/54))
+- `name` moved to `name_prefix` which limits ALB name descriptiveness to 6 characters ([#53](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/53))
+- listner » listener (fix typo on outputs.tf) ([#51](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/51))
 
-- extra certs can now be applied to HTTPS listeners via the `extra_ssl_certs` list variable and corresponding `extra_ssl_certs_count`.
 
-### Changed
-
-- `load_balancer_security_groups` moved to simpler `security_groups`.
-- `name_prefix` changed back to `name` as the inflexibility of a 6 character prefix is overly restricting. Name conflicts must be dealt with by the developer. (cheers, @michaelmoussa 🎉)
-- upgraded terraform and kitchen terraform. terraform 0.11.4 and above errors out on warnings but has been mitigated with `TF_WARN_OUTPUT_ERRORS=1` per [this issue](https://github.com/hashicorp/terraform/issues/17655).
-
+<a name="v3.0.0"></a>
 ## [v3.0.0] - 2018-03-20
 
-### Added
+- 3.0.0 release - configuration supports n of each ancillary ALB resource ([#49](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/49))
 
-- default values added for most target group and listener attributes.
-- new application load balancer attributes added as variables with defaults.
-- tests now cover listeners.
 
-### Changed
-
-- listeners and target groups now defined by lists of maps allowing many-to-many relationships of those resources.
-- listeners and target groups creation is now data driven through variables giving greater flexibility.
-- `name_prefix` used where possible to avoid naming conflicts in resource testing.
-- logging to S3 now made manditory and done outside the module as this is better practice. (thanks, @alexjurkiewicz 🥂)
-- terraform 0.11.3 now used in CI. 0.11.4 seems to have warnings on plan that become errors in CI.
-
+<a name="v2.5.0"></a>
 ## [v2.5.0] - 2018-03-07
 
-### Added
+- release prep and rubocop compliance ([#48](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/48))
+- Merge pull request [#47](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/47) from egarbi/custom_alb_listener_ports
+- Adds 2 new variables to control listener ports of ALB
+- Merge pull request [#41](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/41) from angstwad/fix-bucket-policy
+- Add target_group.name to outputs.tf ([#45](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/45))
+- update force_destroy_log_bucket description ([#42](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/42))
+- fix generated bucket policy if log_location_prefix is omitted (or empty string)
+- Add ALB target group target_type variable and  depends_on to alb related resource ([#37](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/37))
+- Fix syntax error in usage example ([#39](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/39))
 
-- `target_type` variable for targeting IPs rather than instances (nice, @angusfz 👌)
-- Added variables for controlling front door ALB listening ports (thanks, @egarbi ✨)
-- output for `target_group_name` for external consumption (boom! @ndench 🐱‍🐉)
 
-### Changed
-
-- Clarified variable description and bucket policy (right on, @angstwad 👏)
-- Docs and var description updates (everything helps, @tehmaspc 🦑)
-
+<a name="v2.4.0"></a>
 ## [v2.4.0] - 2018-01-19
 
-### Added
+- simple doc update [skip-ci]
+- kicking v2.4.0 out the door ([#35](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/35))
+- Remove region ([#30](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/30))
+- Add deregistration_delay argument ([#34](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/34))
+- Alb name ([#28](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/28))
+- moved data source to data file
 
-- `alb_arn_suffix` output added for external consumption. (props, @mbolek 🐱‍🏍)
-- variables to control listener ports (wunderbar, @egarbi 🙌)
 
-### Changed
-
-- Remove `region` input. If you'd like to customise the AWS provider configuration,
-  this is supported using the new `providers` input which is a core Terraform feature.
-  [Read more.](https://www.terraform.io/docs/modules/usage.html#providers-within-modules)
-- update CI to use terraform 0.11.2 and KT 3.1.0.
-- Several formatting changes to adhere to convention.
-
+<a name="v2.3.2"></a>
 ## [v2.3.2] - 2017-12-18
 
-### Added
+- added version file to help with release tags and changelog
+- added changelog entry and applied terraform fmt to updated outputs.tf fiel
+- Added http and https listener ARNs ([#25](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/25))
+- Create bucket before provisioning access logs on the ALB
 
-- ARN outputs of listeners for reuse outside the module. (thanks, @proj4spes! 👌)
 
-## [v2.3.1] - 2017-11-27
+<a name="v2.3.1"></a>
+## [v2.3.1] - 2017-11-28
 
-### Added
+- move to kitchen-terraform 3.0.x and terraform 0.11.0 ([#19](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/19))
+- Merge pull request [#18](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/18) from mbolek/tg_health_code
+- Adding the health check code for ALB health checking
 
-- variable `health_check_matcher` determines a set or range of successful HTTP
-  status codes for target group health checks (🧀 @mbolek).
-- adapted test kitchen configuration to KT 3.0.x.
 
-## [v2.1.0] - 2017-11-16
+<a name="v2.3.0"></a>
+## [v2.3.0] - 2017-11-21
 
-### Added
+- Add ARN of ALB to outputs ([#17](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/17))
 
-- outputs added for listeners - these can be useful for ECR integration (🍰
-  @mbolek).
-- Moved default `alb_protocols` to HTTP to lower barier of entry in getting
-  started.
 
-## [v2.0.0] - 2017-11-06
+<a name="v2.2.0"></a>
+## [v2.2.0] - 2017-11-21
 
-### Added
+- Merge pull request [#16](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/16) from mbolek/terraform_v011
+- Possible fix for Terraform v0.11(output to non-existing resource)
 
-- added `create_log_bucket` and `enable_logging` to help control logging more
-  granularly.
 
-### Changed
+<a name="v2.1.0"></a>
+## [v2.1.0] - 2017-11-17
 
-- existing log-related variables made more descriptive (this is the breaking
-  change)
-- S3 policy related test made more explicit (⭐ @antonbabenko)
+- Merge pull request [#14](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/14) from terraform-aws-modules/simplify_region_var_in_tests
+- added detail to changelog
+- resolving the HTTP default issue
+- Merge pull request [#13](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/13) from mbolek/alb_listener_outputs
+- Adding outputs
+- Merge pull request [#10](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/10) from tpoindessous/patch-2
+- Merge pull request [#9](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/9) from tpoindessous/patch-1
+- Update README.md
+- Update README.md
+- Update outputs.tf
+- Update outputs.tf
 
-## [v1.0.3] - 2017-10-19
 
-### Added
+<a name="v2.0.0"></a>
+## [v2.0.0] - 2017-11-07
 
-- TravisCI configuration added and now passing.
-- badge added to docs.
-- permissions section now in the example readme.
-- placeholder shell script added for CI deployment. Eventually this should
-  conditionally release to the registry when those APIs become available.
+- Flip order of variable params, moving versioning to adhere to semver
+- Rev'ing minor version as variable changes are breaking
+- Added flexibility around logging
+- corrected link to CI
 
-### Changed
 
-- altered tf variable `aws_region` to `region`.
-- replaced hardcoding the region to instead use a random region as retrieved by
-  an awscli docker container within CI.
-- example cert is now a regionally-specific resource enabling tests to run in
-  various regions at once and not collide.
-- ruby version bump means `Rhcl` becomes `rhcl`.
+<a name="v1.0.3"></a>
+## [v1.0.3] - 2017-10-25
 
-## [v1.0.2] - 2017-10-12
+- Fixed sid in s3 bucket policy test
+- Fixed S3 bucket policy to make it canonical
+- Adding CI to module ([#5](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/5))
+- Migrating to new org and terraform registry ([#1](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/1))
 
-### Added
 
-- moved data sources to dedicated `data.tf` file.
-- `aws_caller_identity` now used to gather account_id rather than using a
-  variable.
-- tests added for `target_group` and expanded for `alb`.
-- input variables added for health checks, bucket policy,
-  force_destroy_log_bucket - increasing flexibility.
+<a name="v0.0.1"></a>
+## v0.0.1 - 2017-09-26
 
-### Changed
+- Initial commit
+- Initial commit
 
-- altered structure of module to conform to the new
-  [Terraform registry standards](https://www.terraform.io/docs/registry/modules/publish.html#requirements)
-- `principle_account_id` (sp) moved to a data source rather than variable map.
-  Spelling corrected.
-- removed redundant `/test/alb` directory which had module contents copied. Test
-  kitchen now uses the module itself.
-- pinned examples to provider and terraform versions to harden versioning.
-- self signed cert added to the test fixtures, eliminating the need for manual
-  upload and terraform.tfvars configuration.
-- modules referenced in the test fixture are now sourced from the terraform
-  registry.
-- removed bucket_policy.json in favor of creating the policy via the
-  `aws_iam_policy_document` resource or optionally a variable.
-- stringed list variables moved to native lists
 
-## [v1.0.1] - 2017-09-14
-
-### Added
-
-- tag maps can now be provided (thanks @kwach)
-
-### Changed
-
-- optional S3 logging (thanks @marocchino)
-
-## [v1.0.0] - 2017-03-16
-
-### Added
-
-- Tests and fixtures for ALB components using awspec and test kitchen
-- S3 log bucket and policy rendering for logging now in place
-- root_principle_id added and referenced through a map for s3 bucket policy
-- string lists moved to native list types
-- default region removed
-
-### Changed
-
-- Restructured project templates to alb dir to add testing. This is a breaking
-  change so upping major version.
-- Redundant examples dir removed
-- Updated documentation
-
-## [v0.1.0] - 2017-03-09
-
-### Added
-
-- Initial release.
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.0.0...HEAD
+[v4.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.6.0...v4.0.0
+[v3.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.5.0...v3.6.0
+[v3.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.4.0...v3.5.0
+[v3.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.1...v3.4.0
+[v3.3.1]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.3.0...v3.3.1
+[v3.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.2.0...v3.3.0
+[v3.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.1.0...v3.2.0
+[v3.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.0.0...v3.1.0
+[v3.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.5.0...v3.0.0
+[v2.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.4.0...v2.5.0
+[v2.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.3.2...v2.4.0
+[v2.3.2]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.3.1...v2.3.2
+[v2.3.1]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.3.0...v2.3.1
+[v2.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.2.0...v2.3.0
+[v2.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.1.0...v2.2.0
+[v2.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v2.0.0...v2.1.0
+[v2.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v1.0.3...v2.0.0
+[v1.0.3]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v0.0.1...v1.0.3

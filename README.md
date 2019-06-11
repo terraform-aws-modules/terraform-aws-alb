@@ -7,6 +7,12 @@ Balancer (ALB) running over HTTP/HTTPS. Available through the [Terraform registr
 | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | master | [![build Status](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/terraform-aws-modules/terraform-aws-alb) |
 
+## Terraform versions
+
+Terraform 0.12. Pin module version to `~> v4.0`. Submit pull-requests to `master` branch.
+
+Terraform 0.11. Pin module version to `~> v3.0`. Submit pull-requests to `terraform011` branch.
+
 ## Assumptions
 
 * You want to create a set of resources around an application load balancer: namely associated target groups and listeners.
