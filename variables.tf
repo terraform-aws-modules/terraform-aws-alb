@@ -36,8 +36,7 @@ variable "extra_ssl_certs_count" {
 
 variable "https_listeners" {
   description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0)"
-  # TODO: How to manage optional values?
-  type    = list(object({ port = number, certificate_arn = string }))
+  type    = list(map(string))
   default = []
 }
 
@@ -49,8 +48,7 @@ variable "https_listeners_count" {
 
 variable "http_tcp_listeners" {
   description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
-  # TODO: How to manage optional values?
-  type    = list(object({ port = number, protocol = string }))
+  type    = list(map(string))
   default = []
 }
 
@@ -143,8 +141,7 @@ variable "security_groups" {
 
 variable "target_groups" {
   description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable."
-  # TODO: How to manage optional values?
-  type    = list(object({ name = string, backend_protocol = string, backend_port = number }))
+  type    = list(map(string))
   default = []
 }
 
@@ -158,18 +155,18 @@ variable "target_groups_defaults" {
   description = "Default values for target groups as defined by the list of maps."
   type = object(
     {
-      cookie_duration                  = number,
-      deregistration_delay             = number,
-      health_check_interval            = number,
-      health_check_healthy_threshold   = number,
+      cookie_duration                  = string,
+      deregistration_delay             = string,
+      health_check_interval            = string,
+      health_check_healthy_threshold   = string,
       health_check_path                = string,
       health_check_port                = string,
-      health_check_timeout             = number,
-      health_check_unhealthy_threshold = number,
+      health_check_timeout             = string,
+      health_check_unhealthy_threshold = string,
       health_check_matcher             = string,
-      stickiness_enabled               = bool,
+      stickiness_enabled               = string,
       target_type                      = string,
-      slow_start                       = number,
+      slow_start                       = string,
     }
   )
   default = {
