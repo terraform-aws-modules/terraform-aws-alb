@@ -3,9 +3,16 @@
 
 
 
+<a name="v4.1.0"></a>
+## [v4.1.0] - 2019-06-17
+
+- Updated pre-commit-terraform to support terraform-docs and Terraform 0.12
+
+
 <a name="v4.0.0"></a>
 ## [v4.0.0] - 2019-06-11
 
+- Updated CHANGELOG
 - Upgrade module to support Terraform 0.12 ([#107](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/107))
 
 
@@ -171,7 +178,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.1.0...HEAD
+[v4.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.6.0...v4.0.0
 [v3.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.5.0...v3.6.0
 [v3.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.4.0...v3.5.0
