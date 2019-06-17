@@ -2,10 +2,10 @@
 # See http://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: git://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.12.0
+    rev: v1.14.0
     hooks:
       - id: terraform_fmt
-      # - id: terraform_docs
+      - id: terraform_docs
   - repo: git://github.com/pre-commit/pre-commit-hooks
     rev: v2.2.3
     hooks:
