@@ -139,3 +139,8 @@ variable "target_groups_defaults" {
 variable "vpc_id" {
   description = "VPC id where the load balancer and other resources will be deployed."
 }
+
+variable "load_balancer_type" {
+  default = "application"
+  description = "The load balancer type can be application or network"
+}

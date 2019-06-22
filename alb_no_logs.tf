@@ -17,7 +17,28 @@ resource "aws_lb" "application_no_logs" {
     update = "${var.load_balancer_update_timeout}"
   }
 
-  count = "${var.create_alb && !var.logging_enabled ? 1 : 0}"
+  count = "${var.create_alb && !var.logging_enabled && var.load_balancer_type == "application" ? 1 : 0}"
+}
+
+resource "aws_lb" "network_no_logs" {
+  load_balancer_type               = "network"
+  name                             = "${var.load_balancer_name}"
+  internal                         = "${var.load_balancer_is_internal}"
+  subnets                          = ["${var.subnets}"]
+  idle_timeout                     = "${var.idle_timeout}"
+  enable_cross_zone_load_balancing = "${var.enable_cross_zone_load_balancing}"
+  enable_deletion_protection       = "${var.enable_deletion_protection}"
+  enable_http2                     = "${var.enable_http2}"
+  ip_address_type                  = "${var.ip_address_type}"
+  tags                             = "${merge(var.tags, map("Name", var.load_balancer_name))}"
+
+  timeouts {
+    create = "${var.load_balancer_create_timeout}"
+    delete = "${var.load_balancer_delete_timeout}"
+    update = "${var.load_balancer_update_timeout}"
+  }
+
+  count = "${var.create_alb && !var.logging_enabled && var.load_balancer_type != "application" ? 1 : 0}"
 }
 
 resource "aws_lb_target_group" "main_no_logs" {
@@ -47,7 +68,7 @@ resource "aws_lb_target_group" "main_no_logs" {
   }
 
   tags       = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
-  count      = "${var.create_alb && !var.logging_enabled ? var.target_groups_count : 0}"
+  count      = "${var.create_alb && !var.logging_enabled && var.load_balancer_type == "application" ? var.target_groups_count : 0}"
   depends_on = ["aws_lb.application_no_logs"]
 
   lifecycle {
@@ -55,8 +76,45 @@ resource "aws_lb_target_group" "main_no_logs" {
   }
 }
 
+resource "aws_lb_target_group" "network_no_logs" {
+  name                 = "${lookup(var.target_groups[count.index], "name")}"
+  vpc_id               = "${var.vpc_id}"
+  port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
+  protocol             = "${upper(lookup(var.target_groups[count.index], "backend_protocol"))}"
+  deregistration_delay = "${lookup(var.target_groups[count.index], "deregistration_delay", lookup(local.target_groups_defaults, "deregistration_delay"))}"
+  target_type          = "${lookup(var.target_groups[count.index], "target_type", lookup(local.target_groups_defaults, "target_type"))}"
+  slow_start           = "${lookup(var.target_groups[count.index], "slow_start", lookup(local.target_groups_defaults, "slow_start"))}"
+
+  health_check {
+    interval            = "${lookup(var.target_groups[count.index], "health_check_interval", lookup(local.target_groups_defaults, "health_check_interval"))}"
+    port                = "${lookup(var.target_groups[count.index], "health_check_port", lookup(local.target_groups_defaults, "health_check_port"))}"
+    healthy_threshold   = "${lookup(var.target_groups[count.index], "health_check_healthy_threshold", lookup(local.target_groups_defaults, "health_check_healthy_threshold"))}"
+    unhealthy_threshold = "${lookup(var.target_groups[count.index], "health_check_unhealthy_threshold", lookup(local.target_groups_defaults, "health_check_unhealthy_threshold"))}"
+    protocol            = "${upper(lookup(var.target_groups[count.index], "healthcheck_protocol", lookup(var.target_groups[count.index], "backend_protocol")))}"
+  }
+
+  stickiness {
+    type            = "lb_cookie"
+    cookie_duration = "${lookup(var.target_groups[count.index], "cookie_duration", lookup(local.target_groups_defaults, "cookie_duration"))}"
+    enabled         = "${lookup(var.target_groups[count.index], "stickiness_enabled", lookup(local.target_groups_defaults, "stickiness_enabled"))}"
+  }
+
+  tags       = "${merge(var.tags, map("Name", lookup(var.target_groups[count.index], "name")))}"
+  count      = "${var.create_alb && !var.logging_enabled && var.load_balancer_type != "application" ? var.target_groups_count : 0}"
+  depends_on = ["aws_lb.network_no_logs"]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+locals {
+  load_balancer_arn_no_logs = "${var.load_balancer_type == "application" ? element(concat(aws_lb.application_no_logs.*.arn, list("")), 0) : element(concat(aws_lb.network_no_logs.*.arn, list("")), 0)}"
+  target_group_ids_no_logs = "${var.load_balancer_type == "application" ? list(aws_lb_target_group.main_no_logs.*.id) : list(aws_lb_target_group.network_no_logs.*.id)}"
+}
+
 resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
-  load_balancer_arn = "${element(concat(aws_lb.application_no_logs.*.arn, list("")), 0)}"
+  load_balancer_arn = "${local.load_balancer_arn_no_logs}"
   port              = "${lookup(var.http_tcp_listeners[count.index], "port")}"
   protocol          = "${lookup(var.http_tcp_listeners[count.index], "protocol")}"
   count             = "${var.create_alb && !var.logging_enabled ? var.http_tcp_listeners_count : 0}"
@@ -68,9 +126,9 @@ resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
 }
 
 resource "aws_lb_listener" "frontend_https_no_logs" {
-  load_balancer_arn = "${element(concat(aws_lb.application_no_logs.*.arn, list("")), 0)}"
+  load_balancer_arn = "${local.load_balancer_arn_no_logs}"
   port              = "${lookup(var.https_listeners[count.index], "port")}"
-  protocol          = "HTTPS"
+  protocol          = "${local.https_listener_protocol}"
   certificate_arn   = "${lookup(var.https_listeners[count.index], "certificate_arn")}"
   ssl_policy        = "${lookup(var.https_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)}"
   count             = "${var.create_alb && !var.logging_enabled ? var.https_listeners_count : 0}"
