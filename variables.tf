@@ -141,6 +141,6 @@ variable "vpc_id" {
 }
 
 variable "load_balancer_type" {
-  default = "application"
+  default     = "application"
   description = "The load balancer type can be application or network"
 }

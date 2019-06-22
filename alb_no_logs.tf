@@ -110,7 +110,7 @@ resource "aws_lb_target_group" "network_no_logs" {
 
 locals {
   load_balancer_arn_no_logs = "${var.load_balancer_type == "application" ? element(concat(aws_lb.application_no_logs.*.arn, list("")), 0) : element(concat(aws_lb.network_no_logs.*.arn, list("")), 0)}"
-  target_group_ids_no_logs = "${var.load_balancer_type == "application" ? list(aws_lb_target_group.main_no_logs.*.id) : list(aws_lb_target_group.network_no_logs.*.id)}"
+  target_group_ids_no_logs  = "${var.load_balancer_type == "application" ? list(aws_lb_target_group.main_no_logs.*.id) : list(aws_lb_target_group.network_no_logs.*.id)}"
 }
 
 resource "aws_lb_listener" "frontend_http_tcp_no_logs" {

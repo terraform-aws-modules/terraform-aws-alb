@@ -122,7 +122,7 @@ resource "aws_lb_target_group" "network" {
 
 locals {
   load_balancer_arn = "${var.load_balancer_type == "application" ? element(concat(aws_lb.application.*.arn, list("")), 0) : element(concat(aws_lb.network.*.arn, list("")), 0)}"
-  target_group_ids = "${var.load_balancer_type == "application" ? list(aws_lb_target_group.main.*.id) : list(aws_lb_target_group.network.*.id)}"
+  target_group_ids  = "${var.load_balancer_type == "application" ? list(aws_lb_target_group.main.*.id) : list(aws_lb_target_group.network.*.id)}"
 }
 
 resource "aws_lb_listener" "frontend_http_tcp" {

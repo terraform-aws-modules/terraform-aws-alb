@@ -14,6 +14,6 @@ locals {
     slow_start                       = 0
   }
 
-  target_groups_defaults = "${merge(local.target_groups_default_configs, var.target_groups_defaults)}"
-  https_listener_protocol   = "${var.load_balancer_type == "application" ? "HTTPS" : "TLS"}"
+  target_groups_defaults  = "${merge(local.target_groups_default_configs, var.target_groups_defaults)}"
+  https_listener_protocol = "${var.load_balancer_type == "application" ? "HTTPS" : "TLS"}"
 }
