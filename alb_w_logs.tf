@@ -122,7 +122,7 @@ resource "aws_lb_target_group" "network" {
 
 locals {
   load_balancer_arn = "${var.load_balancer_type == "application" ? element(concat(aws_lb.application.*.arn, list("")), 0) : element(concat(aws_lb.network.*.arn, list("")), 0)}"
-  target_group_ids = "${slice(concat(aws_lb_target_group.main.*.id, aws_lb_target_group.network.*.id, list("")), 0, var.target_groups_count)}"
+  target_group_ids  = "${slice(concat(aws_lb_target_group.main.*.id, aws_lb_target_group.network.*.id, list("")), 0, var.target_groups_count)}"
   target_group_arns = "${slice(concat(aws_lb_target_group.main.*.arn, aws_lb_target_group.network.*.arn, list("")), 0, var.target_groups_count)}"
 }
 
