@@ -110,7 +110,8 @@ resource "aws_lb_target_group" "network_no_logs" {
 
 locals {
   load_balancer_arn_no_logs = "${var.load_balancer_type == "application" ? element(concat(aws_lb.application_no_logs.*.arn, list("")), 0) : element(concat(aws_lb.network_no_logs.*.arn, list("")), 0)}"
-  target_group_ids_no_logs  = "${var.load_balancer_type == "application" ? list(aws_lb_target_group.main_no_logs.*.id) : list(aws_lb_target_group.network_no_logs.*.id)}"
+  target_group_ids_no_logs = "${slice(concat(aws_lb_target_group.main_no_logs.*.id, aws_lb_target_group.network_no_logs.*.id, list("")), 0, var.target_groups_count)}"
+  target_group_arns_no_logs = "${slice(concat(aws_lb_target_group.main_no_logs.*.arn, aws_lb_target_group.network_no_logs.*.arn, list("")), 0, var.target_groups_count)}"
 }
 
 resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
@@ -120,7 +121,7 @@ resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
   count             = "${var.create_alb && !var.logging_enabled ? var.http_tcp_listeners_count : 0}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
+    target_group_arn = "${local.target_group_ids_no_logs[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
     type             = "forward"
   }
 }
@@ -134,7 +135,7 @@ resource "aws_lb_listener" "frontend_https_no_logs" {
   count             = "${var.create_alb && !var.logging_enabled ? var.https_listeners_count : 0}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
+    target_group_arn = "${local.target_group_ids_no_logs[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
     type             = "forward"
   }
 }
