@@ -47,7 +47,7 @@ variable "https_listeners_count" {
 }
 
 variable "http_tcp_listeners" {
-  description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
+  description = "A list of maps describing the HTTP listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0)"
   type        = list(map(string))
   default     = []
 }
