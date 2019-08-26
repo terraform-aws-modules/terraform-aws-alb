@@ -113,6 +113,7 @@ variable "tags" {
 variable "security_groups" {
   description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
   type        = "list"
+  default     = []
 }
 
 variable "target_groups" {
@@ -138,4 +139,15 @@ variable "vpc_id" {
 variable "enable_access_log_collection" {
   description = "True if you want to collect LB access logs into S3 Bucket."
   default     = "false"
+}
+
+variable "load_balancer_type" {
+  description = "The type of load balancer to create. Possible values are application or network. The default value is application."
+  default     = "application"
+}
+
+variable "stickiness" {
+  type        = "map"
+  description = "A Stickiness block. Stickiness blocks are documented below. stickiness is only valid if used with Load Balancers of type Application"
+  default     = {}
 }
