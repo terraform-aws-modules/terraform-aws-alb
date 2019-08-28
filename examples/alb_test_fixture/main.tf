@@ -99,6 +99,7 @@ module "alb" {
   http_tcp_listeners_count = local.http_tcp_listeners_count
   target_groups            = local.target_groups
   target_groups_count      = local.target_groups_count
+  target_groups_tags       = local.target_groups_tags
   extra_ssl_certs          = local.extra_ssl_certs
   extra_ssl_certs_count    = local.extra_ssl_certs_count
 }

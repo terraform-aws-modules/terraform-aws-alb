@@ -145,6 +145,12 @@ variable "target_groups" {
   default     = []
 }
 
+variable "target_groups_tags" {
+  description = "A list of maps containing key/value pairs that have the target group tags. Order of these maps is important and the index of these are to be referenced in target group definitions."
+  type        = list(map(string))
+  default     = []
+}
+
 variable "target_groups_count" {
   description = "A manually provided count/length of the target_groups list of maps since the list cannot be computed."
   type        = number

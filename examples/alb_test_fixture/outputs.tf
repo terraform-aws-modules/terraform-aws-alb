@@ -42,3 +42,7 @@ output "http_tcp_listeners_count" {
   value = local.http_tcp_listeners_count
 }
 
+output "target_groups_tags" {
+  value = local.target_groups_tags
+}
+

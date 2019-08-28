@@ -136,6 +136,7 @@ The following IAM policy is the minimum needed to execute the module from the te
 | sg\_id |  |
 | target\_group\_arns |  |
 | target\_groups\_count |  |
+| target\_groups\_tags |  |
 | vpc\_id |  |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

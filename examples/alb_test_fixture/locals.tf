@@ -59,6 +59,15 @@ locals {
     },
   ]
 
+  target_groups_tags = [
+    {
+      "HostGroup" = "Foo"
+    },
+    {
+      "HostGroup" = "Bar"
+    }
+  ]
+
   extra_ssl_certs_count = 4
 
   extra_ssl_certs = [

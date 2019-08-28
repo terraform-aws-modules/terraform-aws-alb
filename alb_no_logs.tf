@@ -108,6 +108,7 @@ resource "aws_lb_target_group" "main_no_logs" {
 
   tags = merge(
     var.tags,
+    length(var.target_groups_tags) > 0 ? var.target_groups_tags[count.index] : {},
     {
       "Name" = var.target_groups[count.index]["name"]
     },
