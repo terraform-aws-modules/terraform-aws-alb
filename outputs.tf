@@ -18,7 +18,10 @@ output "http_tcp_listener_arns" {
       aws_lb_listener.frontend_http_tcp_no_logs.*.arn,
     ),
     0,
-    var.http_tcp_listeners_count,
+    length(concat(
+      aws_lb_listener.frontend_http_tcp.*.arn,
+      aws_lb_listener.frontend_http_tcp_no_logs.*.arn,
+    )) != 0 ? var.http_tcp_listeners_count : 0,
   )
 }
 
@@ -30,7 +33,10 @@ output "http_tcp_listener_ids" {
       aws_lb_listener.frontend_http_tcp_no_logs.*.id,
     ),
     0,
-    var.http_tcp_listeners_count,
+    length(concat(
+      aws_lb_listener.frontend_http_tcp.*.id,
+      aws_lb_listener.frontend_http_tcp_no_logs.*.id,
+    )) != 0 ? var.http_tcp_listeners_count : 0,
   )
 }
 
@@ -42,7 +48,10 @@ output "https_listener_arns" {
       aws_lb_listener.frontend_https_no_logs.*.arn,
     ),
     0,
-    var.https_listeners_count,
+    length(concat(
+      aws_lb_listener.frontend_https.*.arn,
+      aws_lb_listener.frontend_https_no_logs.*.arn,
+    )) != 0 ? var.http_tcp_listeners_count : 0,
   )
 }
 
@@ -54,7 +63,10 @@ output "https_listener_ids" {
       aws_lb_listener.frontend_https_no_logs.*.id,
     ),
     0,
-    var.https_listeners_count,
+    length(concat(
+      aws_lb_listener.frontend_https.*.id,
+      aws_lb_listener.frontend_https_no_logs.*.id,
+    )) != 0 ? var.http_tcp_listeners_count : 0,
   )
 }
 
@@ -102,7 +114,10 @@ output "target_group_arns" {
       aws_lb_target_group.main_no_logs.*.arn,
     ),
     0,
-    var.target_groups_count,
+    length(concat(
+      aws_lb_target_group.main.*.arn,
+      aws_lb_target_group.main_no_logs.*.arn,
+    )) != 0 ? var.target_groups_count : 0,
   )
 }
 
@@ -114,7 +129,10 @@ output "target_group_arn_suffixes" {
       aws_lb_target_group.main_no_logs.*.arn_suffix,
     ),
     0,
-    var.target_groups_count,
+    length(concat(
+      aws_lb_target_group.main.*.arn_suffix,
+      aws_lb_target_group.main_no_logs.*.arn_suffix,
+    )) != 0 ? var.target_groups_count : 0,
   )
 }
 
@@ -126,7 +144,10 @@ output "target_group_names" {
       aws_lb_target_group.main_no_logs.*.name,
     ),
     0,
-    var.target_groups_count,
+    length(concat(
+      aws_lb_target_group.main.*.name,
+      aws_lb_target_group.main_no_logs.*.name,
+    )) != 0 ? var.target_groups_count : 0,
   )
 }
 
