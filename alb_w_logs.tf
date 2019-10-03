@@ -62,7 +62,7 @@ resource "aws_lb_target_group" "main" {
 }
 
 resource "aws_lb_listener" "frontend_http_tcp" {
-  load_balancer_arn = "${element(concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn), count.index)}"
+  load_balancer_arn = "${element(concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn), 0)}"
   port              = "${lookup(var.http_tcp_listeners[count.index], "port")}"
   protocol          = "${lookup(var.http_tcp_listeners[count.index], "protocol")}"
   count             = "${var.create_alb && var.logging_enabled ? var.http_tcp_listeners_count : 0}"
@@ -74,7 +74,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
 }
 
 resource "aws_lb_listener" "frontend_https" {
-  load_balancer_arn = "${element(concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn), count.index)}"
+  load_balancer_arn = "${element(concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn), 0)}"
   port              = "${lookup(var.https_listeners[count.index], "port")}"
   protocol          = "HTTPS"
   certificate_arn   = "${lookup(var.https_listeners[count.index], "certificate_arn")}"
