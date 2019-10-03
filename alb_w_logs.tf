@@ -128,7 +128,7 @@ resource "aws_lb_target_group" "main" {
 resource "aws_lb_listener" "frontend_http_tcp" {
   load_balancer_arn = element(
     concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn),
-    count.index,
+    0,
   )
   port     = var.http_tcp_listeners[count.index]["port"]
   protocol = var.http_tcp_listeners[count.index]["protocol"]
@@ -143,7 +143,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
 resource "aws_lb_listener" "frontend_https" {
   load_balancer_arn = element(
     concat(aws_lb.application.*.arn, aws_lb.application_no_logs.*.arn),
-    count.index,
+    0,
   )
   port            = var.https_listeners[count.index]["port"]
   protocol        = "HTTPS"
