@@ -121,19 +121,19 @@ resource "aws_lb_target_group" "main_no_logs" {
 }
 
 resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
-  load_balancer_arn = element(concat(aws_lb.application_no_logs.*.arn, [""]), 0)
+  load_balancer_arn = element(concat(aws_lb.application_no_logs.*.arn, [""]), count.index)
   port              = var.http_tcp_listeners[count.index]["port"]
   protocol          = var.http_tcp_listeners[count.index]["protocol"]
   count             = var.create_alb && false == var.logging_enabled ? var.http_tcp_listeners_count : 0
 
   default_action {
-    target_group_arn = aws_lb_target_group.main_no_logs[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)].id
+    target_group_arn = aws_lb_target_group.main_no_logs[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id
     type             = "forward"
   }
 }
 
 resource "aws_lb_listener" "frontend_https_no_logs" {
-  load_balancer_arn = element(concat(aws_lb.application_no_logs.*.arn, [""]), 0)
+  load_balancer_arn = element(concat(aws_lb.application_no_logs.*.arn, [""]), count.index)
   port              = var.https_listeners[count.index]["port"]
   protocol          = "HTTPS"
   certificate_arn   = var.https_listeners[count.index]["certificate_arn"]
@@ -145,7 +145,7 @@ resource "aws_lb_listener" "frontend_https_no_logs" {
   count = var.create_alb && false == var.logging_enabled ? var.https_listeners_count : 0
 
   default_action {
-    target_group_arn = aws_lb_target_group.main_no_logs[lookup(var.https_listeners[count.index], "target_group_index", 0)].id
+    target_group_arn = aws_lb_target_group.main_no_logs[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id
     type             = "forward"
   }
 }
