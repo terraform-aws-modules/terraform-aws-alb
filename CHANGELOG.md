@@ -3,9 +3,19 @@
 
 
 
+<a name="v4.2.0"></a>
+## [v4.2.0] - 2019-11-20
+
+- Set correct TG for listeners (fixed [#119](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/119)) ([#120](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/120))
+- Update variables.tf ([#113](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/113))
+- Hardcode AWS region for tests
+- Remove --error-with-issues option on tflint as it is now default and removed ([#114](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/114))
+
+
 <a name="v4.1.0"></a>
 ## [v4.1.0] - 2019-06-17
 
+- Updated CHANGELOG
 - Updated pre-commit-terraform to support terraform-docs and Terraform 0.12
 
 
@@ -178,7 +188,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.1.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.2.0...HEAD
+[v4.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.6.0...v4.0.0
 [v3.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.5.0...v3.6.0
