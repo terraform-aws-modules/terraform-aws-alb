@@ -68,7 +68,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
   count             = "${var.create_alb && var.logging_enabled ? var.http_tcp_listeners_count : 0}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
+    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)]}"
     type             = "forward"
   }
 }
@@ -82,7 +82,7 @@ resource "aws_lb_listener" "frontend_https" {
   count             = "${var.create_alb && var.logging_enabled ? var.https_listeners_count : 0}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
+    target_group_arn = "${aws_lb_target_group.main.*.id[lookup(var.https_listeners[count.index], "target_group_index", count.index)]}"
     type             = "forward"
   }
 }
