@@ -135,7 +135,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
   count    = var.create_alb && var.logging_enabled ? var.http_tcp_listeners_count : 0
 
   default_action {
-    target_group_arn = aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)].id
+    target_group_arn = aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id
     type             = "forward"
   }
 }
@@ -156,7 +156,7 @@ resource "aws_lb_listener" "frontend_https" {
   count = var.create_alb && var.logging_enabled ? var.https_listeners_count : 0
 
   default_action {
-    target_group_arn = aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", 0)].id
+    target_group_arn = aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id
     type             = "forward"
   }
 }
