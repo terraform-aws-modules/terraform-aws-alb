@@ -141,40 +141,6 @@ variable "target_groups" {
   type        = any
   default     = []
 }
-//
-//variable "target_groups_defaults" {
-//  description = "Default values for target groups as defined by the list of maps."
-//  type = object(
-//    {
-//      cookie_duration                  = string,
-//      deregistration_delay             = string,
-//      health_check_interval            = string,
-//      health_check_healthy_threshold   = string,
-//      health_check_path                = string,
-//      health_check_port                = string,
-//      health_check_timeout             = string,
-//      health_check_unhealthy_threshold = string,
-//      health_check_matcher             = string,
-//      stickiness_enabled               = string,
-//      target_type                      = string,
-//      slow_start                       = string,
-//    }
-//  )
-//  default = {
-//    cookie_duration                  = 86400
-//    deregistration_delay             = 300
-//    health_check_interval            = 10
-//    health_check_healthy_threshold   = 3
-//    health_check_path                = "/"
-//    health_check_port                = "traffic-port"
-//    health_check_timeout             = 5
-//    health_check_unhealthy_threshold = 3
-//    health_check_matcher             = "200-299"
-//    stickiness_enabled               = true
-//    target_type                      = "instance"
-//    slow_start                       = 0
-//  }
-//}
 
 variable "vpc_id" {
   description = "VPC id where the load balancer and other resources will be deployed."
