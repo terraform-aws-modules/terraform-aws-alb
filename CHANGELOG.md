@@ -3,9 +3,31 @@
 
 
 
+<a name="v5.0.0"></a>
+## [v5.0.0] - 2019-11-22
+
+- Rewrote to use Terraform 0.12 features + NLB + cleanup ([#128](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/128))
+- Updated CHANGELOG
+- Set correct TG for listeners (fixed [#119](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/119)) ([#120](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/120))
+- Update variables.tf ([#113](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/113))
+- Hardcode AWS region for tests
+- Remove --error-with-issues option on tflint as it is now default and removed ([#114](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/114))
+- Updated CHANGELOG
+- Updated pre-commit-terraform to support terraform-docs and Terraform 0.12
+- Updated CHANGELOG
+- Upgrade module to support Terraform 0.12 ([#107](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/107))
+
+
+<a name="v3.7.0"></a>
+## [v3.7.0] - 2019-11-20
+
+- Set correct TG for listeners for Terraform 0.11 (fixed [#119](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/119)) ([#121](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/121))
+
+
 <a name="v4.2.0"></a>
 ## [v4.2.0] - 2019-11-20
 
+- Updated CHANGELOG
 - Set correct TG for listeners (fixed [#119](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/119)) ([#120](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/120))
 - Update variables.tf ([#113](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/113))
 - Hardcode AWS region for tests
@@ -188,7 +210,9 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.2.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.0.0...HEAD
+[v5.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.7.0...v5.0.0
+[v3.7.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.2.0...v3.7.0
 [v4.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.6.0...v4.0.0
