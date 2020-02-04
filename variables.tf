@@ -106,12 +106,6 @@ variable "access_logs" {
   default     = {}
 }
 
-variable "log_location_prefix" {
-  description = "S3 prefix within the log_bucket_name under which logs are stored."
-  type        = string
-  default     = ""
-}
-
 variable "subnets" {
   description = "A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
   type        = list(string)
