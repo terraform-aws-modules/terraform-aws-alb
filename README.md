@@ -8,12 +8,12 @@ These types of resources are supported:
 * [Load Balancer Listener](https://www.terraform.io/docs/providers/aws/r/lb_listener.html)
 * [Load Balancer Listener Certificate](https://www.terraform.io/docs/providers/aws/r/lb_listener_certificate.html)
 * [Target Group](https://www.terraform.io/docs/providers/aws/r/lb_target_group.html)
+* [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
 
 Not supported (yet):
 
 * [Load Balancer Listener default actions](https://www.terraform.io/docs/providers/aws/r/lb_listener.html) - only `forward` is supported
 * [Load Balancer Listener Rule](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
-* [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
 
 ## Terraform versions
 
@@ -68,6 +68,13 @@ module "alb" {
     }
   ]
 
+  target_groups_attachments = [
+    {
+    instance_id = "i-0123456789abcdefg"
+    target_group_index = 0
+    }
+  ]
+
   tags = {
     Environment = "Test"
   }
@@ -115,6 +122,13 @@ module "nlb" {
       port               = 80
       protocol           = "TCP"
       target_group_index = 0
+    }
+  ]
+
+  target_groups_attachments = [
+    {
+    instance_id = "i-0123456789abcdefg"
+    target_group_index = 0
     }
   ]
 
@@ -180,6 +194,7 @@ module "lb" {
 | subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | list(string) | `"null"` | no |
 | tags | A map of tags to add to all resources | map(string) | `{}` | no |
 | target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable. | any | `[]` | no |
+| target\_groups\_attachments | A list of maps containing key/value pairs that define the target groups attachments to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: instance_id, target_group_index. | any | `[]` | no |
 | vpc\_id | VPC id where the load balancer and other resources will be deployed. | string | `"null"` | no |
 
 ## Outputs

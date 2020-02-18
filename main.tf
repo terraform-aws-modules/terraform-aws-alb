@@ -105,6 +105,14 @@ resource "aws_lb_target_group" "main" {
   }
 }
 
+resource "aws_lb_target_group_attachment" "group_attachment" {
+  count = var.create_lb ? length(var.target_groups_attachments) : 0
+
+  target_group_arn = aws_lb_target_group.main[lookup(var.target_groups_attachments[count.index], "target_group_index", count.index)].arn
+  target_id        = lookup(var.target_groups_attachments[lookup(var.target_groups_attachments[count.index], "target_group_index", count.index)], "instance_id", null)
+  port             = lookup(var.target_groups[lookup(var.target_groups_attachments[count.index], "target_group_index", count.index)], "backend_port", null)
+}
+
 resource "aws_lb_listener" "frontend_http_tcp" {
   count = var.create_lb ? length(var.http_tcp_listeners) : 0
 

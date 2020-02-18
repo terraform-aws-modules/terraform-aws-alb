@@ -148,3 +148,8 @@ variable "vpc_id" {
   default     = null
 }
 
+variable "target_groups_attachments" {
+  description = "A list of maps containing key/value pairs that define the target groups attachments to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: instance_id, target_group_index."
+  type        = any
+  default     = []
+}
