@@ -99,10 +99,6 @@ resource "aws_lb_target_group" "main" {
   )
 
   depends_on = [aws_lb.this]
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_lb_listener" "frontend_http_tcp" {
@@ -141,4 +137,3 @@ resource "aws_lb_listener_certificate" "https_listener" {
   listener_arn    = aws_lb_listener.frontend_https[var.extra_ssl_certs[count.index]["https_listener_index"]].arn
   certificate_arn = var.extra_ssl_certs[count.index]["certificate_arn"]
 }
-

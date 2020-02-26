@@ -161,25 +161,25 @@ module "lb" {
 | enable\_cross\_zone\_load\_balancing | Indicates whether cross zone load balancing should be enabled in application load balancers. | bool | `"false"` | no |
 | enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | bool | `"false"` | no |
 | enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | bool | `"true"` | no |
-| extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward). | list(map(string)) | `[]` | no |
-| http\_tcp\_listeners | A list of maps describing the HTTP listeners for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to 0) | list(map(string)) | `[]` | no |
-| https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to 0) | list(map(string)) | `[]` | no |
+| extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate\_arn, https\_listener\_index \(the index of the listener within https\_listeners which the cert applies toward\). | list(map(string)) | `[]` | no |
+| http\_tcp\_listeners | A list of maps describing the HTTP listeners for this ALB. Required key/values: port, protocol. Optional key/values: target\_group\_index \(defaults to 0\) | list(map(string)) | `[]` | no |
+| https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate\_arn. Optional key/values: ssl\_policy \(defaults to ELBSecurityPolicy-2016-08\), target\_group\_index \(defaults to 0\) | list(map(string)) | `[]` | no |
 | idle\_timeout | The time in seconds that the connection is allowed to be idle. | number | `"60"` | no |
 | internal | Boolean determining if the load balancer is internal or externally facing. | bool | `"false"` | no |
 | ip\_address\_type | The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack. | string | `"ipv4"` | no |
-| listener\_ssl\_policy\_default | The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html). | string | `"ELBSecurityPolicy-2016-08"` | no |
+| listener\_ssl\_policy\_default | The security policy if using HTTPS externally on the load balancer. \[See\]\(https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html\). | string | `"ELBSecurityPolicy-2016-08"` | no |
 | load\_balancer\_create\_timeout | Timeout value when creating the ALB. | string | `"10m"` | no |
 | load\_balancer\_delete\_timeout | Timeout value when deleting the ALB. | string | `"10m"` | no |
 | load\_balancer\_type | The type of load balancer to create. Possible values are application or network. | string | `"application"` | no |
 | load\_balancer\_update\_timeout | Timeout value when updating the ALB. | string | `"10m"` | no |
-| log\_location\_prefix | S3 prefix within the log_bucket_name under which logs are stored. | string | `""` | no |
+| log\_location\_prefix | S3 prefix within the log\_bucket\_name under which logs are stored. | string | `""` | no |
 | name | The resource name and Name tag of the load balancer. | string | `"null"` | no |
 | name\_prefix | The resource name prefix and Name tag of the load balancer. | string | `"null"` | no |
-| security\_groups | The security groups to attach to the load balancer. e.g. ["sg-edcd9784","sg-edcd9785"] | list(string) | `[]` | no |
+| security\_groups | The security groups to attach to the load balancer. e.g. \["sg-edcd9784","sg-edcd9785"\] | list(string) | `[]` | no |
 | subnet\_mapping | A list of subnet mapping blocks describing subnets to attach to network load balancer | list(map(string)) | `[]` | no |
-| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | list(string) | `"null"` | no |
+| subnets | A list of subnets to associate with the load balancer. e.g. \['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'\] | list(string) | `"null"` | no |
 | tags | A map of tags to add to all resources | map(string) | `{}` | no |
-| target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port. Optional key/values are in the target_groups_defaults variable. | any | `[]` | no |
+| target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port. Optional key/values are in the target\_groups\_defaults variable. | any | `[]` | no |
 | vpc\_id | VPC id where the load balancer and other resources will be deployed. | string | `"null"` | no |
 
 ## Outputs
@@ -197,7 +197,7 @@ module "lb" {
 | this\_lb\_arn\_suffix | ARN suffix of our load balancer - can be used with CloudWatch. |
 | this\_lb\_dns\_name | The DNS name of the load balancer. |
 | this\_lb\_id | The ID and ARN of the load balancer we created. |
-| this\_lb\_zone\_id | The zone_id of the load balancer to assist with creating DNS records. |
+| this\_lb\_zone\_id | The zone\_id of the load balancer to assist with creating DNS records. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
