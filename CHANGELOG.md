@@ -3,9 +3,19 @@
 
 
 
+<a name="v5.1.0"></a>
+## [v5.1.0] - 2020-03-05
+
+- Fixed variable description (closes [#138](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/138))
+- Update variables.tf ([#130](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/130))
+- Removed unused (depracated) input variable ([#136](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/136))
+- Update README.md ([#137](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/137))
+
+
 <a name="v5.0.0"></a>
 ## [v5.0.0] - 2019-11-22
 
+- Updated CHANGELOG
 - Rewrote to use Terraform 0.12 features + NLB + cleanup ([#128](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/128))
 - Updated CHANGELOG
 - Set correct TG for listeners (fixed [#119](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/119)) ([#120](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/120))
@@ -210,7 +220,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.0.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.1.0...HEAD
+[v5.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.0.0...v5.1.0
 [v5.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.7.0...v5.0.0
 [v3.7.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.2.0...v3.7.0
 [v4.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v4.1.0...v4.2.0
