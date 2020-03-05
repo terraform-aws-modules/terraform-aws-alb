@@ -15,6 +15,17 @@ $ terraform apply
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | n/a |
+| random | n/a |
+
+## Inputs
+
+No input.
+
 ## Outputs
 
 | Name | Description |
@@ -30,6 +41,6 @@ Note that this example may create resources which cost money. Run `terraform des
 | this\_lb\_arn\_suffix | ARN suffix of our load balancer - can be used with CloudWatch. |
 | this\_lb\_dns\_name | The DNS name of the load balancer. |
 | this\_lb\_id | The ID and ARN of the load balancer we created. |
-| this\_lb\_zone\_id | The zone_id of the load balancer to assist with creating DNS records. |
+| this\_lb\_zone\_id | The zone\_id of the load balancer to assist with creating DNS records. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
