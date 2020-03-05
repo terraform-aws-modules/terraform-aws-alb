@@ -13,7 +13,7 @@ Not supported (yet):
 
 * [Load Balancer Listener default actions](https://www.terraform.io/docs/providers/aws/r/lb_listener.html) - only `forward` is supported
 * [Load Balancer Listener Rule](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
-* [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
+* [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_target_group_attachment.html)
 
 ## Terraform versions
 
