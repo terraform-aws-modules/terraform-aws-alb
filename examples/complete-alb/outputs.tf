@@ -57,4 +57,3 @@ output "target_group_names" {
   description = "Name of the target group. Useful for passing to your CodeDeploy Deployment Group."
   value       = module.alb.target_group_names
 }
-

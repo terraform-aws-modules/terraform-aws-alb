@@ -1,26 +1,3 @@
-# Fetch specific rules from listeners
-locals {
-  http_nonauth_listeners = [
-    for l in var.http_tcp_listeners :
-    l if l["action_type"] == "forward" || l["action_type"] == "redirect" || l["action_type"] == "fixed-response"
-  ]
-
-  http_auth_listeners = [
-    for l in var.http_tcp_listeners :
-    l if l["action_type"] == "authenticate-cognito" || l["action_type"] == "authenticate-oidc"
-  ]
-
-  https_nonauth_listeners = [
-    for l in var.https_listeners :
-    l if l["action_type"] == "forward" || l["action_type"] == "redirect" || l["action_type"] == "fixed-response"
-  ]
-
-  https_auth_listeners = [
-    for l in var.https_listeners :
-    l if l["action_type"] == "authenticate-cognito" || l["action_type"] == "authenticate-oidc"
-  ]
-}
-
 resource "aws_lb" "this" {
   count = var.create_lb ? 1 : 0
 
@@ -128,208 +105,203 @@ resource "aws_lb_target_group" "main" {
   }
 }
 
-resource "aws_lb_listener" "nonauth_frontend_http_tcp" {
-  count = var.create_lb ? length(local.http_nonauth_listeners) : 0
+resource "aws_lb_listener" "frontend_http_tcp" {
+  count = var.create_lb ? length(var.http_tcp_listeners) : 0
 
   load_balancer_arn = aws_lb.this[0].arn
 
-  port     = local.http_nonauth_listeners[count.index]["port"]
-  protocol = local.http_nonauth_listeners[count.index]["protocol"]
+  port     = var.http_tcp_listeners[count.index]["port"]
+  protocol = var.http_tcp_listeners[count.index]["protocol"]
 
   dynamic "default_action" {
-    for_each = local.http_nonauth_listeners[count.index]["action_type"] == "forward" ? local.http_nonauth_listeners[count.index] : {}
+    for_each = var.http_tcp_listeners[count.index]
 
+    # Defaults to forward action if action_type not specified
     content {
-      type             = lookup(local.http_nonauth_listeners[count.index], "action_type", null)
-      target_group_arn = aws_lb_target_group.main[lookup(local.http_nonauth_listeners[count.index], "target_group_index", count.index)].id
-    }
-  }
+      type             = lookup(default_action.value, "action_type", "forward")
+      target_group_arn = var.http_tcp_listeners[count.index]["action_type"] == null ? null : aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id
 
-  dynamic "default_action" {
-    for_each = local.http_nonauth_listeners[count.index]["action_type"] == "redirect" ? local.http_nonauth_listeners[count.index] : {}
-    content {
-      type = lookup(local.http_nonauth_listeners[count.index], "action_type", null)
-      redirect {
-        path        = lookup(local.http_nonauth_listeners[count.index], "path", null)
-        host        = lookup(local.http_nonauth_listeners[count.index], "host", null)
-        port        = lookup(local.http_nonauth_listeners[count.index], "port", null)
-        protocol    = lookup(local.http_nonauth_listeners[count.index], "protocol", null)
-        query       = lookup(local.http_nonauth_listeners[count.index], "query", null)
-        status_code = lookup(local.http_nonauth_listeners[count.index], "status_code", null)
+      dynamic "redirect" {
+        for_each = length(keys(lookup(redirect.value, "redirect_block", {}))) == 0 ? [] : [lookup(redirect.value, "redirect_block", {})]
+
+        content {
+          path        = lookup(redirect.value, "path", null)
+          host        = lookup(redirect.value, "host", null)
+          port        = lookup(redirect.value, "port", null)
+          protocol    = lookup(redirect.value, "protocol", null)
+          query       = lookup(redirect.value, "query", null)
+          status_code = lookup(redirect.value, "status_code", null)
+        }
       }
-    }
-  }
 
-  dynamic "default_action" {
-    for_each = local.http_nonauth_listeners[count.index]["action_type"] == "fixed-response" ? local.http_nonauth_listeners[count.index] : {}
-    content {
-      type = lookup(local.http_nonauth_listeners[count.index], "action_type", null)
-      fixed_response {
-        content_type = lookup(local.http_nonauth_listeners[count.index], "content_type", null)
-        message_body = lookup(local.http_nonauth_listeners[count.index], "message_body", null)
-        status_code  = lookup(local.http_nonauth_listeners[count.index], "status_code", null)
+      dynamic "fixed_response" {
+        for_each = length(keys(lookup(default_action.value, "fixed_response_block", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response_block", {})]
+
+        content {
+          content_type = lookup(fixed_response.value, "content_type", null)
+          message_body = lookup(fixed_response.value, "message_body", null)
+          status_code  = lookup(fixed_response.value, "status_code", null)
+        }
       }
-    }
-  }
-}
 
-resource "aws_lb_listener" "auth_frontend_http_tcp" {
-  count = var.create_lb ? length(local.http_auth_listeners) : 0
+      dynamic "authenticate_cognito" {
+        for_each = length(keys(lookup(default_action.value, "authenticate_cognito_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_cognito_block", {})]
 
-  load_balancer_arn = aws_lb.this[0].arn
+        # Max 10 extra params
+        content {
+          dynamic "authentication_request_extra_params" {
+            for_each = length(keys(lookup(authenticate_cognito.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_cognito.value, "authentication_request_extra_params", {})]
 
-  port     = local.http_auth_listeners[count.index]["port"]
-  protocol = local.http_auth_listeners[count.index]["protocol"]
-
-  dynamic "default_action" {
-    for_each = local.http_auth_listeners[count.index]["action_type"] == "authenticate-cognito" ? local.http_auth_listeners[count.index] : {}
-    content {
-      type = lookup(local.http_auth_listeners[count.index], "action_type", null)
-      authenticate_cognito {
-        on_unauthenticated_request = lookup(local.http_auth_listeners[count.index], "on_authenticated_request", null)
-        scope                      = lookup(local.http_auth_listeners[count.index], "scope", null)
-        session_cookie_name        = lookup(local.http_auth_listeners[count.index], "session_cookie_name", null)
-        session_timeout            = lookup(local.http_auth_listeners[count.index], "session_timeout", null)
-        user_pool_arn              = lookup(local.http_auth_listeners[count.index], "user_pool_arn", null)
-        user_pool_client_id        = lookup(local.http_auth_listeners[count.index], "user_pool_client_id", null)
-        user_pool_domain           = lookup(local.http_auth_listeners[count.index], "user_pool_domain", null)
+            content {
+              key   = authentication_request_extra_params.key
+              value = authentication_request_extra_params.value
+            }
+          }
+          on_unauthenticated_request = lookup(authenticate_cognito.value, "on_authenticated_request", null)
+          scope                      = lookup(authenticate_cognito.value, "scope", null)
+          session_cookie_name        = lookup(authenticate_cognito.value, "session_cookie_name", null)
+          session_timeout            = lookup(authenticate_cognito.value, "session_timeout", null)
+          user_pool_arn              = lookup(authenticate_cognito.value, "user_pool_arn", null)
+          user_pool_client_id        = lookup(authenticate_cognito.value, "user_pool_client_id", null)
+          user_pool_domain           = lookup(authenticate_cognito.value, "user_pool_domain", null)
+        }
       }
-    }
-  }
 
-  dynamic "default_action" {
-    for_each = local.http_auth_listeners[count.index]["action_type"] == "authenticate-oidc" ? local.http_auth_listeners[count.index] : {}
-    content {
-      type = lookup(local.http_auth_listeners[count.index], "action_type", null)
-      authenticate_oidc {
-        authorization_endpoint     = lookup(local.http_auth_listeners[count.index], "authorization_endpoint", null)
-        client_id                  = lookup(local.http_auth_listeners[count.index], "client_id", null)
-        client_secret              = lookup(local.http_auth_listeners[count.index], "client_secret", null)
-        issuer                     = lookup(local.http_auth_listeners[count.index], "issuer", null)
-        on_unauthenticated_request = lookup(local.http_auth_listeners[count.index], "on_unauthenticated_request", null)
-        scope                      = lookup(local.http_auth_listeners[count.index], "scope", null)
-        session_cookie_name        = lookup(local.http_auth_listeners[count.index], "session_cookie_name", null)
-        session_timeout            = lookup(local.http_auth_listeners[count.index], "session_timeout", null)
-        token_endpoint             = lookup(local.http_auth_listeners[count.index], "token_endpoint", null)
-        user_info_endpoint         = lookup(local.http_auth_listeners[count.index], "user_info_endpoint", null)
+      dynamic "authenticate_oidc" {
+        for_each = length(keys(lookup(default_action.value, "authenticate_oidc_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_oidc_block", {})]
+
+        # Max 10 extra params
+        content {
+          dynamic "authentication_request_extra_params" {
+            for_each = length(keys(lookup(authenticate_oidc.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_oidc.value, "authentication_request_extra_params", {})]
+
+            content {
+              key   = authentication_request_extra_params.key
+              value = authentication_request_extra_params.value
+            }
+          }
+          authorization_endpoint     = lookup(authenticate_oidc.value, "authorization_endpoint", null)
+          client_id                  = lookup(authenticate_oidc.value, "client_id", null)
+          client_secret              = lookup(authenticate_oidc.value, "client_secret", null)
+          issuer                     = lookup(authenticate_oidc.value, "issuer", null)
+          on_unauthenticated_request = lookup(authenticate_oidc.value, "on_unauthenticated_request", null)
+          scope                      = lookup(authenticate_oidc.value, "scope", null)
+          session_cookie_name        = lookup(authenticate_oidc.value, "session_cookie_name", null)
+          session_timeout            = lookup(authenticate_oidc.value, "session_timeout", null)
+          token_endpoint             = lookup(authenticate_oidc.value, "token_endpoint", null)
+          user_info_endpoint         = lookup(authenticate_oidc.value, "user_info_endpoint", null)
+        }
       }
     }
   }
 
   default_action {
-    target_group_arn = aws_lb_target_group.main[lookup(local.http_auth_listeners[count.index], "target_group_index", count.index)].id
-    type             = "forward"
+    type             = var.http_tcp_listeners[count.index]["listener_authenticated"] == false ? null : "forward"
+    target_group_arn = var.http_tcp_listeners[count.index]["listener_authenticated"] == false ? null : aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id
   }
 }
 
-resource "aws_lb_listener" "nonauth_frontend_https" {
-  count = var.create_lb ? length(local.https_nonauth_listeners) : 0
+resource "aws_lb_listener" "frontend_https" {
+  count = var.create_lb ? length(var.https_listeners) : 0
 
   load_balancer_arn = aws_lb.this[0].arn
 
-  port            = local.https_nonauth_listeners[count.index]["port"]
-  protocol        = lookup(local.https_nonauth_listeners[count.index], "protocol", "HTTPS")
-  certificate_arn = local.https_nonauth_listeners[count.index]["certificate_arn"]
-  ssl_policy      = lookup(local.https_nonauth_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)
+  port            = var.https_listeners[count.index]["port"]
+  protocol        = lookup(var.https_listeners[count.index], "protocol", "HTTPS")
+  certificate_arn = var.https_listeners[count.index]["certificate_arn"]
+  ssl_policy      = lookup(var.https_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)
 
   dynamic "default_action" {
-    for_each = local.https_nonauth_listeners[count.index]["action_type"] == "forward" ? local.https_nonauth_listeners[count.index] : {}
+    for_each = var.https_listeners[count.index]
 
+    # Defaults to forward action if action_type not specified
     content {
-      type             = lookup(local.https_nonauth_listeners[count.index], "action_type", null)
-      target_group_arn = aws_lb_target_group.main[lookup(local.https_nonauth_listeners[count.index], "target_group_index", count.index)].id
-    }
-  }
+      type             = lookup(default_action.value, "action_type", "forward")
+      target_group_arn = var.https_listeners[count.index]["action_type"] == null ? null : aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id
 
-  dynamic "default_action" {
-    for_each = local.https_nonauth_listeners[count.index]["action_type"] == "redirect" ? local.https_nonauth_listeners[count.index] : {}
-    content {
-      type = lookup(local.https_nonauth_listeners[count.index], "action_type", null)
-      redirect {
-        path        = lookup(local.https_nonauth_listeners[count.index], "path", null)
-        host        = lookup(local.https_nonauth_listeners[count.index], "host", null)
-        port        = lookup(local.https_nonauth_listeners[count.index], "port", null)
-        protocol    = lookup(local.https_nonauth_listeners[count.index], "protocol", null)
-        query       = lookup(local.https_nonauth_listeners[count.index], "query", null)
-        status_code = lookup(local.https_nonauth_listeners[count.index], "status_code", null)
+      dynamic "redirect" {
+        for_each = length(keys(lookup(redirect.value, "redirect_block", {}))) == 0 ? [] : [lookup(redirect.value, "redirect_block", {})]
+
+        content {
+          path        = lookup(redirect.value, "path", null)
+          host        = lookup(redirect.value, "host", null)
+          port        = lookup(redirect.value, "port", null)
+          protocol    = lookup(redirect.value, "protocol", null)
+          query       = lookup(redirect.value, "query", null)
+          status_code = lookup(redirect.value, "status_code", null)
+        }
       }
-    }
-  }
 
-  dynamic "default_action" {
-    for_each = local.https_nonauth_listeners[count.index]["action_type"] == "fixed-response" ? local.https_nonauth_listeners[count.index] : {}
-    content {
-      type = lookup(local.https_nonauth_listeners[count.index], "action_type", null)
-      fixed_response {
-        content_type = lookup(local.https_nonauth_listeners[count.index], "content_type", null)
-        message_body = lookup(local.https_nonauth_listeners[count.index], "message_body", null)
-        status_code  = lookup(local.https_nonauth_listeners[count.index], "status_code", null)
+      dynamic "fixed_response" {
+        for_each = length(keys(lookup(default_action.value, "fixed_response_block", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response_block", {})]
+
+        content {
+          content_type = lookup(fixed_response.value, "content_type", null)
+          message_body = lookup(fixed_response.value, "message_body", null)
+          status_code  = lookup(fixed_response.value, "status_code", null)
+        }
       }
-    }
-  }
-}
 
-resource "aws_lb_listener" "auth_frontend_https" {
-  count = var.create_lb ? length(local.https_auth_listeners) : 0
+      dynamic "authenticate_cognito" {
+        for_each = length(keys(lookup(default_action.value, "authenticate_cognito_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_cognito_block", {})]
 
-  load_balancer_arn = aws_lb.this[0].arn
+        # Max 10 extra params
+        content {
+          dynamic "authentication_request_extra_params" {
+            for_each = length(keys(lookup(authenticate_cognito.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_cognito.value, "authentication_request_extra_params", {})]
 
-  port            = local.https_auth_listeners[count.index]["port"]
-  protocol        = lookup(local.https_auth_listeners[count.index], "protocol", "HTTPS")
-  certificate_arn = local.https_auth_listeners[count.index]["certificate_arn"]
-  ssl_policy      = lookup(local.https_auth_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)
-
-  dynamic "default_action" {
-    for_each = local.https_auth_listeners[count.index]["action_type"] == "authenticate-cognito" ? local.https_auth_listeners[count.index] : {}
-    content {
-      type = lookup(local.https_auth_listeners[count.index], "action_type", null)
-      authenticate_cognito {
-        on_unauthenticated_request = lookup(local.https_auth_listeners[count.index], "on_authenticated_request", null)
-        scope                      = lookup(local.https_auth_listeners[count.index], "scope", null)
-        session_cookie_name        = lookup(local.https_auth_listeners[count.index], "session_cookie_name", null)
-        session_timeout            = lookup(local.https_auth_listeners[count.index], "session_timeout", null)
-        user_pool_arn              = lookup(local.https_auth_listeners[count.index], "user_pool_arn", null)
-        user_pool_client_id        = lookup(local.https_auth_listeners[count.index], "user_pool_client_id", null)
-        user_pool_domain           = lookup(local.https_auth_listeners[count.index], "user_pool_domain", null)
+            content {
+              key   = authentication_request_extra_params.key
+              value = authentication_request_extra_params.value
+            }
+          }
+          on_unauthenticated_request = lookup(authenticate_cognito.value, "on_authenticated_request", null)
+          scope                      = lookup(authenticate_cognito.value, "scope", null)
+          session_cookie_name        = lookup(authenticate_cognito.value, "session_cookie_name", null)
+          session_timeout            = lookup(authenticate_cognito.value, "session_timeout", null)
+          user_pool_arn              = lookup(authenticate_cognito.value, "user_pool_arn", null)
+          user_pool_client_id        = lookup(authenticate_cognito.value, "user_pool_client_id", null)
+          user_pool_domain           = lookup(authenticate_cognito.value, "user_pool_domain", null)
+        }
       }
-    }
-  }
 
-  dynamic "default_action" {
-    for_each = local.https_auth_listeners[count.index]["action_type"] == "authenticate-oidc" ? local.https_auth_listeners[count.index] : {}
-    content {
-      type = lookup(local.https_auth_listeners[count.index], "action_type", null)
-      authenticate_oidc {
-        authorization_endpoint     = lookup(local.https_auth_listeners[count.index], "authorization_endpoint", null)
-        client_id                  = lookup(local.https_auth_listeners[count.index], "client_id", null)
-        client_secret              = lookup(local.https_auth_listeners[count.index], "client_secret", null)
-        issuer                     = lookup(local.https_auth_listeners[count.index], "issuer", null)
-        on_unauthenticated_request = lookup(local.https_auth_listeners[count.index], "on_unauthenticated_request", null)
-        scope                      = lookup(local.https_auth_listeners[count.index], "scope", null)
-        session_cookie_name        = lookup(local.https_auth_listeners[count.index], "session_cookie_name", null)
-        session_timeout            = lookup(local.https_auth_listeners[count.index], "session_timeout", null)
-        token_endpoint             = lookup(local.https_auth_listeners[count.index], "token_endpoint", null)
-        user_info_endpoint         = lookup(local.https_auth_listeners[count.index], "user_info_endpoint", null)
+      dynamic "authenticate_oidc" {
+        for_each = length(keys(lookup(default_action.value, "authenticate_oidc_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_oidc_block", {})]
+
+        # Max 10 extra params
+        content {
+          dynamic "authentication_request_extra_params" {
+            for_each = length(keys(lookup(authenticate_oidc.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_oidc.value, "authentication_request_extra_params", {})]
+
+            content {
+              key   = authentication_request_extra_params.key
+              value = authentication_request_extra_params.value
+            }
+          }
+          authorization_endpoint     = lookup(authenticate_oidc.value, "authorization_endpoint", null)
+          client_id                  = lookup(authenticate_oidc.value, "client_id", null)
+          client_secret              = lookup(authenticate_oidc.value, "client_secret", null)
+          issuer                     = lookup(authenticate_oidc.value, "issuer", null)
+          on_unauthenticated_request = lookup(authenticate_oidc.value, "on_unauthenticated_request", null)
+          scope                      = lookup(authenticate_oidc.value, "scope", null)
+          session_cookie_name        = lookup(authenticate_oidc.value, "session_cookie_name", null)
+          session_timeout            = lookup(authenticate_oidc.value, "session_timeout", null)
+          token_endpoint             = lookup(authenticate_oidc.value, "token_endpoint", null)
+          user_info_endpoint         = lookup(authenticate_oidc.value, "user_info_endpoint", null)
+        }
       }
     }
   }
 
   default_action {
-    target_group_arn = aws_lb_target_group.main[lookup(local.https_auth_listeners[count.index], "target_group_index", count.index)].id
-    type             = "forward"
+    type             = var.https_listeners[count.index]["listener_authenticated"] == false ? null : "forward"
+    target_group_arn = var.https_listeners[count.index]["listener_authenticated"] == false ? null : aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id
   }
 }
 
-resource "aws_lb_listener_certificate" "nonauth_https_listener" {
+resource "aws_lb_listener_certificate" "https_listener" {
   count = var.create_lb ? length(var.extra_ssl_certs) : 0
 
-  listener_arn    = aws_lb_listener.nonauth_frontend_https[var.extra_ssl_certs[count.index]["https_listener_index"]].arn
-  certificate_arn = var.extra_ssl_certs[count.index]["certificate_arn"]
-}
-
-resource "aws_lb_listener_certificate" "auth_https_listener" {
-  count = var.create_lb ? length(var.extra_ssl_certs) : 0
-
-  listener_arn    = aws_lb_listener.auth_frontend_https[var.extra_ssl_certs[count.index]["https_listener_index"]].arn
+  listener_arn    = aws_lb_listener.frontend_https[var.extra_ssl_certs[count.index]["https_listener_index"]].arn
   certificate_arn = var.extra_ssl_certs[count.index]["certificate_arn"]
 }

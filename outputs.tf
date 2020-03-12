@@ -23,44 +23,24 @@ output "this_lb_zone_id" {
   value       = concat(aws_lb.this.*.zone_id, [""])[0]
 }
 
-output "nonauth_http_tcp_listener_arns" {
+output "http_tcp_listener_arns" {
   description = "The ARN of the TCP and HTTP load balancer listeners created."
-  value       = aws_lb_listener.nonauth_frontend_http_tcp.*.arn
+  value       = aws_lb_listener.frontend_http_tcp.*.arn
 }
 
-output "auth_http_tcp_listener_arns" {
-  description = "The ARN of the TCP and HTTP load balancer listeners created."
-  value       = aws_lb_listener.auth_frontend_http_tcp.*.arn
-}
-
-output "nonauth_http_tcp_listener_ids" {
+output "http_tcp_listener_ids" {
   description = "The IDs of the TCP and HTTP load balancer listeners created."
-  value       = aws_lb_listener.nonauth_frontend_http_tcp.*.id
+  value       = aws_lb_listener.frontend_http_tcp.*.id
 }
 
-output "auth_http_tcp_listener_ids" {
-  description = "The IDs of the TCP and HTTP load balancer listeners created."
-  value       = aws_lb_listener.auth_frontend_http_tcp.*.id
-}
-
-output "nonauth_https_listener_arns" {
+output "https_listener_arns" {
   description = "The ARNs of the HTTPS load balancer listeners created."
-  value       = aws_lb_listener.nonauth_frontend_https.*.arn
+  value       = aws_lb_listener.frontend_https.*.arn
 }
 
-output "auth_https_listener_arns" {
-  description = "The ARNs of the HTTPS load balancer listeners created."
-  value       = aws_lb_listener.auth_frontend_https.*.arn
-}
-
-output "nonauth_https_listener_ids" {
+output "https_listener_ids" {
   description = "The IDs of the load balancer listeners created."
-  value       = aws_lb_listener.nonauth_frontend_https.*.id
-}
-
-output "auth_https_listener_ids" {
-  description = "The IDs of the load balancer listeners created."
-  value       = aws_lb_listener.auth_frontend_https.*.id
+  value       = aws_lb_listener.frontend_https.*.id
 }
 
 output "target_group_arns" {
@@ -77,4 +57,3 @@ output "target_group_names" {
   description = "Name of the target group. Useful for passing to your CodeDeploy Deployment Group."
   value       = aws_lb_target_group.main.*.name
 }
-
