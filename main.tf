@@ -119,7 +119,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
     # Defaults to forward action if action_type not specified
     content {
       type             = lookup(default_action.value, "action_type", "forward")
-      target_group_arn = var.http_tcp_listeners[count.index]["action_type"] == null ? null : aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id
+      target_group_arn = contains([null, "forward"], var.https_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id : null
 
       dynamic "redirect" {
         for_each = length(keys(lookup(redirect.value, "redirect_block", {}))) == 0 ? [] : [lookup(redirect.value, "redirect_block", {})]
@@ -176,8 +176,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
             for_each = length(keys(lookup(authenticate_oidc.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_oidc.value, "authentication_request_extra_params", {})]
 
             content {
-              key   = authentication_request_extra_params.key
-              value = authentication_request_extra_params.value
+              authentication_request_extra_params.key = authentication_request_extra_params.value
             }
           }
           authorization_endpoint     = lookup(authenticate_oidc.value, "authorization_endpoint", null)
@@ -196,8 +195,8 @@ resource "aws_lb_listener" "frontend_http_tcp" {
   }
 
   default_action {
-    type             = var.http_tcp_listeners[count.index]["listener_authenticated"] == false ? null : "forward"
-    target_group_arn = var.http_tcp_listeners[count.index]["listener_authenticated"] == false ? null : aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id
+    type             = contains(["authenticate-oidc", "authenticate-cognito"], var.http_tcp_listeners[count.index]["action_type"]) ? "forward" : null
+    target_group_arn = contains(["authenticate-oidc", "authenticate-cognito"], var.http_tcp_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id : null
   }
 }
 
@@ -217,7 +216,7 @@ resource "aws_lb_listener" "frontend_https" {
     # Defaults to forward action if action_type not specified
     content {
       type             = lookup(default_action.value, "action_type", "forward")
-      target_group_arn = var.https_listeners[count.index]["action_type"] == null ? null : aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id
+      target_group_arn = contains([null, "forward"], var.https_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id : null
 
       dynamic "redirect" {
         for_each = length(keys(lookup(redirect.value, "redirect_block", {}))) == 0 ? [] : [lookup(redirect.value, "redirect_block", {})]
@@ -251,8 +250,7 @@ resource "aws_lb_listener" "frontend_https" {
             for_each = length(keys(lookup(authenticate_cognito.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_cognito.value, "authentication_request_extra_params", {})]
 
             content {
-              key   = authentication_request_extra_params.key
-              value = authentication_request_extra_params.value
+              authentication_request_extra_params.key = authentication_request_extra_params.value
             }
           }
           on_unauthenticated_request = lookup(authenticate_cognito.value, "on_authenticated_request", null)
@@ -274,8 +272,7 @@ resource "aws_lb_listener" "frontend_https" {
             for_each = length(keys(lookup(authenticate_oidc.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_oidc.value, "authentication_request_extra_params", {})]
 
             content {
-              key   = authentication_request_extra_params.key
-              value = authentication_request_extra_params.value
+              authentication_request_extra_params.key = authentication_request_extra_params.value
             }
           }
           authorization_endpoint     = lookup(authenticate_oidc.value, "authorization_endpoint", null)
@@ -294,8 +291,8 @@ resource "aws_lb_listener" "frontend_https" {
   }
 
   default_action {
-    type             = var.https_listeners[count.index]["listener_authenticated"] == false ? null : "forward"
-    target_group_arn = var.https_listeners[count.index]["listener_authenticated"] == false ? null : aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id
+    type             = contains(["authenticate-oidc", "authenticate-cognito"], var.https_listeners[count.index]["action_type"]) ? "forward" : null
+    target_group_arn = contains(["authenticate-oidc", "authenticate-cognito"], var.https_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id : null
   }
 }
 

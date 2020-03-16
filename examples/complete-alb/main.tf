@@ -25,6 +25,20 @@ data "aws_route53_zone" "this" {
   name = local.domain_name
 }
 
+resource "aws_cognito_user_pool" "user_pool" {
+  name = "user-pool-${random_pet.this.id}"
+}
+
+resource "aws_cognito_user_pool_client" "user_pool_client" {
+  name = "user-pool-client-${random_pet.this.id}"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+}
+
+resource "aws_cognito_user_pool_domain" "user_pool_domain" {
+  domain = "cognito-${random_pet.this.id}"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+}
+
 module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 3.0"
@@ -76,10 +90,71 @@ module "alb" {
   //  }
 
   http_tcp_listeners = [
+    # Forward action is default, either when defined or undefined
     {
       port               = 80
       protocol           = "HTTP"
       target_group_index = 0
+      # action_type        = forward
+    },
+    {
+      port               = 81
+      protocol           = "HTTP"
+      action_type        = "redirect"
+      redirect_block     = {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    },
+    {
+      port         = 82
+      protocol     = "HTTP"
+      action_type  = "fixed_response"
+      fixed_response_block = {
+        content_type = "text/plain"
+        message_body = "Fixed message"
+        status_code = "200"
+      }
+    },
+    {
+      port         = 83
+      protocol     = "HTTP"
+      action_type  = "authenticate-cognito"
+      target_group_index = 0
+      authenticate_cognito_block = {
+        authentication_request_extra_params = {
+          display = "page"
+          prompt  = "login"
+        }
+        on_unauthenticated_request = "authenticate"
+        session_cookie_name        = "session-${random_pet.this.id}"
+        session_timeout            = 3600
+        user_pool_arn              = aws_cognito_user_pool.user_pool.arn
+        user_pool_client_id        = aws_cognito_user_pool_client.user_pool_client.id
+        user_pool_domain           = aws_cognito_user_pool_domain.user_pool_domain.domain
+      }
+    },
+    {
+      port         = 84
+      protocol     = "HTTP"
+      action_type  = "authenticate-oidc"
+      target_group_index = 0
+      authenticate_oidc_block = {
+        authentication_request_extra_params = {
+          display = "page"
+          prompt = "login"
+        }
+        authorization_endpoint     = "${local.domain_name}/auth"
+        client_id                  = "client_id"
+        client_secret              = "client_secret"
+        issuer                     = local.domain_name
+        on_unauthenticated_request = "authenticate"
+        session_cookie_name        = "session-${random_pet.this.id}"
+        session_timeout            = 3600
+        token_endpoint             = "${local.domain_name}/token"
+        user_info_endpoint         = "${local.domain_name}/user_info"
+      }
     },
   ]
 
