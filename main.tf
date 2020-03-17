@@ -114,15 +114,15 @@ resource "aws_lb_listener" "frontend_http_tcp" {
   protocol = var.http_tcp_listeners[count.index]["protocol"]
 
   dynamic "default_action" {
-    for_each = var.http_tcp_listeners[count.index]
+    for_each = length(keys(var.http_tcp_listeners[count.index])) == 0 ? [] : [var.http_tcp_listeners[count.index]]
 
     # Defaults to forward action if action_type not specified
     content {
       type             = lookup(default_action.value, "action_type", "forward")
-      target_group_arn = contains([null, "forward"], var.https_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id : null
+      target_group_arn = contains([null, "", "forward"], lookup(default_action.value, "action_type", "")) ? aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id : null
 
       dynamic "redirect" {
-        for_each = length(keys(lookup(redirect.value, "redirect_block", {}))) == 0 ? [] : [lookup(redirect.value, "redirect_block", {})]
+        for_each = length(keys(lookup(default_action.value, "redirect", {}))) == 0 ? [] : [lookup(default_action.value, "redirect", {})]
 
         content {
           path        = lookup(redirect.value, "path", null)
@@ -135,7 +135,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
       }
 
       dynamic "fixed_response" {
-        for_each = length(keys(lookup(default_action.value, "fixed_response_block", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response_block", {})]
+        for_each = length(keys(lookup(default_action.value, "fixed_response", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response", {})]
 
         content {
           content_type = lookup(fixed_response.value, "content_type", null)
@@ -143,60 +143,15 @@ resource "aws_lb_listener" "frontend_http_tcp" {
           status_code  = lookup(fixed_response.value, "status_code", null)
         }
       }
-
-      dynamic "authenticate_cognito" {
-        for_each = length(keys(lookup(default_action.value, "authenticate_cognito_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_cognito_block", {})]
-
-        # Max 10 extra params
-        content {
-          dynamic "authentication_request_extra_params" {
-            for_each = length(keys(lookup(authenticate_cognito.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_cognito.value, "authentication_request_extra_params", {})]
-
-            content {
-              key   = authentication_request_extra_params.key
-              value = authentication_request_extra_params.value
-            }
-          }
-          on_unauthenticated_request = lookup(authenticate_cognito.value, "on_authenticated_request", null)
-          scope                      = lookup(authenticate_cognito.value, "scope", null)
-          session_cookie_name        = lookup(authenticate_cognito.value, "session_cookie_name", null)
-          session_timeout            = lookup(authenticate_cognito.value, "session_timeout", null)
-          user_pool_arn              = lookup(authenticate_cognito.value, "user_pool_arn", null)
-          user_pool_client_id        = lookup(authenticate_cognito.value, "user_pool_client_id", null)
-          user_pool_domain           = lookup(authenticate_cognito.value, "user_pool_domain", null)
-        }
-      }
-
-      dynamic "authenticate_oidc" {
-        for_each = length(keys(lookup(default_action.value, "authenticate_oidc_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_oidc_block", {})]
-
-        # Max 10 extra params
-        content {
-          dynamic "authentication_request_extra_params" {
-            for_each = length(keys(lookup(authenticate_oidc.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_oidc.value, "authentication_request_extra_params", {})]
-
-            content {
-              authentication_request_extra_params.key = authentication_request_extra_params.value
-            }
-          }
-          authorization_endpoint     = lookup(authenticate_oidc.value, "authorization_endpoint", null)
-          client_id                  = lookup(authenticate_oidc.value, "client_id", null)
-          client_secret              = lookup(authenticate_oidc.value, "client_secret", null)
-          issuer                     = lookup(authenticate_oidc.value, "issuer", null)
-          on_unauthenticated_request = lookup(authenticate_oidc.value, "on_unauthenticated_request", null)
-          scope                      = lookup(authenticate_oidc.value, "scope", null)
-          session_cookie_name        = lookup(authenticate_oidc.value, "session_cookie_name", null)
-          session_timeout            = lookup(authenticate_oidc.value, "session_timeout", null)
-          token_endpoint             = lookup(authenticate_oidc.value, "token_endpoint", null)
-          user_info_endpoint         = lookup(authenticate_oidc.value, "user_info_endpoint", null)
-        }
-      }
     }
   }
 
-  default_action {
-    type             = contains(["authenticate-oidc", "authenticate-cognito"], var.http_tcp_listeners[count.index]["action_type"]) ? "forward" : null
-    target_group_arn = contains(["authenticate-oidc", "authenticate-cognito"], var.http_tcp_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.http_tcp_listeners[count.index], "target_group_index", count.index)].id : null
+  dynamic "default_action" {
+    for_each = contains(["authenticate-oidc", "authenticate-cognito"], lookup(var.http_tcp_listeners[count.index], "action_type", {})) ? [var.http_tcp_listeners[count.index]] : []
+    content {
+      type             = "forward"
+      target_group_arn = aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id
+    }
   }
 }
 
@@ -211,15 +166,15 @@ resource "aws_lb_listener" "frontend_https" {
   ssl_policy      = lookup(var.https_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)
 
   dynamic "default_action" {
-    for_each = var.https_listeners[count.index]
+    for_each = length(keys(var.https_listeners[count.index])) == 0 ? [] : [var.https_listeners[count.index]]
 
     # Defaults to forward action if action_type not specified
     content {
       type             = lookup(default_action.value, "action_type", "forward")
-      target_group_arn = contains([null, "forward"], var.https_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id : null
+      target_group_arn = contains([null, "", "forward"], lookup(default_action.value, "action_type", "")) ? aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id : null
 
       dynamic "redirect" {
-        for_each = length(keys(lookup(redirect.value, "redirect_block", {}))) == 0 ? [] : [lookup(redirect.value, "redirect_block", {})]
+        for_each = length(keys(lookup(default_action.value, "redirect", {}))) == 0 ? [] : [lookup(default_action.value, "redirect", {})]
 
         content {
           path        = lookup(redirect.value, "path", null)
@@ -232,7 +187,7 @@ resource "aws_lb_listener" "frontend_https" {
       }
 
       dynamic "fixed_response" {
-        for_each = length(keys(lookup(default_action.value, "fixed_response_block", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response_block", {})]
+        for_each = length(keys(lookup(default_action.value, "fixed_response", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response", {})]
 
         content {
           content_type = lookup(fixed_response.value, "content_type", null)
@@ -241,58 +196,50 @@ resource "aws_lb_listener" "frontend_https" {
         }
       }
 
+      # Authentication actions only available with HTTPS listeners
       dynamic "authenticate_cognito" {
-        for_each = length(keys(lookup(default_action.value, "authenticate_cognito_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_cognito_block", {})]
+        for_each = length(keys(lookup(default_action.value, "authenticate_cognito", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_cognito", {})]
 
-        # Max 10 extra params
         content {
-          dynamic "authentication_request_extra_params" {
-            for_each = length(keys(lookup(authenticate_cognito.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_cognito.value, "authentication_request_extra_params", {})]
-
-            content {
-              authentication_request_extra_params.key = authentication_request_extra_params.value
-            }
-          }
-          on_unauthenticated_request = lookup(authenticate_cognito.value, "on_authenticated_request", null)
-          scope                      = lookup(authenticate_cognito.value, "scope", null)
-          session_cookie_name        = lookup(authenticate_cognito.value, "session_cookie_name", null)
-          session_timeout            = lookup(authenticate_cognito.value, "session_timeout", null)
-          user_pool_arn              = lookup(authenticate_cognito.value, "user_pool_arn", null)
-          user_pool_client_id        = lookup(authenticate_cognito.value, "user_pool_client_id", null)
-          user_pool_domain           = lookup(authenticate_cognito.value, "user_pool_domain", null)
+          # Max 10 extra params
+          authentication_request_extra_params = lookup(authenticate_cognito.value, "authentication_request_extra_params", null)
+          on_unauthenticated_request          = lookup(authenticate_cognito.value, "on_authenticated_request", null)
+          scope                               = lookup(authenticate_cognito.value, "scope", null)
+          session_cookie_name                 = lookup(authenticate_cognito.value, "session_cookie_name", null)
+          session_timeout                     = lookup(authenticate_cognito.value, "session_timeout", null)
+          user_pool_arn                       = lookup(authenticate_cognito.value, "user_pool_arn", null)
+          user_pool_client_id                 = lookup(authenticate_cognito.value, "user_pool_client_id", null)
+          user_pool_domain                    = lookup(authenticate_cognito.value, "user_pool_domain", null)
         }
       }
 
       dynamic "authenticate_oidc" {
-        for_each = length(keys(lookup(default_action.value, "authenticate_oidc_block", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_oidc_block", {})]
+        for_each = length(keys(lookup(default_action.value, "authenticate_oidc", {}))) == 0 ? [] : [lookup(default_action.value, "authenticate_oidc", {})]
 
-        # Max 10 extra params
         content {
-          dynamic "authentication_request_extra_params" {
-            for_each = length(keys(lookup(authenticate_oidc.value, "authentication_request_extra_params", {}))) == 0 ? [] : [lookup(authenticate_oidc.value, "authentication_request_extra_params", {})]
-
-            content {
-              authentication_request_extra_params.key = authentication_request_extra_params.value
-            }
-          }
-          authorization_endpoint     = lookup(authenticate_oidc.value, "authorization_endpoint", null)
-          client_id                  = lookup(authenticate_oidc.value, "client_id", null)
-          client_secret              = lookup(authenticate_oidc.value, "client_secret", null)
-          issuer                     = lookup(authenticate_oidc.value, "issuer", null)
-          on_unauthenticated_request = lookup(authenticate_oidc.value, "on_unauthenticated_request", null)
-          scope                      = lookup(authenticate_oidc.value, "scope", null)
-          session_cookie_name        = lookup(authenticate_oidc.value, "session_cookie_name", null)
-          session_timeout            = lookup(authenticate_oidc.value, "session_timeout", null)
-          token_endpoint             = lookup(authenticate_oidc.value, "token_endpoint", null)
-          user_info_endpoint         = lookup(authenticate_oidc.value, "user_info_endpoint", null)
+          # Max 10 extra params
+          authentication_request_extra_params = lookup(authenticate_oidc.value, "authentication_request_extra_params", null)
+          authorization_endpoint              = lookup(authenticate_oidc.value, "authorization_endpoint", null)
+          client_id                           = lookup(authenticate_oidc.value, "client_id", null)
+          client_secret                       = lookup(authenticate_oidc.value, "client_secret", null)
+          issuer                              = lookup(authenticate_oidc.value, "issuer", null)
+          on_unauthenticated_request          = lookup(authenticate_oidc.value, "on_unauthenticated_request", null)
+          scope                               = lookup(authenticate_oidc.value, "scope", null)
+          session_cookie_name                 = lookup(authenticate_oidc.value, "session_cookie_name", null)
+          session_timeout                     = lookup(authenticate_oidc.value, "session_timeout", null)
+          token_endpoint                      = lookup(authenticate_oidc.value, "token_endpoint", null)
+          user_info_endpoint                  = lookup(authenticate_oidc.value, "user_info_endpoint", null)
         }
       }
     }
   }
 
-  default_action {
-    type             = contains(["authenticate-oidc", "authenticate-cognito"], var.https_listeners[count.index]["action_type"]) ? "forward" : null
-    target_group_arn = contains(["authenticate-oidc", "authenticate-cognito"], var.https_listeners[count.index]["action_type"]) ? aws_lb_target_group.main[lookup(var.https_listeners[count.index], "target_group_index", count.index)].id : null
+  dynamic "default_action" {
+    for_each = contains(["authenticate-oidc", "authenticate-cognito"], lookup(var.https_listeners[count.index], "action_type", {})) ? [var.https_listeners[count.index]] : []
+    content {
+      type             = "forward"
+      target_group_arn = aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id
+    }
   }
 }
 

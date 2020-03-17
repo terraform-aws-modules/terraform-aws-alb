@@ -7,11 +7,11 @@ These types of resources are supported:
 * [Load Balancer](https://www.terraform.io/docs/providers/aws/r/lb.html)
 * [Load Balancer Listener](https://www.terraform.io/docs/providers/aws/r/lb_listener.html)
 * [Load Balancer Listener Certificate](https://www.terraform.io/docs/providers/aws/r/lb_listener_certificate.html)
+* [Load Balancer Listener default actions](https://www.terraform.io/docs/providers/aws/r/lb_listener.html) - All actions supported.
 * [Target Group](https://www.terraform.io/docs/providers/aws/r/lb_target_group.html)
 
 Not supported (yet):
 
-* [Load Balancer Listener default actions](https://www.terraform.io/docs/providers/aws/r/lb_listener.html) - only `forward` is supported
 * [Load Balancer Listener Rule](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
 * [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_target_group_attachment.html)
 
@@ -65,6 +65,68 @@ module "alb" {
       port               = 80
       protocol           = "HTTP"
       target_group_index = 0
+    }
+  ]
+
+  tags = {
+    Environment = "Test"
+  }
+}
+```
+
+### Application Load Balancer (HTTP redirect and HTTPS cognito authentication)
+
+```hcl
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 5.0"
+  
+  name = "my-alb"
+
+  load_balancer_type = "application"
+
+  vpc_id             = "vpc-abcde012"
+  subnets            = ["subnet-abcde012", "subnet-bcde012a"]
+  security_groups    = ["sg-edcd9784", "sg-edcd9785"]
+  
+  access_logs = {
+    bucket = "my-alb-logs"
+  }
+
+  target_groups = [
+    {
+      name_prefix      = "default"
+      backend_protocol = "HTTPS"
+      backend_port     = 443
+      target_type      = "instance"
+    }
+  ]
+
+  https_listeners = [
+    {
+      port                 = 443
+      protocol             = "HTTPS"
+      certificate_arn      = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+      action_type          = "authenticate-cognito"
+      target_group_index   = 0
+      authenticate_cognito = {
+        user_pool_arn       = "arn:aws:cognito-idp::123456789012:userpool/test-pool"
+        user_pool_client_id = "6oRmFiS0JHk="
+        user_pool_domain    = "test-domain-com"
+      }
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port        = 80
+      protocol    = "HTTP"
+      action_type = "redirect"
+      redirect = {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
     }
   ]
 
@@ -168,7 +230,7 @@ module "lb" {
 | enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | `bool` | `false` | no |
 | enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | `bool` | `true` | no |
 | extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate\_arn, https\_listener\_index (the index of the listener within https\_listeners which the cert applies toward). | `list(map(string))` | `[]` | no |
-| http\_tcp\_listeners | A list of maps describing the HTTP listeners or TCP ports for this ALB. Required key/values: port, protocol. Optional key/values: target\_group\_index (defaults to http\_tcp\_listeners[count.index]) | `list(map(string))` | `[]` | no |
+| http\_tcp\_listeners | A list of maps describing the HTTP listeners or TCP ports for this ALB. Required key/values: port, protocol. Optional key/values: target\_group\_index (defaults to http\_tcp\_listeners[count.index]), action\_type (defaults to forward), redirect, fixed_response, authenticate_cognito, authenticate_oidc | `any` | `[]` | no |
 | https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate\_arn. Optional key/values: ssl\_policy (defaults to ELBSecurityPolicy-2016-08), target\_group\_index (defaults to https\_listeners[count.index]) | `list(map(string))` | `[]` | no |
 | idle\_timeout | The time in seconds that the connection is allowed to be idle. | `number` | `60` | no |
 | internal | Boolean determining if the load balancer is internal or externally facing. | `bool` | `false` | no |

@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "us-east-1"
 }
 
 locals {
@@ -32,10 +32,15 @@ resource "aws_cognito_user_pool" "user_pool" {
 resource "aws_cognito_user_pool_client" "user_pool_client" {
   name = "user-pool-client-${random_pet.this.id}"
   user_pool_id = aws_cognito_user_pool.user_pool.id
+  generate_secret = true
+  allowed_oauth_flows = ["code", "implicit"]
+  callback_urls = ["https://${local.domain_name}/callback"]
+  allowed_oauth_scopes = ["email", "openid"]
+  allowed_oauth_flows_user_pool_client = true
 }
 
 resource "aws_cognito_user_pool_domain" "user_pool_domain" {
-  domain = "cognito-${random_pet.this.id}"
+  domain = "mydomain-random-com"
   user_pool_id = aws_cognito_user_pool.user_pool.id
 }
 
@@ -95,33 +100,44 @@ module "alb" {
       port               = 80
       protocol           = "HTTP"
       target_group_index = 0
-      # action_type        = forward
+      # action_type        = "forward"
     },
     {
-      port               = 81
-      protocol           = "HTTP"
-      action_type        = "redirect"
-      redirect_block     = {
+      port          = 81
+      protocol      = "HTTP"
+      action_type   = "redirect"
+      redirect      = {
         port        = "443"
         protocol    = "HTTPS"
         status_code = "HTTP_301"
       }
     },
     {
-      port         = 82
-      protocol     = "HTTP"
-      action_type  = "fixed_response"
-      fixed_response_block = {
+      port           = 82
+      protocol       = "HTTP"
+      action_type    = "fixed-response"
+      fixed_response = {
         content_type = "text/plain"
         message_body = "Fixed message"
-        status_code = "200"
+        status_code  = "200"
       }
     },
+  ]
+
+  https_listeners = [
     {
-      port         = 83
-      protocol     = "HTTP"
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = module.acm.this_acm_certificate_arn
+      target_group_index = 1
+    },
+    # Authentication actions only allowed with HTTPS
+    {
+      port         = 444
+      protocol     = "HTTPS"
       action_type  = "authenticate-cognito"
-      target_group_index = 0
+      target_group_index = 1
+      certificate_arn    = module.acm.this_acm_certificate_arn
       authenticate_cognito_block = {
         authentication_request_extra_params = {
           display = "page"
@@ -136,34 +152,23 @@ module "alb" {
       }
     },
     {
-      port         = 84
-      protocol     = "HTTP"
-      action_type  = "authenticate-oidc"
-      target_group_index = 0
-      authenticate_oidc_block = {
+      port               = 445
+      protocol           = "HTTPS"
+      action_type        = "authenticate-oidc"
+      target_group_index = 1
+      certificate_arn    = module.acm.this_acm_certificate_arn
+      authenticate_oidc  = {
         authentication_request_extra_params = {
           display = "page"
           prompt = "login"
         }
-        authorization_endpoint     = "${local.domain_name}/auth"
+        authorization_endpoint     = "https://${local.domain_name}/auth"
         client_id                  = "client_id"
         client_secret              = "client_secret"
-        issuer                     = local.domain_name
-        on_unauthenticated_request = "authenticate"
-        session_cookie_name        = "session-${random_pet.this.id}"
-        session_timeout            = 3600
-        token_endpoint             = "${local.domain_name}/token"
-        user_info_endpoint         = "${local.domain_name}/user_info"
+        issuer                     = "https://${local.domain_name}"
+        token_endpoint             = "https://${local.domain_name}/token"
+        user_info_endpoint         = "https://${local.domain_name}/user_info"
       }
-    },
-  ]
-
-  https_listeners = [
-    {
-      port               = 443
-      protocol           = "HTTPS"
-      certificate_arn    = module.acm.this_acm_certificate_arn
-      target_group_index = 1
     },
   ]
 
