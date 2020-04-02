@@ -108,6 +108,9 @@ module "nlb" {
       backend_protocol = "TCP_UDP"
       backend_port     = 81
       target_type      = "instance"
+      tags = {
+        tcp_udp = true
+      }
     },
     {
       name_prefix      = "u1-"
