@@ -14,6 +14,7 @@ resource "aws_lb" "this" {
   enable_deletion_protection       = var.enable_deletion_protection
   enable_http2                     = var.enable_http2
   ip_address_type                  = var.ip_address_type
+  drop_invalid_header_fields       = var.drop_invalid_header_fields
 
   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   dynamic "access_logs" {
