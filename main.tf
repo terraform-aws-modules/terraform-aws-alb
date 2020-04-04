@@ -131,7 +131,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
           port        = lookup(redirect.value, "port", null)
           protocol    = lookup(redirect.value, "protocol", null)
           query       = lookup(redirect.value, "query", null)
-          status_code = lookup(redirect.value, "status_code", null)
+          status_code = redirect.value["status_code"]
         }
       }
 
@@ -139,19 +139,11 @@ resource "aws_lb_listener" "frontend_http_tcp" {
         for_each = length(keys(lookup(default_action.value, "fixed_response", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response", {})]
 
         content {
-          content_type = lookup(fixed_response.value, "content_type", null)
+          content_type = fixed_response.value["content_type"]
           message_body = lookup(fixed_response.value, "message_body", null)
           status_code  = lookup(fixed_response.value, "status_code", null)
         }
       }
-    }
-  }
-
-  dynamic "default_action" {
-    for_each = contains(["authenticate-oidc", "authenticate-cognito"], lookup(var.http_tcp_listeners[count.index], "action_type", {})) ? [var.http_tcp_listeners[count.index]] : []
-    content {
-      type             = "forward"
-      target_group_arn = aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id
     }
   }
 }
@@ -183,7 +175,7 @@ resource "aws_lb_listener" "frontend_https" {
           port        = lookup(redirect.value, "port", null)
           protocol    = lookup(redirect.value, "protocol", null)
           query       = lookup(redirect.value, "query", null)
-          status_code = lookup(redirect.value, "status_code", null)
+          status_code = redirect.value["status_code"]
         }
       }
 
@@ -191,7 +183,7 @@ resource "aws_lb_listener" "frontend_https" {
         for_each = length(keys(lookup(default_action.value, "fixed_response", {}))) == 0 ? [] : [lookup(default_action.value, "fixed_response", {})]
 
         content {
-          content_type = lookup(fixed_response.value, "content_type", null)
+          content_type = fixed_response.value["content_type"]
           message_body = lookup(fixed_response.value, "message_body", null)
           status_code  = lookup(fixed_response.value, "status_code", null)
         }
@@ -208,9 +200,9 @@ resource "aws_lb_listener" "frontend_https" {
           scope                               = lookup(authenticate_cognito.value, "scope", null)
           session_cookie_name                 = lookup(authenticate_cognito.value, "session_cookie_name", null)
           session_timeout                     = lookup(authenticate_cognito.value, "session_timeout", null)
-          user_pool_arn                       = lookup(authenticate_cognito.value, "user_pool_arn", null)
-          user_pool_client_id                 = lookup(authenticate_cognito.value, "user_pool_client_id", null)
-          user_pool_domain                    = lookup(authenticate_cognito.value, "user_pool_domain", null)
+          user_pool_arn                       = authenticate_cognito.value["user_pool_arn"]
+          user_pool_client_id                 = authenticate_cognito.value["user_pool_client_id"]
+          user_pool_domain                    = authenticate_cognito.value["user_pool_domain"]
         }
       }
 
@@ -220,16 +212,16 @@ resource "aws_lb_listener" "frontend_https" {
         content {
           # Max 10 extra params
           authentication_request_extra_params = lookup(authenticate_oidc.value, "authentication_request_extra_params", null)
-          authorization_endpoint              = lookup(authenticate_oidc.value, "authorization_endpoint", null)
-          client_id                           = lookup(authenticate_oidc.value, "client_id", null)
-          client_secret                       = lookup(authenticate_oidc.value, "client_secret", null)
-          issuer                              = lookup(authenticate_oidc.value, "issuer", null)
+          authorization_endpoint              = authenticate_oidc.value["authorization_endpoint"]
+          client_id                           = authenticate_oidc.value["client_id"]
+          client_secret                       = authenticate_oidc.value["client_secret"]
+          issuer                              = authenticate_oidc.value["issuer"]
           on_unauthenticated_request          = lookup(authenticate_oidc.value, "on_unauthenticated_request", null)
           scope                               = lookup(authenticate_oidc.value, "scope", null)
           session_cookie_name                 = lookup(authenticate_oidc.value, "session_cookie_name", null)
           session_timeout                     = lookup(authenticate_oidc.value, "session_timeout", null)
-          token_endpoint                      = lookup(authenticate_oidc.value, "token_endpoint", null)
-          user_info_endpoint                  = lookup(authenticate_oidc.value, "user_info_endpoint", null)
+          token_endpoint                      = authenticate_oidc.value["token_endpoint"]
+          user_info_endpoint                  = authenticate_oidc.value["user_info_endpoint"]
         }
       }
     }
