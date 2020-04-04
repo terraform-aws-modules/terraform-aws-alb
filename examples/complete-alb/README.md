@@ -1,6 +1,6 @@
 # Complete ALB example
 
-Configuration in this directory creates ALB with several listeners and SSL certificates.
+Configuration in this directory creates ALB with several supported types of listeners and actions, and SSL certificates.
 
 ## Usage
 
