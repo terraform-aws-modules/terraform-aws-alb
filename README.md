@@ -214,18 +214,26 @@ module "lb" {
 * [Complete Network Load Balancer](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/complete-nlb)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | ~> 0.12 |
+| aws | ~> 2.54 |
+
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | n/a |
+| aws | ~> 2.54 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | access\_logs | Map containing access logging configuration for load balancer. | `map(string)` | `{}` | no |
 | create\_lb | Controls if the Load Balancer should be created | `bool` | `true` | no |
+| drop\_invalid\_header\_fields | Indicates whether invalid header fields are dropped in application load balancers. Defaults to false. | `bool` | `false` | no |
 | enable\_cross\_zone\_load\_balancing | Indicates whether cross zone load balancing should be enabled in application load balancers. | `bool` | `false` | no |
 | enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | `bool` | `false` | no |
 | enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | `bool` | `true` | no |
@@ -240,14 +248,14 @@ module "lb" {
 | load\_balancer\_delete\_timeout | Timeout value when deleting the ALB. | `string` | `"10m"` | no |
 | load\_balancer\_type | The type of load balancer to create. Possible values are application or network. | `string` | `"application"` | no |
 | load\_balancer\_update\_timeout | Timeout value when updating the ALB. | `string` | `"10m"` | no |
-| name | The resource name and Name tag of the load balancer. | `string` | n/a | yes |
-| name\_prefix | The resource name prefix and Name tag of the load balancer. | `string` | n/a | yes |
+| name | The resource name and Name tag of the load balancer. | `string` | `null` | no |
+| name\_prefix | The resource name prefix and Name tag of the load balancer. | `string` | `null` | no |
 | security\_groups | The security groups to attach to the load balancer. e.g. ["sg-edcd9784","sg-edcd9785"] | `list(string)` | `[]` | no |
 | subnet\_mapping | A list of subnet mapping blocks describing subnets to attach to network load balancer | `list(map(string))` | `[]` | no |
-| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | n/a | yes |
+| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | `null` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port. Optional key/values are in the target\_groups\_defaults variable. | `any` | `[]` | no |
-| vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | n/a | yes |
+| vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | `null` | no |
 
 ## Outputs
 
