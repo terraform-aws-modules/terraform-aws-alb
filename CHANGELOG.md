@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.3.0"></a>
+## [v5.3.0] - 2020-04-04
+
+- feat: Add support for all listener actions (redirect, fixed-response, authenticate-cognito, authenticate-oidc) ([#141](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/141))
+
+
 <a name="v5.2.0"></a>
 ## [v5.2.0] - 2020-04-02
 
@@ -214,7 +220,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.2.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.3.0...HEAD
+[v5.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.2.0...v5.3.0
 [v5.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.1.0...v5.2.0
 [v5.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.0.0...v5.1.0
 [v5.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v3.7.0...v5.0.0
