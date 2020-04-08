@@ -1,6 +1,6 @@
 # Complete ALB example
 
-Configuration in this directory creates ALB with several listeners and SSL certificates.
+Configuration in this directory creates ALB with several supported types of listeners and actions, and SSL certificates.
 
 ## Usage
 
@@ -15,6 +15,10 @@ $ terraform apply
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
 ## Providers
 
 | Name | Version |

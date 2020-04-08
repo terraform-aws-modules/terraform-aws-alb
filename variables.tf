@@ -4,6 +4,12 @@ variable "create_lb" {
   default     = true
 }
 
+variable "drop_invalid_header_fields" {
+  description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
+  type        = bool
+  default     = false
+}
+
 variable "enable_deletion_protection" {
   description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
   type        = bool
@@ -30,13 +36,13 @@ variable "extra_ssl_certs" {
 
 variable "https_listeners" {
   description = "A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate_arn. Optional key/values: ssl_policy (defaults to ELBSecurityPolicy-2016-08), target_group_index (defaults to https_listeners[count.index])"
-  type        = list(map(string))
+  type        = any
   default     = []
 }
 
 variable "http_tcp_listeners" {
   description = "A list of maps describing the HTTP listeners or TCP ports for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to http_tcp_listeners[count.index])"
-  type        = list(map(string))
+  type        = any
   default     = []
 }
 
@@ -153,4 +159,3 @@ variable "vpc_id" {
   type        = string
   default     = null
 }
-
