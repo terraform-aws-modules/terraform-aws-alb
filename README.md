@@ -259,8 +259,7 @@ module "lb" {
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | target\_group\_tags | A map of tags to add to all target groups | `map(string)` | `{}` | no |
 | target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port | `any` | `[]` | no |
-| vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | n/a | yes |
-
+| vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | `null` | no |
 
 ## Outputs
 
