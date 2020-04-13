@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.4.0"></a>
+## [v5.4.0] - 2020-04-13
+
+- feat: Add more specific tags ([#151](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/151))
+
+
 <a name="v5.3.0"></a>
 ## [v5.3.0] - 2020-04-04
 
@@ -220,7 +226,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.3.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.4.0...HEAD
+[v5.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.3.0...v5.4.0
 [v5.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.2.0...v5.3.0
 [v5.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.1.0...v5.2.0
 [v5.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.0.0...v5.1.0
