@@ -193,6 +193,9 @@ module "alb" {
         protocol            = "HTTP"
         matcher             = "200-399"
       }
+      tags = {
+        InstanceTargetGroupTag = "baz"
+      }
     },
     {
       name_prefix                        = "l1-"
@@ -203,5 +206,13 @@ module "alb" {
 
   tags = {
     Project = "Unknown"
+  }
+
+  lb_tags = {
+    MyLoadBalancer = "foo"
+  }
+
+  target_group_tags = {
+    MyGlobalTargetGroupTag = "bar"
   }
 }

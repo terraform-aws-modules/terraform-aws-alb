@@ -38,6 +38,7 @@ resource "aws_lb" "this" {
 
   tags = merge(
     var.tags,
+    var.lb_tags,
     {
       Name = var.name != null ? var.name : var.name_prefix
     },
@@ -94,6 +95,8 @@ resource "aws_lb_target_group" "main" {
 
   tags = merge(
     var.tags,
+    var.target_group_tags,
+    lookup(var.target_groups[count.index], "tags", {}),
     {
       "Name" = lookup(var.target_groups[count.index], "name", lookup(var.target_groups[count.index], "name_prefix", ""))
     },

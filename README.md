@@ -245,6 +245,7 @@ module "lb" {
 | idle\_timeout | The time in seconds that the connection is allowed to be idle. | `number` | `60` | no |
 | internal | Boolean determining if the load balancer is internal or externally facing. | `bool` | `false` | no |
 | ip\_address\_type | The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack. | `string` | `"ipv4"` | no |
+| lb\_tags | A map of tags to add to load balancer | `map(string)` | `{}` | no |
 | listener\_ssl\_policy\_default | The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html). | `string` | `"ELBSecurityPolicy-2016-08"` | no |
 | load\_balancer\_create\_timeout | Timeout value when creating the ALB. | `string` | `"10m"` | no |
 | load\_balancer\_delete\_timeout | Timeout value when deleting the ALB. | `string` | `"10m"` | no |
@@ -256,7 +257,8 @@ module "lb" {
 | subnet\_mapping | A list of subnet mapping blocks describing subnets to attach to network load balancer | `list(map(string))` | `[]` | no |
 | subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | `null` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
-| target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port. Optional key/values are in the target\_groups\_defaults variable. | `any` | `[]` | no |
+| target\_group\_tags | A map of tags to add to all target groups | `map(string)` | `{}` | no |
+| target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port | `any` | `[]` | no |
 | vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | `null` | no |
 
 ## Outputs
