@@ -175,6 +175,98 @@ module "alb" {
     },
   ]
 
+  https_listener_rules = [
+    {
+      https_listener_index = 0
+
+      actions = [
+        {
+          type = "authenticate-cognito"
+
+          on_unauthenticated_request = "authenticate"
+          session_cookie_name        = "session-${random_pet.this.id}"
+          session_timeout            = 3600
+          user_pool_arn              = aws_cognito_user_pool.this.arn
+          user_pool_client_id        = aws_cognito_user_pool_client.this.id
+          user_pool_domain           = aws_cognito_user_pool_domain.this.domain
+        },
+        {
+          type               = "forward"
+          target_group_index = 0
+        }
+      ]
+
+      conditions = [{
+        path_patterns = ["/some/auth/required/route"]
+      }]
+    },
+    {
+      https_listener_index = 1
+      priority = 2
+
+      actions = [
+        {
+          type = "authenticate-oidc"
+
+          authentication_request_extra_params = {
+            display = "page"
+            prompt  = "login"
+          }
+          authorization_endpoint = "https://${local.domain_name}/auth"
+          client_id              = "client_id"
+          client_secret          = "client_secret"
+          issuer                 = "https://${local.domain_name}"
+          token_endpoint         = "https://${local.domain_name}/token"
+          user_info_endpoint     = "https://${local.domain_name}/user_info"
+        },
+        {
+          type               = "forward"
+          target_group_index = 1
+        }
+      ]
+
+      conditions = [{
+        host_headers = ["X-Make-Me-Authenticate", "X-I-Like-Auth"]
+      }]
+    },
+    {
+      https_listener_index = 0
+      priority             = 3
+      actions = [{
+        type        = "fixed-response"
+        content_type = "text/plain"
+        status_code = 200
+        message_body = "This is a fixed response"
+      }]
+
+      conditions = [{
+        http_headers = [{
+          http_header_name   = "x-Gimme-Fixed-Response"
+          values = ["yes", "please", "right now"]
+        }]
+      }]
+    },
+    {
+      https_listener_index = 0
+      priority             = 5000
+      actions = [{
+        type        = "redirect"
+        status_code = "HTTP_302"
+        host        = "www.youtube.com"
+        path        = "/watch"
+        query       = "v=dQw4w9WgXcQ"
+        protocol    = "HTTPS"
+      }]
+
+      conditions = [{
+        query_strings = [{
+          key   = "video"
+          value = "random"
+        }]
+      }]
+    },
+  ]
+
   target_groups = [
     {
       name_prefix          = "h1"
