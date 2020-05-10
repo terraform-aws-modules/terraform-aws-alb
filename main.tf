@@ -64,8 +64,8 @@ resource "aws_lb_target_group" "main" {
 
   deregistration_delay               = lookup(var.target_groups[count.index], "deregistration_delay", null)
   slow_start                         = lookup(var.target_groups[count.index], "slow_start", null)
-  proxy_protocol_v2                  = lookup(var.target_groups[count.index], "proxy_protocol_v2", null)
-  lambda_multi_value_headers_enabled = lookup(var.target_groups[count.index], "lambda_multi_value_headers_enabled", null)
+  proxy_protocol_v2                  = lookup(var.target_groups[count.index], "proxy_protocol_v2", false)
+  lambda_multi_value_headers_enabled = lookup(var.target_groups[count.index], "lambda_multi_value_headers_enabled", false)
 
   dynamic "health_check" {
     for_each = length(keys(lookup(var.target_groups[count.index], "health_check", {}))) == 0 ? [] : [lookup(var.target_groups[count.index], "health_check", {})]
