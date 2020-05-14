@@ -31,7 +31,7 @@ HTTP and HTTPS listeners with default actions:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -39,7 +39,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -82,7 +82,7 @@ HTTP to HTTPS redirect and HTTPS cognito authentication:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -90,7 +90,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -144,14 +144,14 @@ module "alb" {
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-nlb"
 
   load_balancer_type = "network"
 
   vpc_id  = "vpc-abcde012"
   subnets = ["subnet-abcde012", "subnet-bcde012a"]
-  
+
   access_logs = {
     bucket = "my-nlb-logs"
   }
@@ -255,7 +255,7 @@ module "lb" {
 | name\_prefix | The resource name prefix and Name tag of the load balancer. | `string` | `null` | no |
 | security\_groups | The security groups to attach to the load balancer. e.g. ["sg-edcd9784","sg-edcd9785"] | `list(string)` | `[]` | no |
 | subnet\_mapping | A list of subnet mapping blocks describing subnets to attach to network load balancer | `list(map(string))` | `[]` | no |
-| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | `null` | no |
+| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | `[]` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | target\_group\_tags | A map of tags to add to all target groups | `map(string)` | `{}` | no |
 | target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port | `any` | `[]` | no |

@@ -1,0 +1,12 @@
+version: '3'
+services:
+  go:
+    build:
+      context: .
+      dockerfile: Dockerfile.go+terraform
+    command: >
+        bash -c "cd /code/test
+        && pwd
+        && go test"
+    volumes:
+      - .:/code
