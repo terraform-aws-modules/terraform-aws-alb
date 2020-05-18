@@ -87,7 +87,7 @@ output "sg_ids" {
 
 
 module "alb" {
-  source = "/Users/amanda.carvalho/Documents/data/youse-seguradora/terraform-aws-alb"
+  source = "github.com/youse-seguradora/terraform-aws-alb"
 
 
   name = "my-alb"
