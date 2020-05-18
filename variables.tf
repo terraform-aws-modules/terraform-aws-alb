@@ -89,7 +89,7 @@ variable "name" {
 }
 
 variable "name_prefix" {
-  description = "The resource name prefix and Name tag of the load balancer."
+  description = "The resource name prefix and Name tag of the load balancer. Cannot be longer than 6 characters"
   type        = string
   default     = null
 }
