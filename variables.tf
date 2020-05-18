@@ -159,3 +159,26 @@ variable "vpc_id" {
   type        = string
   default     = null
 }
+
+variable "target_groups_arn_attach" {
+  description = "Target Group ARN to attach"
+  type        = any
+  default     = {}
+}
+
+variable "target_id" {
+  description = "ID instance to attach in Target Group"
+  type        = any
+  default     = {}
+}
+
+variable "target_port" {
+  description = "Port Target Group"
+  type        = number
+  default     = null
+}
+
+variable "target_count" {
+  type    = number
+  default = 0
+}

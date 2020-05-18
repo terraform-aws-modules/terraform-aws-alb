@@ -257,8 +257,12 @@ module "lb" {
 | subnet\_mapping | A list of subnet mapping blocks describing subnets to attach to network load balancer | `list(map(string))` | `[]` | no |
 | subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | `[]` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
+| target\_count | n/a | `number` | `0` | no |
 | target\_group\_tags | A map of tags to add to all target groups | `map(string)` | `{}` | no |
 | target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port | `any` | `[]` | no |
+| target\_groups\_arn\_attach | Target Group ARN to attach | `any` | `{}` | no |
+| target\_id | ID instance to attach in Target Group | `any` | `{}` | no |
+| target\_port | Port Target Group | `number` | `null` | no |
 | vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | `null` | no |
 
 ## Outputs
