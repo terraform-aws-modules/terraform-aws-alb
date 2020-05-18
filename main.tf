@@ -245,3 +245,11 @@ resource "aws_lb_listener_certificate" "https_listener" {
   listener_arn    = aws_lb_listener.frontend_https[var.extra_ssl_certs[count.index]["https_listener_index"]].arn
   certificate_arn = var.extra_ssl_certs[count.index]["certificate_arn"]
 }
+
+resource "aws_lb_target_group_attachment" "lb_target_attachment" {
+  count = var.target_count
+
+  target_group_arn = var.target_groups_arn_attach
+  target_id        = var.target_id
+  port             = var.target_port
+}
