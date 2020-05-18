@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.6.0"></a>
+## [v5.6.0] - 2020-05-18
+
+- docs: Updated description and examples of name_prefix argument ([#162](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/162))
+- docs: Updated formatting in UPGRADE-5.0.md
+
+
 <a name="v5.5.0"></a>
 ## [v5.5.0] - 2020-05-11
 
@@ -232,7 +239,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.5.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.6.0...HEAD
+[v5.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.5.0...v5.6.0
 [v5.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.4.0...v5.5.0
 [v5.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.3.0...v5.4.0
 [v5.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.2.0...v5.3.0
