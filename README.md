@@ -46,7 +46,7 @@ module "alb" {
 
   target_groups = [
     {
-      name_prefix      = "default"
+      name_prefix      = "pref-"
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
@@ -97,7 +97,7 @@ module "alb" {
 
   target_groups = [
     {
-      name_prefix      = "default"
+      name_prefix      = "pref-"
       backend_protocol = "HTTPS"
       backend_port     = 443
       target_type      = "instance"
@@ -158,7 +158,7 @@ module "nlb" {
 
   target_groups = [
     {
-      name_prefix      = "default"
+      name_prefix      = "pref-"
       backend_protocol = "TCP"
       backend_port     = 80
       target_type      = "ip"
@@ -252,7 +252,7 @@ module "lb" {
 | load\_balancer\_type | The type of load balancer to create. Possible values are application or network. | `string` | `"application"` | no |
 | load\_balancer\_update\_timeout | Timeout value when updating the ALB. | `string` | `"10m"` | no |
 | name | The resource name and Name tag of the load balancer. | `string` | `null` | no |
-| name\_prefix | The resource name prefix and Name tag of the load balancer. | `string` | `null` | no |
+| name\_prefix | The resource name prefix and Name tag of the load balancer. Cannot be longer than 6 characters | `string` | `null` | no |
 | security\_groups | The security groups to attach to the load balancer. e.g. ["sg-edcd9784","sg-edcd9785"] | `list(string)` | `[]` | no |
 | subnet\_mapping | A list of subnet mapping blocks describing subnets to attach to network load balancer | `list(map(string))` | `[]` | no |
 | subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | `null` | no |
