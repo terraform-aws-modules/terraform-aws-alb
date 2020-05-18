@@ -30,7 +30,7 @@ data "aws_ami" "amazon_linux" {
 }
 
 module "ec2" {
-  source = "/Users/amanda.carvalho/Documents/data/youse-seguradora/terraform-aws-ec2-instance"
+  source = "github.com/youse-seguradora/terraform-aws-ec2-instance"
 
   instance_count = 1
 
