@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.7.0"></a>
+## [v5.7.0] - 2020-08-13
+
+- feat: Support AWS provider 3.0 and Terraform 0.13 ([#166](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/166))
+
+
 <a name="v5.6.0"></a>
 ## [v5.6.0] - 2020-05-18
 
@@ -239,7 +245,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.6.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.7.0...HEAD
+[v5.7.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.6.0...v5.7.0
 [v5.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.5.0...v5.6.0
 [v5.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.4.0...v5.5.0
 [v5.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.3.0...v5.4.0
