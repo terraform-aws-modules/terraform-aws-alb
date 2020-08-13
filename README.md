@@ -221,13 +221,13 @@ module "lb" {
 | Name | Version |
 |------|---------|
 | terraform | ~> 0.12 |
-| aws | ~> 2.54 |
+| aws | >= 2.54 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.54 |
+| aws | >= 2.54 |
 
 ## Inputs
 
