@@ -17,7 +17,7 @@ Not supported (yet):
 
 ## Terraform versions
 
-Terraform 0.12. Pin module version to `~> v5.0`. Submit pull-requests to `master` branch.
+Terraform 0.12 and newer. Pin module version to `~> v5.0`. Submit pull-requests to `master` branch.
 
 Terraform 0.11. Pin module version to `~> v3.0`. Submit pull-requests to `terraform011` branch.
 
@@ -220,14 +220,14 @@ module "lb" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.12 |
-| aws | ~> 2.54 |
+| terraform | >= 0.12.6, < 0.14 |
+| aws | >= 2.54, < 4.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.54 |
+| aws | >= 2.54, < 4.0 |
 
 ## Inputs
 
