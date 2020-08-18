@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.8.0"></a>
+## [v5.8.0] - 2020-08-18
+
+- feat: Support Least Outstanding Requests algorithm for load balancing requests ([#158](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/158))
+
+
 <a name="v5.7.0"></a>
 ## [v5.7.0] - 2020-08-13
 
@@ -245,7 +251,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.7.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.8.0...HEAD
+[v5.8.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.7.0...v5.8.0
 [v5.7.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.6.0...v5.7.0
 [v5.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.5.0...v5.6.0
 [v5.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.4.0...v5.5.0
