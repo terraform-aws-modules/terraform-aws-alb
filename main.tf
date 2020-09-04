@@ -161,7 +161,7 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
         session_cookie_name                 = lookup(action.value, "session_cookie_name", null)
         session_timeout                     = lookup(action.value, "session_timeout", null)
         token_endpoint                      = action.value["token_endpoint"]
-        user_info_endpoint                  = action_rule.value["user_info_endpoint"]
+        user_info_endpoint                  = action.value["user_info_endpoint"]
       }
     }
   }
@@ -258,9 +258,13 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
     ]
 
     content {
-      http_header {
-        http_header_name = condition.value["http_headers"]["http_header_name"]
-        values           = condition.value["http_headers"]["values"]
+      dynamic "http_header" {
+        for_each = condition.value["http_headers"]
+
+        content {
+          http_header_name = http_header.value["http_header_name"]
+          values           = http_header.value["values"]
+        }
       }
     }
   }
