@@ -202,7 +202,7 @@ module "alb" {
     },
     {
       https_listener_index = 1
-      priority = 2
+      priority             = 2
 
       actions = [
         {
@@ -226,23 +226,23 @@ module "alb" {
       ]
 
       conditions = [{
-        host_headers = ["X-Make-Me-Authenticate", "X-I-Like-Auth"]
+        host_headers = ["foobar.com"]
       }]
     },
     {
       https_listener_index = 0
       priority             = 3
       actions = [{
-        type        = "fixed-response"
+        type         = "fixed-response"
         content_type = "text/plain"
-        status_code = 200
+        status_code  = 200
         message_body = "This is a fixed response"
       }]
 
       conditions = [{
         http_headers = [{
-          http_header_name   = "x-Gimme-Fixed-Response"
-          values = ["yes", "please", "right now"]
+          http_header_name = "x-Gimme-Fixed-Response"
+          values           = ["yes", "please", "right now"]
         }]
       }]
     },
