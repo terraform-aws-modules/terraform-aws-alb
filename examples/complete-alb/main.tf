@@ -38,15 +38,15 @@ module "security_group" {
   egress_rules        = ["all-all"]
 }
 
-//module "log_bucket" {
-//  source  = "terraform-aws-modules/s3-bucket/aws"
-//  version = "~> 1.0"
-//
-//  bucket                         = "logs-${random_pet.this.id}"
-//  acl                            = "log-delivery-write"
-//  force_destroy                  = true
-//  attach_elb_log_delivery_policy = true
-//}
+# module "log_bucket" {
+#   source  = "terraform-aws-modules/s3-bucket/aws"
+#   version = "~> 1.0"
+#
+#   bucket                         = "logs-${random_pet.this.id}"
+#   acl                            = "log-delivery-write"
+#   force_destroy                  = true
+#   attach_elb_log_delivery_policy = true
+# }
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
@@ -92,10 +92,10 @@ module "alb" {
   security_groups = [module.security_group.this_security_group_id]
   subnets         = data.aws_subnet_ids.all.ids
 
-  //  # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
-  //  access_logs = {
-  //    bucket = module.log_bucket.this_s3_bucket_id
-  //  }
+  #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
+  #   access_logs = {
+  #     bucket = module.log_bucket.this_s3_bucket_id
+  #   }
 
   http_tcp_listeners = [
     # Forward action is default, either when defined or undefined
@@ -307,4 +307,13 @@ module "alb" {
   target_group_tags = {
     MyGlobalTargetGroupTag = "bar"
   }
+}
+
+#########################
+# LB will not be created
+#########################
+module "lb_disabled" {
+  source = "../../"
+
+  create_lb = false
 }
