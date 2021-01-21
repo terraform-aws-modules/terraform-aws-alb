@@ -1,3 +1,55 @@
+
+locals{
+    subnet_ids_string = join(",", data.aws_subnet_ids.public.ids)
+  subnet_ids_list = split(",", local.subnet_ids_string)
+
+}
+
+#############################################################
+# Data sources to get VPC Details
+##############################################################
+data "aws_vpc" "usbank_vpc" {
+  filter {
+    name = "tag:Name"
+    values = ["bankus_east-1-vpc"]
+  }
+}
+
+
+##############################################################
+# Data sources to get subnets
+##############################################################
+
+data "aws_subnet_ids" "public" {
+  vpc_id = data.aws_vpc.usbank_vpc.id
+ tags = {
+    Name = "bankus_east-1-vpc-public-*"
+ }
+
+  # tags = {
+  # Name = "bankus_east-1-vpc-db-us-east-1a",
+  # Name = "bankus_east-1-vpc-db-us-east-1c",  # insert value here
+
+}
+
+data "aws_subnet" "public" {
+  vpc_id = data.aws_vpc.usbank_vpc.id
+  count = length(data.aws_subnet_ids.public.ids)
+  id    = local.subnet_ids_list[count.index]
+}
+
+data "aws_security_group" "this" {
+  vpc_id = data.aws_vpc.usbank_vpc.id
+  #  filter {
+  #   name   = "tag:Name"
+     #values = ["bankus_east-1-vpc-public-us-east-1a"] # insert value here
+  tags = {
+  Name = "usbank-appserv"
+  # insert value here
+  }
+}
+
+
 resource "aws_lb" "this" {
   count = var.create_lb ? 1 : 0
 
@@ -5,9 +57,10 @@ resource "aws_lb" "this" {
   name_prefix = var.name_prefix
 
   load_balancer_type = var.load_balancer_type
+
   internal           = var.internal
-  security_groups    = var.security_groups
-  subnets            = var.subnets
+  security_groups    = [data.aws_security_group.this.id]
+  subnets            = data.aws_subnet_ids.public.ids
 
   idle_timeout                     = var.idle_timeout
   enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
