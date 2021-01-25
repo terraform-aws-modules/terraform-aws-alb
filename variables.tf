@@ -40,6 +40,8 @@ variable "https_listeners" {
   default     = []
 }
 
+
+
 variable "http_tcp_listeners" {
   description = "A list of maps describing the HTTP listeners or TCP ports for this ALB. Required key/values: port, protocol. Optional key/values: target_group_index (defaults to http_tcp_listeners[count.index])"
   type        = any
@@ -106,6 +108,7 @@ variable "load_balancer_type" {
   default     = "application"
 }
 
+
 variable "load_balancer_update_timeout" {
   description = "Timeout value when updating the ALB."
   type        = string
@@ -133,19 +136,19 @@ variable "subnet_mapping" {
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
-  default     = {}
+  default     = {"Name" = "alb-resource"}
 }
 
 variable "lb_tags" {
   description = "A map of tags to add to load balancer"
   type        = map(string)
-  default     = {}
+  default     = {"Name" = "ALB"}
 }
 
 variable "target_group_tags" {
   description = "A map of tags to add to all target groups"
   type        = map(string)
-  default     = {}
+  default     = {"Name" = "ALB-tgt-grp"}
 }
 
 variable "security_groups" {
@@ -159,6 +162,8 @@ variable "target_groups" {
   type        = any
   default     = []
 }
+
+
 
 variable "vpc_id" {
   description = "VPC id where the load balancer and other resources will be deployed."

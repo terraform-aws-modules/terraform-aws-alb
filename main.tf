@@ -40,14 +40,12 @@ data "aws_subnet" "public" {
 
 data "aws_security_group" "this" {
   vpc_id = data.aws_vpc.usbank_vpc.id
-  #  filter {
-  #   name   = "tag:Name"
-     #values = ["bankus_east-1-vpc-public-us-east-1a"] # insert value here
   tags = {
   Name = "usbank-appserv"
-  # insert value here
   }
 }
+
+
 
 
 resource "aws_lb" "this" {
@@ -110,7 +108,7 @@ resource "aws_lb_target_group" "main" {
   name        = lookup(var.target_groups[count.index], "name", null)
   name_prefix = lookup(var.target_groups[count.index], "name_prefix", null)
 
-  vpc_id      = var.vpc_id
+  vpc_id = data.aws_vpc.usbank_vpc.id
   port        = lookup(var.target_groups[count.index], "backend_port", null)
   protocol    = lookup(var.target_groups[count.index], "backend_protocol", null) != null ? upper(lookup(var.target_groups[count.index], "backend_protocol")) : null
   target_type = lookup(var.target_groups[count.index], "target_type", null)
@@ -157,6 +155,9 @@ resource "aws_lb_target_group" "main" {
   )
 
   depends_on = [aws_lb.this]
+
+
+
 
   lifecycle {
     create_before_destroy = true
