@@ -318,11 +318,11 @@ No Modules.
 
 | Name |
 |------|
-| [aws_lb](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb) |
-| [aws_lb_listener](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_listener) |
 | [aws_lb_listener_certificate](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_listener_certificate) |
 | [aws_lb_listener_rule](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_listener_rule) |
+| [aws_lb_listener](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_listener) |
 | [aws_lb_target_group](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_target_group) |
+| [aws_lb](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb) |
 
 ## Inputs
 
