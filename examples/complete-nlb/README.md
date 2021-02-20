@@ -30,6 +30,23 @@ Note that this example may create resources which cost money. Run `terraform des
 | aws | >= 2.54 |
 | random | >= 2.0 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| acm | terraform-aws-modules/acm/aws | ~> 2.0 |
+| nlb | ../../ |  |
+
+## Resources
+
+| Name |
+|------|
+| [aws_eip](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/eip) |
+| [aws_route53_zone](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/data-sources/route53_zone) |
+| [aws_subnet_ids](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/data-sources/subnet_ids) |
+| [aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/data-sources/vpc) |
+| [random_pet](https://registry.terraform.io/providers/hashicorp/random/2.0/docs/resources/pet) |
+
 ## Inputs
 
 No input.
@@ -50,5 +67,4 @@ No input.
 | this\_lb\_dns\_name | The DNS name of the load balancer. |
 | this\_lb\_id | The ID and ARN of the load balancer we created. |
 | this\_lb\_zone\_id | The zone\_id of the load balancer to assist with creating DNS records. |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -310,6 +310,20 @@ module "lb" {
 |------|---------|
 | aws | >= 2.54 |
 
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [aws_lb_listener_certificate](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_listener_certificate) |
+| [aws_lb_listener_rule](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_listener_rule) |
+| [aws_lb_listener](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_listener) |
+| [aws_lb_target_group](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb_target_group) |
+| [aws_lb](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/lb) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -359,7 +373,6 @@ module "lb" {
 | this\_lb\_dns\_name | The DNS name of the load balancer. |
 | this\_lb\_id | The ID and ARN of the load balancer we created. |
 | this\_lb\_zone\_id | The zone\_id of the load balancer to assist with creating DNS records. |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors
