@@ -41,11 +41,11 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name |
 |------|
-| [aws_eip](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/resources/eip) |
-| [aws_route53_zone](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/data-sources/route53_zone) |
-| [aws_subnet_ids](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/data-sources/subnet_ids) |
-| [aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/2.54/docs/data-sources/vpc) |
-| [random_pet](https://registry.terraform.io/providers/hashicorp/random/2.0/docs/resources/pet) |
+| [aws_eip](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) |
+| [aws_route53_zone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) |
+| [aws_subnet_ids](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) |
+| [aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) |
+| [random_pet](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) |
 
 ## Inputs
 
