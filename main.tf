@@ -31,8 +31,10 @@ resource "aws_lb" "this" {
     for_each = var.subnet_mapping
 
     content {
-      subnet_id     = subnet_mapping.value.subnet_id
-      allocation_id = lookup(subnet_mapping.value, "allocation_id", null)
+      subnet_id            = subnet_mapping.value.subnet_id
+      allocation_id        = lookup(subnet_mapping.value, "allocation_id", null)
+      private_ipv4_address = lookup(subnet_mapping.value, "private_ipv4_address", null)
+      ipv6_address         = lookup(subnet_mapping.value, "ipv6_address", null)
     }
   }
 
