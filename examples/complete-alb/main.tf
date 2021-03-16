@@ -285,6 +285,7 @@ module "alb" {
         protocol            = "HTTP"
         matcher             = "200-399"
       }
+      protocol_version = "HTTP1"
       tags = {
         InstanceTargetGroupTag = "baz"
       }
