@@ -57,10 +57,11 @@ resource "aws_lb_target_group" "main" {
   name        = lookup(var.target_groups[count.index], "name", null)
   name_prefix = lookup(var.target_groups[count.index], "name_prefix", null)
 
-  vpc_id      = var.vpc_id
-  port        = lookup(var.target_groups[count.index], "backend_port", null)
-  protocol    = lookup(var.target_groups[count.index], "backend_protocol", null) != null ? upper(lookup(var.target_groups[count.index], "backend_protocol")) : null
-  target_type = lookup(var.target_groups[count.index], "target_type", null)
+  vpc_id           = var.vpc_id
+  port             = lookup(var.target_groups[count.index], "backend_port", null)
+  protocol         = lookup(var.target_groups[count.index], "backend_protocol", null) != null ? upper(lookup(var.target_groups[count.index], "backend_protocol")) : null
+  protocol_version = lookup(var.target_groups[count.index], "protocol_version", null) != null ? upper(lookup(var.target_groups[count.index], "protocol_version")) : null
+  target_type      = lookup(var.target_groups[count.index], "target_type", null)
 
   deregistration_delay               = lookup(var.target_groups[count.index], "deregistration_delay", null)
   slow_start                         = lookup(var.target_groups[count.index], "slow_start", null)
