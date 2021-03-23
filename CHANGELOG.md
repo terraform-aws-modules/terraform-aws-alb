@@ -7,6 +7,25 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.12.0"></a>
+## [v5.12.0] - 2021-03-03
+
+- chore: align ci-cd static checks to use individual minimum Terraform versions ([#185](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/185))
+- chore: add ci-cd workflow for pre-commit checks ([#183](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/183))
+
+
+<a name="v5.11.0"></a>
+## [v5.11.0] - 2021-02-20
+
+- chore: update documentation based on latest `terraform-docs` which includes module and resource sections ([#181](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/181))
+
+
+<a name="v5.10.0"></a>
+## [v5.10.0] - 2020-11-24
+
+- fix: Updated supported Terraform versions ([#173](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/173))
+
+
 <a name="v5.9.0"></a>
 ## [v5.9.0] - 2020-09-11
 
@@ -257,7 +276,10 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.9.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.12.0...HEAD
+[v5.12.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.11.0...v5.12.0
+[v5.11.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.10.0...v5.11.0
+[v5.10.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.9.0...v5.10.0
 [v5.9.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.8.0...v5.9.0
 [v5.8.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.7.0...v5.8.0
 [v5.7.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.6.0...v5.7.0

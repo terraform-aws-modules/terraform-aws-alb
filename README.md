@@ -301,14 +301,28 @@ module "lb" {
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.6, < 0.14 |
-| aws | >= 2.54, < 4.0 |
+| terraform | >= 0.12.6 |
+| aws | >= 2.54 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 2.54, < 4.0 |
+| aws | >= 2.54 |
+
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [aws_lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) |
+| [aws_lb_listener](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) |
+| [aws_lb_listener_certificate](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_certificate) |
+| [aws_lb_listener_rule](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_rule) |
+| [aws_lb_target_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) |
 
 ## Inputs
 
@@ -322,6 +336,7 @@ module "lb" {
 | enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | `bool` | `true` | no |
 | extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate\_arn, https\_listener\_index (the index of the listener within https\_listeners which the cert applies toward). | `list(map(string))` | `[]` | no |
 | http\_tcp\_listeners | A list of maps describing the HTTP listeners or TCP ports for this ALB. Required key/values: port, protocol. Optional key/values: target\_group\_index (defaults to http\_tcp\_listeners[count.index]) | `any` | `[]` | no |
+| https\_listener\_rules | A list of maps describing the Listener Rules for this ALB. Required key/values: actions, conditions. Optional key/values: priority, https\_listener\_index (default to https\_listeners[count.index]) | `any` | `[]` | no |
 | https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate\_arn. Optional key/values: ssl\_policy (defaults to ELBSecurityPolicy-2016-08), target\_group\_index (defaults to https\_listeners[count.index]) | `any` | `[]` | no |
 | idle\_timeout | The time in seconds that the connection is allowed to be idle. | `number` | `60` | no |
 | internal | Boolean determining if the load balancer is internal or externally facing. | `bool` | `false` | no |
@@ -358,7 +373,6 @@ module "lb" {
 | this\_lb\_dns\_name | The DNS name of the load balancer. |
 | this\_lb\_id | The ID and ARN of the load balancer we created. |
 | this\_lb\_zone\_id | The zone\_id of the load balancer to assist with creating DNS records. |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors
