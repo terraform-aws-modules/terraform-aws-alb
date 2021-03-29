@@ -65,6 +65,7 @@ No input.
 | https\_listener\_ids | The IDs of the load balancer listeners created. |
 | target\_group\_arn\_suffixes | ARN suffixes of our target groups - can be used with CloudWatch. |
 | target\_group\_arns | ARNs of the target groups. Useful for passing to your Auto Scaling group. |
+| target\_group\_attachments | ARNs of the target group attachment IDs. |
 | target\_group\_names | Name of the target group. Useful for passing to your CodeDeploy Deployment Group. |
 | this\_lb\_arn | The ID and ARN of the load balancer we created. |
 | this\_lb\_arn\_suffix | ARN suffix of our load balancer - can be used with CloudWatch. |

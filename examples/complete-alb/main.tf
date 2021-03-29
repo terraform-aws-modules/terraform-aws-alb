@@ -285,6 +285,16 @@ module "alb" {
         protocol            = "HTTP"
         matcher             = "200-399"
       }
+      targets = [
+        {
+          target_id = "i-0123456789abcdefg"
+          port = 80
+        },
+        {
+          target_id = "i-a1b2c3d4e5f6g7h8i"
+          port = 8080
+        }
+      ]
       tags = {
         InstanceTargetGroupTag = "baz"
       }
@@ -293,6 +303,14 @@ module "alb" {
       name_prefix                        = "l1-"
       target_type                        = "lambda"
       lambda_multi_value_headers_enabled = true
+      targets = [
+        {
+          target_id = "arn:aws:lambda:us-east-1:123456789012:function:lambda_function_1"
+        },
+        {
+          target_id = "arn:aws:lambda:us-east-1:123456789012:function:lambda_function_2"
+        }
+      ]
     },
   ]
 

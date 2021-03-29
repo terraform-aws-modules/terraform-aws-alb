@@ -110,6 +110,34 @@ resource "aws_lb_target_group" "main" {
   }
 }
 
+locals {
+  # Merge the target group index into a product map of the targets so we
+  # can figure out what target group we should attach each target to.
+  # Target indexes can be dynamically defined, but need to match
+  # the function argument reference. This means any additional arguments
+  # can be added later and only need to be updated in the attachment resource below.
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment#argument-reference
+  target_group_attachments = flatten([
+      for key, groups in var.target_groups : [
+        for k, targets in groups : [
+          for idx, target in targets : merge({tg_index = key}, target)
+        ]
+        if k == "targets"
+      ]
+  ])
+}
+
+resource "aws_lb_target_group_attachment" "tg" {
+  for_each = {
+    for attachment in local.target_group_attachments : "${attachment.tg_index}.${attachment.target_id}" => attachment
+  }
+
+  target_group_arn  = aws_lb_target_group.main[each.value.tg_index].arn
+  target_id         = lookup(each.value, "target_id")
+  port              = lookup(each.value, "port", null)
+  availability_zone = lookup(each.value, "availability_zone", null)
+}
+
 resource "aws_lb_listener_rule" "https_listener_rule" {
   count = var.create_lb ? length(var.https_listener_rules) : 0
 
