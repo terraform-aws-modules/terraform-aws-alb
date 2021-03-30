@@ -118,12 +118,12 @@ locals {
   # can be added later and only need to be updated in the attachment resource below.
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment#argument-reference
   target_group_attachments = flatten([
-      for key, groups in var.target_groups : [
-        for k, targets in groups : [
-          for idx, target in targets : merge({tg_index = key}, target)
-        ]
-        if k == "targets"
+    for key, groups in var.target_groups : [
+      for k, targets in groups : [
+        for idx, target in targets : merge({ tg_index = key }, target)
       ]
+      if k == "targets"
+    ]
   ])
 }
 

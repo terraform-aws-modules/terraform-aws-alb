@@ -288,11 +288,11 @@ module "alb" {
       targets = [
         {
           target_id = "i-0123456789abcdefg"
-          port = 80
+          port      = 80
         },
         {
           target_id = "i-a1b2c3d4e5f6g7h8i"
-          port = 8080
+          port      = 8080
         }
       ]
       tags = {
