@@ -282,7 +282,7 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 
 ## Notes
 
-1. Terraform AWS provider v2.39.0 (via Terraform 0.12) has [issue #7987](https://github.com/terraform-providers/terraform-provider-aws/issues/7987) related to "Provider produced inconsistent final plan". It means that S3 bucket has to be created before referencing it as an argument inside `access_logs = { bucket = "my-already-created-bucket-for-logs" }`, so this won't work: `access_logs = { bucket = module.log_bucket.this_s3_bucket_id }`.
+1. Terraform AWS provider >= v2.39.0 (via Terraform >= 0.12) has [issue #16674](https://github.com/hashicorp/terraform-provider-aws/issues/16674) related to "Provider produced inconsistent final plan". It means that S3 bucket has to be created before referencing it as an argument inside `access_logs = { bucket = "my-already-created-bucket-for-logs" }`, so this won't work: `access_logs = { bucket = module.log_bucket.this_s3_bucket_id }`.
 
 ## Conditional creation
 
