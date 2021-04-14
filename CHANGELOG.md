@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.14.0"></a>
+## [v5.14.0] - 2021-04-14
+
+- feat: Add target group attachment capabilities ([#191](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/191))
+
+
 <a name="v5.13.0"></a>
 ## [v5.13.0] - 2021-04-06
 
@@ -306,7 +312,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.13.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.14.0...HEAD
+[v5.14.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.13.0...v5.14.0
 [v5.13.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.12.0...v5.13.0
 [v5.12.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.11.0...v5.12.0
 [v5.11.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.10.0...v5.11.0
