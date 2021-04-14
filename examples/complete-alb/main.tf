@@ -285,16 +285,16 @@ module "alb" {
         protocol            = "HTTP"
         matcher             = "200-399"
       }
-      targets = [
-        {
-          target_id = "i-0123456789abcdefg"
+      targets = {
+        my_ec2 = {
+          target_id = aws_instance.this.id
           port      = 80
         },
-        {
-          target_id = "i-a1b2c3d4e5f6g7h8i"
+        my_ec2_again = {
+          target_id = aws_instance.this.id
           port      = 8080
         }
-      ]
+      }
       tags = {
         InstanceTargetGroupTag = "baz"
       }
@@ -303,14 +303,16 @@ module "alb" {
       name_prefix                        = "l1-"
       target_type                        = "lambda"
       lambda_multi_value_headers_enabled = true
-      targets = [
-        {
-          target_id = "arn:aws:lambda:us-east-1:123456789012:function:lambda_function_1"
-        },
-        {
-          target_id = "arn:aws:lambda:us-east-1:123456789012:function:lambda_function_2"
+      targets = {
+        # Lambda function permission should be granted before
+        # it is used. There can be an error:
+        # NB: Error registering targets with target group:
+        # AccessDenied: elasticloadbalancing principal does not
+        # have permission to invoke ... from target group ...
+        my_lambda = {
+          target_id = module.lambda_function.this_lambda_function_arn
         }
-      ]
+      }
     },
   ]
 
@@ -334,4 +336,77 @@ module "lb_disabled" {
   source = "../../"
 
   create_lb = false
+}
+
+##################
+# Extra resources
+##################
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+
+  owners = ["amazon"]
+
+  filter {
+    name = "name"
+
+    values = [
+      "amzn-ami-hvm-*-x86_64-gp2",
+    ]
+  }
+
+  filter {
+    name = "owner-alias"
+
+    values = [
+      "amazon",
+    ]
+  }
+}
+
+resource "aws_instance" "this" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = "t3.nano"
+}
+
+#############################################
+# Using packaged function from Lambda module
+#############################################
+
+locals {
+  package_url = "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-lambda/master/examples/fixtures/python3.8-zip/existing_package.zip"
+  downloaded  = "downloaded_package_${md5(local.package_url)}.zip"
+}
+
+resource "null_resource" "download_package" {
+  triggers = {
+    downloaded = local.downloaded
+  }
+
+  provisioner "local-exec" {
+    command = "curl -L -o ${local.downloaded} ${local.package_url}"
+  }
+}
+
+module "lambda_function" {
+  source  = "terraform-aws-modules/lambda/aws"
+  version = "~> 1.0"
+
+  function_name = "${random_pet.this.id}-lambda"
+  description   = "My awesome lambda function"
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+
+  publish = true
+
+  create_package         = false
+  local_existing_package = local.downloaded
+
+  allowed_triggers = {
+    AllowExecutionFromELB = {
+      service    = "elasticloadbalancing"
+      source_arn = module.alb.target_group_arns[1] # index should match the correct target_group
+    }
+  }
+
+  depends_on = [null_resource.download_package]
 }

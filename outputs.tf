@@ -60,7 +60,7 @@ output "target_group_names" {
 
 output "target_group_attachments" {
   description = "ARNs of the target group attachment IDs."
-  value = [
-    for tg in aws_lb_target_group_attachment.tg : tg.id
-  ]
+  value = {
+    for k, v in aws_lb_target_group_attachment.this : k => v.id
+  }
 }
