@@ -408,5 +408,5 @@ module "lambda_function" {
     }
   }
 
-  depends_on = [null_resource.download_package]
+  #  depends_on = [null_resource.download_package]
 }

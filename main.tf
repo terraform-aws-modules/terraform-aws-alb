@@ -346,7 +346,6 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
   }
 }
 
-
 resource "aws_lb_listener" "frontend_http_tcp" {
   count = var.create_lb ? length(var.http_tcp_listeners) : 0
 
