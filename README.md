@@ -10,9 +10,6 @@ These types of resources are supported:
 * [Load Balancer Listener default actions](https://www.terraform.io/docs/providers/aws/r/lb_listener.html) - All actions supported.
 * [Load Balancer Listener Rule](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
 * [Target Group](https://www.terraform.io/docs/providers/aws/r/lb_target_group.html)
-
-Not supported (yet):
-
 * [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_target_group_attachment.html)
 
 ## Terraform versions
@@ -31,7 +28,7 @@ HTTP and HTTPS listeners with default actions:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -39,7 +36,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -50,6 +47,16 @@ module "alb" {
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
+      targets = [
+        {
+          target_id = "i-0123456789abcdefg"
+          port = 80
+        },
+        {
+          target_id = "i-a1b2c3d4e5f6g7h8i"
+          port = 8080
+        }
+      ]
     }
   ]
 
@@ -82,7 +89,7 @@ HTTP to HTTPS redirect and HTTPS cognito authentication:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -90,7 +97,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -144,7 +151,7 @@ Cognito Authentication only on certain routes, with redirects for other routes:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -152,7 +159,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -225,14 +232,14 @@ When you're using ALB Listener rules, make sure that every rule's `actions` bloc
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-nlb"
 
   load_balancer_type = "network"
 
   vpc_id  = "vpc-abcde012"
   subnets = ["subnet-abcde012", "subnet-bcde012a"]
-  
+
   access_logs = {
     bucket = "my-nlb-logs"
   }
@@ -301,7 +308,7 @@ module "lb" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.6 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.54 |
 
 ## Providers
@@ -324,6 +331,7 @@ No modules.
 | [aws_lb_listener_certificate.https_listener](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_certificate) | resource |
 | [aws_lb_listener_rule.https_listener_rule](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_rule) | resource |
 | [aws_lb_target_group.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) | resource |
+| [aws_lb_target_group_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment) | resource |
 
 ## Inputs
 
@@ -368,6 +376,7 @@ No modules.
 | <a name="output_https_listener_ids"></a> [https\_listener\_ids](#output\_https\_listener\_ids) | The IDs of the load balancer listeners created. |
 | <a name="output_target_group_arn_suffixes"></a> [target\_group\_arn\_suffixes](#output\_target\_group\_arn\_suffixes) | ARN suffixes of our target groups - can be used with CloudWatch. |
 | <a name="output_target_group_arns"></a> [target\_group\_arns](#output\_target\_group\_arns) | ARNs of the target groups. Useful for passing to your Auto Scaling group. |
+| <a name="output_target_group_attachments"></a> [target\_group\_attachments](#output\_target\_group\_attachments) | ARNs of the target group attachment IDs. |
 | <a name="output_target_group_names"></a> [target\_group\_names](#output\_target\_group\_names) | Name of the target group. Useful for passing to your CodeDeploy Deployment Group. |
 | <a name="output_this_lb_arn"></a> [this\_lb\_arn](#output\_this\_lb\_arn) | The ID and ARN of the load balancer we created. |
 | <a name="output_this_lb_arn_suffix"></a> [this\_lb\_arn\_suffix](#output\_this\_lb\_arn\_suffix) | ARN suffix of our load balancer - can be used with CloudWatch. |
