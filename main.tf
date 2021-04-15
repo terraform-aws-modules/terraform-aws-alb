@@ -128,7 +128,7 @@ locals {
 }
 
 resource "aws_lb_target_group_attachment" "this" {
-  for_each = local.target_group_attachments
+  for_each = var.create_lb && local.target_group_attachments != null ? local.target_group_attachments : {}
 
   target_group_arn  = aws_lb_target_group.main[each.value.tg_index].arn
   target_id         = each.value.target_id
