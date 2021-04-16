@@ -7,6 +7,25 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.15.0"></a>
+## [v5.15.0] - 2021-04-15
+
+- fix: Empty target group attachments for Terraform 0.13 ([#194](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/194))
+
+
+<a name="v5.14.0"></a>
+## [v5.14.0] - 2021-04-14
+
+- feat: Add target group attachment capabilities ([#191](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/191))
+
+
+<a name="v5.13.0"></a>
+## [v5.13.0] - 2021-04-06
+
+- chore: Update readme note on S3 access logs bucket creation ([#188](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/188))
+- chore: update documentation and pin `terraform_docs` version to avoid future changes ([#190](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/190))
+
+
 <a name="v5.12.0"></a>
 ## [v5.12.0] - 2021-03-03
 
@@ -74,7 +93,19 @@ All notable changes to this project will be documented in this file.
 
 - Updated required versions of Terraform
 - feat: Add support for drop_invalid_header_fields ([#150](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/150))
+- Merge pull request [#149](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/149) from terraform-aws-modules/terraform-provider-githubfile-1584635059788589000
+- [ci skip] Create ".chglog/CHANGELOG.tpl.md".
 - Removed meta github files (see meta repo for more) ([#148](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/148))
+- Merge pull request [#147](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/147) from terraform-aws-modules/terraform-provider-githubfile-1584535254246935000
+- [ci skip] Create ".editorconfig".
+- Merge pull request [#144](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/144) from terraform-aws-modules/terraform-provider-githubfile-1584535210366045000
+- Merge pull request [#142](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/142) from terraform-aws-modules/terraform-provider-githubfile-1584535210367098000
+- Merge pull request [#146](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/146) from terraform-aws-modules/terraform-provider-githubfile-1584535210366026000
+- Merge pull request [#143](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/143) from terraform-aws-modules/terraform-provider-githubfile-1584535210366038000
+- [ci skip] Create "LICENSE".
+- [ci skip] Create "Makefile".
+- [ci skip] Create ".gitignore".
+- [ci skip] Create ".pre-commit-config.yaml".
 
 
 <a name="v5.1.0"></a>
@@ -134,8 +165,11 @@ All notable changes to this project will be documented in this file.
 <a name="v3.5.0"></a>
 ## [v3.5.0] - 2018-12-04
 
+- Merge pull request [#91](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/91) from terraform-aws-modules/fix/tests
 - updated test to remove unsupported attribute
+- Merge pull request [#87](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/87) from jwhitcraft/slow_start
 - Add slow_start option
+- Merge pull request [#81](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/81) from alkalinecoffee/master
 - merge user-provided target_groups_defaults with our defaults
 - Add variable to support setting cross-zone-load-balancing ([#73](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/73))
 - tidying up
@@ -192,7 +226,9 @@ All notable changes to this project will be documented in this file.
 ## [v2.5.0] - 2018-03-07
 
 - release prep and rubocop compliance ([#48](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/48))
+- Merge pull request [#47](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/47) from egarbi/custom_alb_listener_ports
 - Adds 2 new variables to control listener ports of ALB
+- Merge pull request [#41](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/41) from angstwad/fix-bucket-policy
 - Add target_group.name to outputs.tf ([#45](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/45))
 - update force_destroy_log_bucket description ([#42](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/42))
 - fix generated bucket policy if log_location_prefix is omitted (or empty string)
@@ -224,6 +260,7 @@ All notable changes to this project will be documented in this file.
 ## [v2.3.1] - 2017-11-28
 
 - move to kitchen-terraform 3.0.x and terraform 0.11.0 ([#19](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/19))
+- Merge pull request [#18](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/18) from mbolek/tg_health_code
 - Adding the health check code for ALB health checking
 
 
@@ -236,15 +273,20 @@ All notable changes to this project will be documented in this file.
 <a name="v2.2.0"></a>
 ## [v2.2.0] - 2017-11-21
 
+- Merge pull request [#16](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/16) from mbolek/terraform_v011
 - Possible fix for Terraform v0.11(output to non-existing resource)
 
 
 <a name="v2.1.0"></a>
 ## [v2.1.0] - 2017-11-17
 
+- Merge pull request [#14](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/14) from terraform-aws-modules/simplify_region_var_in_tests
 - added detail to changelog
 - resolving the HTTP default issue
+- Merge pull request [#13](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/13) from mbolek/alb_listener_outputs
 - Adding outputs
+- Merge pull request [#10](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/10) from tpoindessous/patch-2
+- Merge pull request [#9](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/9) from tpoindessous/patch-1
 - Update README.md
 - Update README.md
 - Update outputs.tf
@@ -276,7 +318,10 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.12.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.15.0...HEAD
+[v5.15.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.14.0...v5.15.0
+[v5.14.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.13.0...v5.14.0
+[v5.13.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.12.0...v5.13.0
 [v5.12.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.11.0...v5.12.0
 [v5.11.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.10.0...v5.11.0
 [v5.10.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.9.0...v5.10.0
