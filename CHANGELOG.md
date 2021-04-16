@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v5.16.0"></a>
+## [v5.16.0] - 2021-04-16
+
+- fix: Add private_ipv4_address, ipv6_address to subnet_mapping block ([#182](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/182))
+- feat: support for target group protocol_version ([#187](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/187))
+
+
 <a name="v5.15.0"></a>
 ## [v5.15.0] - 2021-04-15
 
@@ -318,7 +325,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.15.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.16.0...HEAD
+[v5.16.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.15.0...v5.16.0
 [v5.15.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.14.0...v5.15.0
 [v5.14.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.13.0...v5.14.0
 [v5.13.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.12.0...v5.13.0
