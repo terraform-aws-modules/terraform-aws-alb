@@ -59,10 +59,11 @@ resource "aws_lb_target_group" "main" {
   name        = lookup(var.target_groups[count.index], "name", null)
   name_prefix = lookup(var.target_groups[count.index], "name_prefix", null)
 
-  vpc_id      = var.vpc_id
-  port        = lookup(var.target_groups[count.index], "backend_port", null)
-  protocol    = lookup(var.target_groups[count.index], "backend_protocol", null) != null ? upper(lookup(var.target_groups[count.index], "backend_protocol")) : null
-  target_type = lookup(var.target_groups[count.index], "target_type", null)
+  vpc_id           = var.vpc_id
+  port             = lookup(var.target_groups[count.index], "backend_port", null)
+  protocol         = lookup(var.target_groups[count.index], "backend_protocol", null) != null ? upper(lookup(var.target_groups[count.index], "backend_protocol")) : null
+  protocol_version = lookup(var.target_groups[count.index], "protocol_version", null) != null ? upper(lookup(var.target_groups[count.index], "protocol_version")) : null
+  target_type      = lookup(var.target_groups[count.index], "target_type", null)
 
   deregistration_delay               = lookup(var.target_groups[count.index], "deregistration_delay", null)
   slow_start                         = lookup(var.target_groups[count.index], "slow_start", null)
@@ -110,6 +111,32 @@ resource "aws_lb_target_group" "main" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+locals {
+  # Merge the target group index into a product map of the targets so we
+  # can figure out what target group we should attach each target to.
+  # Target indexes can be dynamically defined, but need to match
+  # the function argument reference. This means any additional arguments
+  # can be added later and only need to be updated in the attachment resource below.
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment#argument-reference
+  target_group_attachments = merge(flatten([
+    for index, group in var.target_groups : [
+      for k, targets in group : {
+        for target_key, target in targets : join(".", [index, target_key]) => merge({ tg_index = index }, target)
+      }
+      if k == "targets"
+    ]
+  ])...)
+}
+
+resource "aws_lb_target_group_attachment" "this" {
+  for_each = var.create_lb && local.target_group_attachments != null ? local.target_group_attachments : {}
+
+  target_group_arn  = aws_lb_target_group.main[each.value.tg_index].arn
+  target_id         = each.value.target_id
+  port              = lookup(each.value, "port", null)
+  availability_zone = lookup(each.value, "availability_zone", null)
 }
 
 resource "aws_lb_listener_rule" "https_listener_rule" {
@@ -321,7 +348,6 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
     }
   }
 }
-
 
 resource "aws_lb_listener" "frontend_http_tcp" {
   count = var.create_lb ? length(var.http_tcp_listeners) : 0
