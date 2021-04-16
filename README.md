@@ -10,9 +10,6 @@ These types of resources are supported:
 * [Load Balancer Listener default actions](https://www.terraform.io/docs/providers/aws/r/lb_listener.html) - All actions supported.
 * [Load Balancer Listener Rule](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
 * [Target Group](https://www.terraform.io/docs/providers/aws/r/lb_target_group.html)
-
-Not supported (yet):
-
 * [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_target_group_attachment.html)
 
 ## Terraform versions
@@ -31,7 +28,7 @@ HTTP and HTTPS listeners with default actions:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -39,7 +36,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -50,6 +47,16 @@ module "alb" {
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
+      targets = [
+        {
+          target_id = "i-0123456789abcdefg"
+          port = 80
+        },
+        {
+          target_id = "i-a1b2c3d4e5f6g7h8i"
+          port = 8080
+        }
+      ]
     }
   ]
 
@@ -82,7 +89,7 @@ HTTP to HTTPS redirect and HTTPS cognito authentication:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -90,7 +97,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -144,7 +151,7 @@ Cognito Authentication only on certain routes, with redirects for other routes:
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-alb"
 
   load_balancer_type = "application"
@@ -152,7 +159,7 @@ module "alb" {
   vpc_id             = "vpc-abcde012"
   subnets            = ["subnet-abcde012", "subnet-bcde012a"]
   security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-  
+
   access_logs = {
     bucket = "my-alb-logs"
   }
@@ -225,14 +232,14 @@ When you're using ALB Listener rules, make sure that every rule's `actions` bloc
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
-  
+
   name = "my-nlb"
 
   load_balancer_type = "network"
 
   vpc_id  = "vpc-abcde012"
   subnets = ["subnet-abcde012", "subnet-bcde012a"]
-  
+
   access_logs = {
     bucket = "my-nlb-logs"
   }
@@ -275,7 +282,7 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 
 ## Notes
 
-1. Terraform AWS provider v2.39.0 (via Terraform 0.12) has [issue #7987](https://github.com/terraform-providers/terraform-provider-aws/issues/7987) related to "Provider produced inconsistent final plan". It means that S3 bucket has to be created before referencing it as an argument inside `access_logs = { bucket = "my-already-created-bucket-for-logs" }`, so this won't work: `access_logs = { bucket = module.log_bucket.this_s3_bucket_id }`.
+1. Terraform AWS provider >= v2.39.0 (via Terraform >= 0.12) has [issue #16674](https://github.com/hashicorp/terraform-provider-aws/issues/16674) related to "Provider produced inconsistent final plan". It means that S3 bucket has to be created before referencing it as an argument inside `access_logs = { bucket = "my-already-created-bucket-for-logs" }`, so this won't work: `access_logs = { bucket = module.log_bucket.this_s3_bucket_id }`.
 
 ## Conditional creation
 
