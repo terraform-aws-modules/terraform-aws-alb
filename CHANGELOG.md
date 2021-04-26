@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v6.0.0"></a>
+## [v6.0.0] - 2021-04-26
+
+- feat: Shorten outputs (removing this_) ([#196](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/196))
+
+
 <a name="v5.16.0"></a>
 ## [v5.16.0] - 2021-04-16
 
@@ -325,7 +331,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.16.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.0.0...HEAD
+[v6.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.16.0...v6.0.0
 [v5.16.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.15.0...v5.16.0
 [v5.15.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.14.0...v5.15.0
 [v5.14.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.13.0...v5.14.0
