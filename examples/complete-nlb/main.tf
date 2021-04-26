@@ -27,7 +27,6 @@ data "aws_route53_zone" "this" {
 
 # module "log_bucket" {
 #   source  = "terraform-aws-modules/s3-bucket/aws"
-#   version = "~> 1.0"
 #
 #   bucket                         = "logs-${random_pet.this.id}"
 #   acl                            = "log-delivery-write"
@@ -36,8 +35,7 @@ data "aws_route53_zone" "this" {
 # }
 
 module "acm" {
-  source  = "terraform-aws-modules/acm/aws"
-  version = "~> 2.0"
+  source = "terraform-aws-modules/acm/aws"
 
   domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".") # Terraform >= 0.12.17
   zone_id     = data.aws_route53_zone.this.id
@@ -69,7 +67,7 @@ module "nlb" {
 
   #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   #   access_logs = {
-  #     bucket = module.log_bucket.this_s3_bucket_id
+  #     bucket = module.log_bucket.s3_bucket_id
   #   }
 
 
@@ -97,7 +95,7 @@ module "nlb" {
     {
       port               = 84
       protocol           = "TLS"
-      certificate_arn    = module.acm.this_acm_certificate_arn
+      certificate_arn    = module.acm.acm_certificate_arn
       target_group_index = 3
     },
   ]
