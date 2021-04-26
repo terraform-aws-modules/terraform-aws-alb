@@ -1,26 +1,26 @@
-output "this_lb_id" {
+output "lb_id" {
   description = "The ID and ARN of the load balancer we created."
-  value       = module.nlb.this_lb_id
+  value       = module.nlb.lb_id
 }
 
-output "this_lb_arn" {
+output "lb_arn" {
   description = "The ID and ARN of the load balancer we created."
-  value       = module.nlb.this_lb_arn
+  value       = module.nlb.lb_arn
 }
 
-output "this_lb_dns_name" {
+output "lb_dns_name" {
   description = "The DNS name of the load balancer."
-  value       = module.nlb.this_lb_dns_name
+  value       = module.nlb.lb_dns_name
 }
 
-output "this_lb_arn_suffix" {
+output "lb_arn_suffix" {
   description = "ARN suffix of our load balancer - can be used with CloudWatch."
-  value       = module.nlb.this_lb_arn_suffix
+  value       = module.nlb.lb_arn_suffix
 }
 
-output "this_lb_zone_id" {
+output "lb_zone_id" {
   description = "The zone_id of the load balancer to assist with creating DNS records."
-  value       = module.nlb.this_lb_zone_id
+  value       = module.nlb.lb_zone_id
 }
 
 output "http_tcp_listener_arns" {

@@ -49,8 +49,7 @@ module "security_group" {
 # }
 
 module "acm" {
-  source  = "terraform-aws-modules/acm/aws"
-  version = "~> 2.0"
+  source = "terraform-aws-modules/acm/aws"
 
   domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".") # Terraform >= 0.12.17
   zone_id     = data.aws_route53_zone.this.id
@@ -94,7 +93,7 @@ module "alb" {
 
   #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   #   access_logs = {
-  #     bucket = module.log_bucket.this_s3_bucket_id
+  #     bucket = module.log_bucket.s3_bucket_id
   #   }
 
   http_tcp_listeners = [
@@ -131,7 +130,7 @@ module "alb" {
     {
       port               = 443
       protocol           = "HTTPS"
-      certificate_arn    = module.acm.this_acm_certificate_arn
+      certificate_arn    = module.acm.acm_certificate_arn
       target_group_index = 1
     },
     # Authentication actions only allowed with HTTPS
@@ -140,7 +139,7 @@ module "alb" {
       protocol           = "HTTPS"
       action_type        = "authenticate-cognito"
       target_group_index = 1
-      certificate_arn    = module.acm.this_acm_certificate_arn
+      certificate_arn    = module.acm.acm_certificate_arn
       authenticate_cognito = {
         authentication_request_extra_params = {
           display = "page"
@@ -159,7 +158,7 @@ module "alb" {
       protocol           = "HTTPS"
       action_type        = "authenticate-oidc"
       target_group_index = 1
-      certificate_arn    = module.acm.this_acm_certificate_arn
+      certificate_arn    = module.acm.acm_certificate_arn
       authenticate_oidc = {
         authentication_request_extra_params = {
           display = "page"
@@ -311,7 +310,7 @@ module "alb" {
         # AccessDenied: elasticloadbalancing principal does not
         # have permission to invoke ... from target group ...
         my_lambda = {
-          target_id = module.lambda_function.this_lambda_function_arn
+          target_id = module.lambda_function.lambda_function_arn
         }
       }
     },
@@ -390,7 +389,7 @@ resource "null_resource" "download_package" {
 
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   function_name = "${random_pet.this.id}-lambda"
   description   = "My awesome lambda function"
