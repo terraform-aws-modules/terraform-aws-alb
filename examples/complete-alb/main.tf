@@ -27,7 +27,7 @@ data "aws_route53_zone" "this" {
 
 module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   name        = "alb-sg-${random_pet.this.id}"
   description = "Security group for example usage with ALB"
@@ -49,7 +49,8 @@ module "security_group" {
 # }
 
 module "acm" {
-  source = "terraform-aws-modules/acm/aws"
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 3.0"
 
   domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".") # Terraform >= 0.12.17
   zone_id     = data.aws_route53_zone.this.id
@@ -88,7 +89,7 @@ module "alb" {
   load_balancer_type = "application"
 
   vpc_id          = data.aws_vpc.default.id
-  security_groups = [module.security_group.this_security_group_id]
+  security_groups = [module.security_group.security_group_id]
   subnets         = data.aws_subnet_ids.all.ids
 
   #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
