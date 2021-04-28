@@ -14,9 +14,9 @@ These types of resources are supported:
 
 ## Terraform versions
 
-Terraform 0.12 and newer. Pin module version to `~> v5.0`. Submit pull-requests to `master` branch.
+Terraform 0.12 and newer. Pin module version to `~> 6.0`. Submit pull-requests to `master` branch.
 
-Terraform 0.11. Pin module version to `~> v3.0`. Submit pull-requests to `terraform011` branch.
+Terraform 0.11. Pin module version to `~> 3.0`. Submit pull-requests to `terraform011` branch.
 
 ## Usage
 
@@ -27,7 +27,7 @@ HTTP and HTTPS listeners with default actions:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = "my-alb"
 
@@ -231,7 +231,7 @@ When you're using ALB Listener rules, make sure that every rule's `actions` bloc
 ```hcl
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = "my-nlb"
 
@@ -282,7 +282,7 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 
 ## Notes
 
-1. Terraform AWS provider >= v2.39.0 (via Terraform >= 0.12) has [issue #16674](https://github.com/hashicorp/terraform-provider-aws/issues/16674) related to "Provider produced inconsistent final plan". It means that S3 bucket has to be created before referencing it as an argument inside `access_logs = { bucket = "my-already-created-bucket-for-logs" }`, so this won't work: `access_logs = { bucket = module.log_bucket.this_s3_bucket_id }`.
+1. Terraform AWS provider >= v2.39.0 (via Terraform >= 0.12) has [issue #16674](https://github.com/hashicorp/terraform-provider-aws/issues/16674) related to "Provider produced inconsistent final plan". It means that S3 bucket has to be created before referencing it as an argument inside `access_logs = { bucket = "my-already-created-bucket-for-logs" }`, so this won't work: `access_logs = { bucket = module.log_bucket.s3_bucket_id }`.
 
 ## Conditional creation
 
