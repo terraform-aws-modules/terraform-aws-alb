@@ -2,22 +2,6 @@
 
 Terraform module which creates Application and Network Load Balancer resources on AWS.
 
-These types of resources are supported:
-
-* [Load Balancer](https://www.terraform.io/docs/providers/aws/r/lb.html)
-* [Load Balancer Listener](https://www.terraform.io/docs/providers/aws/r/lb_listener.html)
-* [Load Balancer Listener Certificate](https://www.terraform.io/docs/providers/aws/r/lb_listener_certificate.html)
-* [Load Balancer Listener default actions](https://www.terraform.io/docs/providers/aws/r/lb_listener.html) - All actions supported.
-* [Load Balancer Listener Rule](https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html)
-* [Target Group](https://www.terraform.io/docs/providers/aws/r/lb_target_group.html)
-* [Target Group Attachment](https://www.terraform.io/docs/providers/aws/r/lb_target_group_attachment.html)
-
-## Terraform versions
-
-Terraform 0.12 and newer. Pin module version to `~> 6.0`. Submit pull-requests to `master` branch.
-
-Terraform 0.11. Pin module version to `~> 3.0`. Submit pull-requests to `terraform011` branch.
-
 ## Usage
 
 ### Application Load Balancer
@@ -88,7 +72,7 @@ HTTP to HTTPS redirect and HTTPS cognito authentication:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = "my-alb"
 
@@ -150,7 +134,7 @@ Cognito Authentication only on certain routes, with redirects for other routes:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = "my-alb"
 
@@ -288,20 +272,20 @@ It's recommended you use this module with [terraform-aws-vpc](https://registry.t
 
 Sometimes you need to have a way to create ALB resources conditionally but Terraform does not allow to use `count` inside `module` block, so the solution is to specify argument `create_lb`.
 
- ```hcl
+```hcl
 # This LB will not be created
 module "lb" {
-  source = "terraform-aws-modules/alb/aws"
+ source = "terraform-aws-modules/alb/aws"
 
-  create_lb = false
-  # ... omitted
+ create_lb = false
+ # ... omitted
 }
 ```
 
 ## Examples
 
-* [Complete Application Load Balancer](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/complete-alb)
-* [Complete Network Load Balancer](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/complete-nlb)
+- [Complete Application Load Balancer](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/complete-alb)
+- [Complete Network Load Balancer](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/complete-nlb)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -387,9 +371,8 @@ No modules.
 
 ## Authors
 
-Module managed by [Anton Babenko](https://github.com/antonbabenko). Originally created and maintained by [Brandon O'Connor](https://github.com/brandoconnor) - brandon@atscale.run.
-Many thanks to [the contributors listed here](https://github.com/terraform-aws-modules/terraform-aws-alb/graphs/contributors)!
+Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with help from [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-alb/graphs/contributors).
 
 ## License
 
-Apache 2 Licensed. See LICENSE for full details.
+Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/LICENSE) for full details.
