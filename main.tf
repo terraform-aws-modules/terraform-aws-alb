@@ -347,6 +347,12 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
       }
     }
   }
+
+  tags = merge(
+    var.tags,
+    var.https_listener_rules_tags,
+    lookup(var.https_listener_rules[count.index], "tags", {}),
+  )
 }
 
 resource "aws_lb_listener" "frontend_http_tcp" {
@@ -389,6 +395,12 @@ resource "aws_lb_listener" "frontend_http_tcp" {
       }
     }
   }
+
+  tags = merge(
+    var.tags,
+    var.http_tcp_listeners_tags,
+    lookup(var.http_tcp_listeners[count.index], "tags", {}),
+  )
 }
 
 resource "aws_lb_listener" "frontend_https" {
@@ -477,6 +489,12 @@ resource "aws_lb_listener" "frontend_https" {
       target_group_arn = aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id
     }
   }
+
+  tags = merge(
+    var.tags,
+    var.https_listeners_tags,
+    lookup(var.https_listeners[count.index], "tags", {}),
+  )
 }
 
 resource "aws_lb_listener_certificate" "https_listener" {
