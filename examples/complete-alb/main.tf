@@ -328,6 +328,18 @@ module "alb" {
   target_group_tags = {
     MyGlobalTargetGroupTag = "bar"
   }
+
+  https_listener_rules_tags = {
+    MyLoadBalancerHTTPSListenerRule = "bar"
+  }
+
+  https_listeners_tags = {
+    MyLoadBalancerHTTPSListener = "bar"
+  }
+
+  http_tcp_listeners_tags = {
+    MyLoadBalancerTCPListener = "bar"
+  }
 }
 
 #########################

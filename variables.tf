@@ -148,6 +148,25 @@ variable "target_group_tags" {
   default     = {}
 }
 
+variable "https_listener_rules_tags" {
+  description = "A map of tags to add to all https listener rules"
+  type        = map(string)
+  default     = {}
+}
+
+variable "https_listeners_tags" {
+  description = "A map of tags to add to all https listeners"
+  type        = map(string)
+  default     = {}
+}
+
+variable "http_tcp_listeners_tags" {
+  description = "A map of tags to add to all tcp listeners"
+  type        = map(string)
+  default     = {}
+}
+
+
 variable "security_groups" {
   description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
   type        = list(string)
