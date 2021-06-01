@@ -412,7 +412,7 @@ resource "aws_lb_listener" "frontend_https" {
   protocol        = lookup(var.https_listeners[count.index], "protocol", "HTTPS")
   certificate_arn = var.https_listeners[count.index]["certificate_arn"]
   ssl_policy      = lookup(var.https_listeners[count.index], "ssl_policy", var.listener_ssl_policy_default)
-  alpn_policy     = try(var.encrypted_listeners[count.index]["alpn_policy"], null)
+  alpn_policy     = try(var.https_listeners[count.index]["alpn_policy"], null)
 
   dynamic "default_action" {
     for_each = length(keys(var.https_listeners[count.index])) == 0 ? [] : [var.https_listeners[count.index]]
