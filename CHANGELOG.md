@@ -6,11 +6,17 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+
+<a name="v6.2.0"></a>
+## [v6.2.0] - 2021-06-02
+
+- feat: Adding support for ALPN policies ([#206](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/206))
+
+
 <a name="v6.1.0"></a>
 ## [v6.1.0] - 2021-05-15
 
 - feat: Add tags to listener and listener rules ([#199](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/199))
-- feat: Added support to map ALPN policies in target group attachments.
 - chore: update CI/CD to use stable `terraform-docs` release artifact and discoverable Apache2.0 license ([#198](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/198))
 - chore: Updated versions in README
 - chore: Updated versions in README
@@ -317,7 +323,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.1.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.2.0...HEAD
+[v6.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.1.0...v6.2.0
 [v6.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.0.0...v6.1.0
 [v6.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.16.0...v6.0.0
 [v5.16.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.15.0...v5.16.0
