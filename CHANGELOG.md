@@ -6,11 +6,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
-
 <a name="v6.1.0"></a>
 ## [v6.1.0] - 2021-05-15
 
 - feat: Add tags to listener and listener rules ([#199](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/199))
+- feat: Added support to map ALPN policies in target group attachments.
 - chore: update CI/CD to use stable `terraform-docs` release artifact and discoverable Apache2.0 license ([#198](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/198))
 - chore: Updated versions in README
 - chore: Updated versions in README
