@@ -70,6 +70,7 @@ resource "aws_lb_target_group" "main" {
   proxy_protocol_v2                  = lookup(var.target_groups[count.index], "proxy_protocol_v2", false)
   lambda_multi_value_headers_enabled = lookup(var.target_groups[count.index], "lambda_multi_value_headers_enabled", false)
   load_balancing_algorithm_type      = lookup(var.target_groups[count.index], "load_balancing_algorithm_type", null)
+  preserve_client_ip                 = lookup(var.target_groups[count.index], "preserve_client_ip", null)
 
   dynamic "health_check" {
     for_each = length(keys(lookup(var.target_groups[count.index], "health_check", {}))) == 0 ? [] : [lookup(var.target_groups[count.index], "health_check", {})]
