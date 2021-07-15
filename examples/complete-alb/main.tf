@@ -267,6 +267,45 @@ module "alb" {
     },
   ]
 
+  http_tcp_listener_rules = [
+    {
+      http_tcp_listener_index = 0
+      priority                = 3
+      actions = [{
+        type         = "fixed-response"
+        content_type = "text/plain"
+        status_code  = 200
+        message_body = "This is a fixed response"
+      }]
+
+      conditions = [{
+        http_headers = [{
+          http_header_name = "x-Gimme-Fixed-Response"
+          values           = ["yes", "please", "right now"]
+        }]
+      }]
+    },
+    {
+      http_tcp_listener_index = 0
+      priority                = 5000
+      actions = [{
+        type        = "redirect"
+        status_code = "HTTP_302"
+        host        = "www.youtube.com"
+        path        = "/watch"
+        query       = "v=dQw4w9WgXcQ"
+        protocol    = "HTTPS"
+      }]
+
+      conditions = [{
+        query_strings = [{
+          key   = "video"
+          value = "random"
+        }]
+      }]
+    },
+  ]
+
   target_groups = [
     {
       name_prefix          = "h1"
