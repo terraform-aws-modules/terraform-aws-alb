@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v6.4.0"></a>
+## [v6.4.0] - 2021-08-12
+
+- feat: Add listener rules support for http/tcp listeners ([#216](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/216))
+
+
 <a name="v6.3.0"></a>
 ## [v6.3.0] - 2021-07-08
 
@@ -329,7 +335,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.3.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.4.0...HEAD
+[v6.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.3.0...v6.4.0
 [v6.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.2.0...v6.3.0
 [v6.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.1.0...v6.2.0
 [v6.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.0.0...v6.1.0
