@@ -362,56 +362,6 @@ resource "aws_lb_listener_rule" "http_tcp_listener_rule" {
   listener_arn = aws_lb_listener.frontend_http_tcp[lookup(var.http_tcp_listener_rules[count.index], "http_tcp_listener_index", count.index)].arn
   priority     = lookup(var.http_tcp_listener_rules[count.index], "priority", null)
 
-  # authenticate-cognito actions
-  dynamic "action" {
-    for_each = [
-      for action_rule in var.http_tcp_listener_rules[count.index].actions :
-      action_rule
-      if action_rule.type == "authenticate-cognito"
-    ]
-
-    content {
-      type = action.value["type"]
-      authenticate_cognito {
-        authentication_request_extra_params = lookup(action.value, "authentication_request_extra_params", null)
-        on_unauthenticated_request          = lookup(action.value, "on_authenticated_request", null)
-        scope                               = lookup(action.value, "scope", null)
-        session_cookie_name                 = lookup(action.value, "session_cookie_name", null)
-        session_timeout                     = lookup(action.value, "session_timeout", null)
-        user_pool_arn                       = action.value["user_pool_arn"]
-        user_pool_client_id                 = action.value["user_pool_client_id"]
-        user_pool_domain                    = action.value["user_pool_domain"]
-      }
-    }
-  }
-
-  # authenticate-oidc actions
-  dynamic "action" {
-    for_each = [
-      for action_rule in var.http_tcp_listener_rules[count.index].actions :
-      action_rule
-      if action_rule.type == "authenticate-oidc"
-    ]
-
-    content {
-      type = action.value["type"]
-      authenticate_oidc {
-        # Max 10 extra params
-        authentication_request_extra_params = lookup(action.value, "authentication_request_extra_params", null)
-        authorization_endpoint              = action.value["authorization_endpoint"]
-        client_id                           = action.value["client_id"]
-        client_secret                       = action.value["client_secret"]
-        issuer                              = action.value["issuer"]
-        on_unauthenticated_request          = lookup(action.value, "on_unauthenticated_request", null)
-        scope                               = lookup(action.value, "scope", null)
-        session_cookie_name                 = lookup(action.value, "session_cookie_name", null)
-        session_timeout                     = lookup(action.value, "session_timeout", null)
-        token_endpoint                      = action.value["token_endpoint"]
-        user_info_endpoint                  = action.value["user_info_endpoint"]
-      }
-    }
-  }
-
   # redirect actions
   dynamic "action" {
     for_each = [

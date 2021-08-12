@@ -161,7 +161,7 @@ variable "https_listener_rules_tags" {
 }
 
 variable "http_tcp_listener_rules_tags" {
-  description = "A map of tags to add to all https listener rules"
+  description = "A map of tags to add to all http listener rules"
   type        = map(string)
   default     = {}
 }
@@ -173,7 +173,7 @@ variable "https_listeners_tags" {
 }
 
 variable "http_tcp_listeners_tags" {
-  description = "A map of tags to add to all tcp listeners"
+  description = "A map of tags to add to all http listeners"
   type        = map(string)
   default     = {}
 }
