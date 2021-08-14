@@ -107,8 +107,6 @@ resource "aws_lb_target_group" "main" {
     },
   )
 
-  depends_on = [aws_lb.this]
-
   lifecycle {
     create_before_destroy = true
   }
