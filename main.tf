@@ -6,15 +6,15 @@ resource "aws_lb" "this" {
 
   load_balancer_type = var.load_balancer_type
   internal           = var.internal
-  security_groups    = var.security_groups
+  security_groups    = var.load_balancer_type == "application" ? var.security_groups : null
   subnets            = var.subnets
 
-  idle_timeout                     = var.idle_timeout
-  enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
+  idle_timeout                     = var.load_balancer_type == "application" ? var.idle_timeout : null
+  enable_cross_zone_load_balancing = var.load_balancer_type == "network" ? var.enable_cross_zone_load_balancing : null
   enable_deletion_protection       = var.enable_deletion_protection
-  enable_http2                     = var.enable_http2
-  ip_address_type                  = var.ip_address_type
-  drop_invalid_header_fields       = var.drop_invalid_header_fields
+  enable_http2                     = var.load_balancer_type == "application" ? var.enable_http2 : null
+  ip_address_type                  = var.load_balancer_type == "internal" ? "ipv4" : var.ip_address_type
+  drop_invalid_header_fields       = var.load_balancer_type == "application"  ? var.drop_invalid_header_fields : null
 
   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   dynamic "access_logs" {
