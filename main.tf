@@ -262,7 +262,7 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
           for_each = action.value["target_groups"]
 
           content {
-            arn = aws_lb_target_group.main[target_group.value["target_group_index"]].id
+            arn    = aws_lb_target_group.main[target_group.value["target_group_index"]].id
             weight = target_group.value["weight"]
           }
         }
