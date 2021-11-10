@@ -4,6 +4,12 @@ variable "create_lb" {
   default     = true
 }
 
+variable "create_tg" {
+  description = "Controls if a Target Group should be created. Creating an LB always creates a TG."
+  type        = bool
+  default     = true
+}
+
 variable "drop_invalid_header_fields" {
   description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
   type        = bool
