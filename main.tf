@@ -258,7 +258,7 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
     content {
       type = "forward"
       forward {
-        dynamic target_group {
+        dynamic "target_group" {
           for_each = action.value["target_groups"]
 
           content {
@@ -266,7 +266,7 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
             weight = target_group.value["weight"]
           }
         }
-        dynamic stickiness {
+        dynamic "stickiness" {
           for_each = length(keys(lookup(action.value, "stickiness", {}))) == 0 ? [] : [lookup(action.value, "stickiness", {})]
 
           content {
