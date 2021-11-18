@@ -248,7 +248,7 @@ module "alb" {
     },
     {
       https_listener_index = 0
-      priority = 4
+      priority             = 4
 
       actions = [{
         type = "weighted-forward"
