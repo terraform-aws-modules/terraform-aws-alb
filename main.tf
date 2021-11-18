@@ -266,6 +266,14 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
             weight = target_group.value["weight"]
           }
         }
+        dynamic stickiness {
+          for_each = length(keys(lookup(action.value, "stickiness", {}))) == 0 ? [] : [lookup(action.value, "stickiness", {})]
+
+          content {
+            enabled  = try(stickiness.value["enabled"], false)
+            duration = try(stickiness.value["duration"], 1)
+          }
+        }
       }
     }
   }

@@ -262,6 +262,10 @@ module "alb" {
             weight             = 1
           }
         ]
+        stickiness = {
+          enabled  = true
+          duration = 3600
+        }
       }]
 
       conditions = [{
