@@ -247,6 +247,37 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
     }
   }
 
+  # weighted forward actions
+  dynamic "action" {
+    for_each = [
+      for action_rule in var.https_listener_rules[count.index].actions :
+      action_rule
+      if action_rule.type == "weighted-forward"
+    ]
+
+    content {
+      type = "forward"
+      forward {
+        dynamic "target_group" {
+          for_each = action.value["target_groups"]
+
+          content {
+            arn    = aws_lb_target_group.main[target_group.value["target_group_index"]].id
+            weight = target_group.value["weight"]
+          }
+        }
+        dynamic "stickiness" {
+          for_each = [lookup(action.value, "stickiness", {})]
+
+          content {
+            enabled  = try(stickiness.value["enabled"], false)
+            duration = try(stickiness.value["duration"], 1)
+          }
+        }
+      }
+    }
+  }
+
   # Path Pattern condition
   dynamic "condition" {
     for_each = [
