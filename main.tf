@@ -267,7 +267,7 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
           }
         }
         dynamic "stickiness" {
-          for_each = length(keys(lookup(action.value, "stickiness", {}))) == 0 ? [] : [lookup(action.value, "stickiness", {})]
+          for_each = [lookup(action.value, "stickiness", {})]
 
           content {
             enabled  = try(stickiness.value["enabled"], false)
