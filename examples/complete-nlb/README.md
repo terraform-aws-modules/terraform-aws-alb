@@ -34,8 +34,8 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws |  |
-| <a name="module_nlb"></a> [nlb](#module\_nlb) | ../../ |  |
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | n/a |
+| <a name="module_nlb"></a> [nlb](#module\_nlb) | ../../ | n/a |
 
 ## Resources
 

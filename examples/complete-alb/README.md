@@ -37,9 +37,9 @@ Note that this example may create resources which cost money. Run `terraform des
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | ~> 3.0 |
-| <a name="module_alb"></a> [alb](#module\_alb) | ../../ |  |
+| <a name="module_alb"></a> [alb](#module\_alb) | ../../ | n/a |
 | <a name="module_lambda_function"></a> [lambda\_function](#module\_lambda\_function) | terraform-aws-modules/lambda/aws | ~> 2.0 |
-| <a name="module_lb_disabled"></a> [lb\_disabled](#module\_lb\_disabled) | ../../ |  |
+| <a name="module_lb_disabled"></a> [lb\_disabled](#module\_lb\_disabled) | ../../ | n/a |
 | <a name="module_security_group"></a> [security\_group](#module\_security\_group) | terraform-aws-modules/security-group/aws | ~> 4.0 |
 
 ## Resources
