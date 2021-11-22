@@ -20,22 +20,22 @@ Note that this example may create resources which cost money. Run `terraform des
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.27 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.40 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.27 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.40 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws |  |
-| <a name="module_nlb"></a> [nlb](#module\_nlb) | ../../ |  |
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | n/a |
+| <a name="module_nlb"></a> [nlb](#module\_nlb) | ../../ | n/a |
 
 ## Resources
 

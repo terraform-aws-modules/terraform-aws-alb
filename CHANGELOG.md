@@ -1,10 +1,18 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
-<a name="unreleased"></a>
-## [Unreleased]
+## [6.6.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.0...v6.6.1) (2021-11-22)
 
+
+### Bug Fixes
+
+* update CI/CD process to enable auto-release workflow ([#228](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/228)) ([b1100cb](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/b1100cb197e067ee6047ac019a4ed316a82f3786))
+
+<a name="v6.6.0"></a>
+## [v6.6.0] - 2021-11-19
+
+- feat: Support weight in forward action ([#224](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/224))
 
 
 <a name="v6.5.0"></a>
@@ -341,7 +349,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.5.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.0...HEAD
+[v6.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.5.0...v6.6.0
 [v6.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.4.0...v6.5.0
 [v6.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.3.0...v6.4.0
 [v6.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.2.0...v6.3.0
