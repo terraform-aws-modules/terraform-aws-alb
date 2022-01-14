@@ -1,10 +1,83 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
-<a name="unreleased"></a>
-## [Unreleased]
+## [6.6.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.0...v6.6.1) (2021-11-22)
 
+
+### Bug Fixes
+
+* update CI/CD process to enable auto-release workflow ([#228](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/228)) ([b1100cb](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/b1100cb197e067ee6047ac019a4ed316a82f3786))
+
+<a name="v6.6.0"></a>
+## [v6.6.0] - 2021-11-19
+
+- feat: Support weight in forward action ([#224](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/224))
+
+
+<a name="v6.5.0"></a>
+## [v6.5.0] - 2021-08-14
+
+- fix: Remove not required depends_on in aws_lb_target_group ([#215](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/215))
+
+
+<a name="v6.4.0"></a>
+## [v6.4.0] - 2021-08-12
+
+- feat: Add listener rules support for http/tcp listeners ([#216](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/216))
+
+
+<a name="v6.3.0"></a>
+## [v6.3.0] - 2021-07-08
+
+- feat: Add support for preserve_client_ip tg flag ([#213](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/213))
+
+
+<a name="v6.2.0"></a>
+## [v6.2.0] - 2021-06-02
+
+- feat: Adding support for ALPN policies ([#206](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/206))
+
+
+<a name="v6.1.0"></a>
+## [v6.1.0] - 2021-05-15
+
+- feat: Add tags to listener and listener rules ([#199](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/199))
+- chore: update CI/CD to use stable `terraform-docs` release artifact and discoverable Apache2.0 license ([#198](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/198))
+- chore: Updated versions in README
+- chore: Updated versions in README
+
+
+<a name="v6.0.0"></a>
+## [v6.0.0] - 2021-04-26
+
+- feat: Shorten outputs (removing this_) ([#196](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/196))
+
+
+<a name="v5.16.0"></a>
+## [v5.16.0] - 2021-04-16
+
+- fix: Add private_ipv4_address, ipv6_address to subnet_mapping block ([#182](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/182))
+- feat: support for target group protocol_version ([#187](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/187))
+
+
+<a name="v5.15.0"></a>
+## [v5.15.0] - 2021-04-15
+
+- fix: Empty target group attachments for Terraform 0.13 ([#194](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/194))
+
+
+<a name="v5.14.0"></a>
+## [v5.14.0] - 2021-04-14
+
+- feat: Add target group attachment capabilities ([#191](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/191))
+
+
+<a name="v5.13.0"></a>
+## [v5.13.0] - 2021-04-06
+
+- chore: Update readme note on S3 access logs bucket creation ([#188](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/188))
+- chore: update documentation and pin `terraform_docs` version to avoid future changes ([#190](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/190))
 
 
 <a name="v5.12.0"></a>
@@ -276,7 +349,18 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.12.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.0...HEAD
+[v6.6.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.5.0...v6.6.0
+[v6.5.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.4.0...v6.5.0
+[v6.4.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.3.0...v6.4.0
+[v6.3.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.2.0...v6.3.0
+[v6.2.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.1.0...v6.2.0
+[v6.1.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.0.0...v6.1.0
+[v6.0.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.16.0...v6.0.0
+[v5.16.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.15.0...v5.16.0
+[v5.15.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.14.0...v5.15.0
+[v5.14.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.13.0...v5.14.0
+[v5.13.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.12.0...v5.13.0
 [v5.12.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.11.0...v5.12.0
 [v5.11.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.10.0...v5.11.0
 [v5.10.0]: https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v5.9.0...v5.10.0

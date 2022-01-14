@@ -52,6 +52,12 @@ variable "https_listener_rules" {
   default     = []
 }
 
+variable "http_tcp_listener_rules" {
+  description = "A list of maps describing the Listener Rules for this ALB. Required key/values: actions, conditions. Optional key/values: priority, http_tcp_listener_index (default to http_tcp_listeners[count.index])"
+  type        = any
+  default     = []
+}
+
 variable "idle_timeout" {
   description = "The time in seconds that the connection is allowed to be idle."
   type        = number
@@ -144,6 +150,30 @@ variable "lb_tags" {
 
 variable "target_group_tags" {
   description = "A map of tags to add to all target groups"
+  type        = map(string)
+  default     = {}
+}
+
+variable "https_listener_rules_tags" {
+  description = "A map of tags to add to all https listener rules"
+  type        = map(string)
+  default     = {}
+}
+
+variable "http_tcp_listener_rules_tags" {
+  description = "A map of tags to add to all http listener rules"
+  type        = map(string)
+  default     = {}
+}
+
+variable "https_listeners_tags" {
+  description = "A map of tags to add to all https listeners"
+  type        = map(string)
+  default     = {}
+}
+
+variable "http_tcp_listeners_tags" {
+  description = "A map of tags to add to all http listeners"
   type        = map(string)
   default     = {}
 }
