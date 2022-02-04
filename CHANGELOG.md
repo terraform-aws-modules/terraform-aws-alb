@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.1...v6.7.0) (2022-02-04)
+
+
+### Features
+
+* Add support for enable_waf_fail_open and desync_mitigation_mode ([#235](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/235)) ([a4a79df](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/a4a79dfb66fd868d93b9405617c6ca8938a42893))
+
 ## [6.6.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.0...v6.6.1) (2021-11-22)
 
 
