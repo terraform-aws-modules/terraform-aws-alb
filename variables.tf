@@ -195,3 +195,15 @@ variable "vpc_id" {
   type        = string
   default     = null
 }
+
+variable "enable_waf_fail_open" {
+  description = "Indicates whether to route requests to targets if lb fails to forward the request to AWS WAF"
+  type        = bool
+  default     = false
+}
+
+variable "desync_mitigation_mode" {
+  description = "Determines how the load balancer handles requests that might pose a security risk to an application due to HTTP desync."
+  type        = string
+  default     = "defensive"
+}
