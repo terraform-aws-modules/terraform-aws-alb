@@ -313,6 +313,35 @@ module "alb" {
           values           = ["yes", "please", "right now"]
         }]
       }]
+    },    
+    {
+      http_tcp_listener_index = 0
+      priority                = 4
+
+      actions = [{
+        type = "weighted-forward"
+        target_groups = [
+          {
+            target_group_index = 1
+            weight             = 2
+          },
+          {
+            target_group_index = 0
+            weight             = 1
+          }
+        ]
+        stickiness = {
+          enabled  = true
+          duration = 3600
+        }
+      }]
+
+      conditions = [{
+        query_strings = [{
+          key   = "weighted"
+          value = "true"
+        }]
+      }]
     },
     {
       http_tcp_listener_index = 0
