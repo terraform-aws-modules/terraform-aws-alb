@@ -478,12 +478,5 @@ module "lambda_function" {
   create_package         = false
   local_existing_package = local.downloaded
 
-  allowed_triggers = {
-    AllowExecutionFromELB = {
-      service    = "elasticloadbalancing"
-      source_arn = module.alb.target_group_arns[1] # index should match the correct target_group
-    }
-  }
-
   depends_on = [null_resource.download_package]
 }
