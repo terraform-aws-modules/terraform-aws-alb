@@ -31,16 +31,89 @@ module "alb" {
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
-      targets = [
-        {
+      targets = {
+        my_target = {
           target_id = "i-0123456789abcdefg"
           port = 80
-        },
-        {
+        }
+        my_other_target = {
           target_id = "i-a1b2c3d4e5f6g7h8i"
           port = 8080
         }
-      ]
+      }
+    }
+  ]
+
+  https_listeners = [
+    {
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+      target_group_index = 0
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
+    }
+  ]
+
+  tags = {
+    Environment = "Test"
+  }
+}
+```
+
+HTTP and HTTPS listeners to lambda:
+
+The targets block has 7 attributes specific to lambda. The details about available here [https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission#action](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission#action)
+
+| Name                        | Default                              | Required |
+|-----------------------------|--------------------------------------|----------|
+| `lambda_function_name`      |                                      | `yes`    |
+| `lambda_action`             | `lambda:InvokeFunction`              | `no`     |
+| `lambda_event_source_token` | `null`                               | `no`     |
+| `lambda_principal`          | `elasticloadbalancing.amazonaws.com` | `no`     |
+| `lambda_qualifier`          | `null`                               | `no`     |
+| `lambda_source_account`     | `null`                               | `no`     |
+| `lambda_statement_id`       | `AllowExecutionFromLb`               | `no`     |
+
+
+```hcl
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 6.0"
+
+  name = "my-alb"
+
+  load_balancer_type = "application"
+
+  vpc_id             = "vpc-abcde012"
+  subnets            = ["subnet-abcde012", "subnet-bcde012a"]
+  security_groups    = ["sg-edcd9784", "sg-edcd9785"]
+
+  access_logs = {
+    bucket = "my-alb-logs"
+  }
+
+  target_groups = [
+    {
+      name_prefix      = "l1-"
+      target_type      = "lambda"
+      lambda_multi_value_headers_enabled = true
+      targets = {
+        my_lambda = {
+          target_id = "i-0123456789abcdefg"
+          lambda_function_name = "my_lambda_function_name"
+        }
+        my_other_lambda = {
+          target_id = "i-a1b2c3d4e5f6g7h8i"
+          lambda_function_name = "my_other_lambda_function_name"
+        }
+      }
     }
   ]
 
@@ -309,6 +382,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_lambda_permission.with_lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lb.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) | resource |
 | [aws_lb_listener.frontend_http_tcp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_lb_listener.frontend_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |

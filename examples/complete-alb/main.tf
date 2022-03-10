@@ -373,13 +373,9 @@ module "alb" {
       target_type                        = "lambda"
       lambda_multi_value_headers_enabled = true
       targets = {
-        # Lambda function permission should be granted before
-        # it is used. There can be an error:
-        # NB: Error registering targets with target group:
-        # AccessDenied: elasticloadbalancing principal does not
-        # have permission to invoke ... from target group ...
         my_lambda = {
-          target_id = module.lambda_function.lambda_function_arn
+          target_id            = module.lambda_function.lambda_function_arn
+          lambda_function_name = module.lambda_function.lambda_function_name
         }
       }
     },
