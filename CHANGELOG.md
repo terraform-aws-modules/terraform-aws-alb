@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.8.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.7.0...v6.8.0) (2022-03-12)
+
+
+### Features
+
+* Made it clear that we stand with Ukraine ([34ba506](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/34ba5062591068c77e2f8dc8c454284bbf039ddd))
+
 ## [6.7.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.1...v6.7.0) (2022-02-04)
 
 
