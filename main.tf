@@ -22,14 +22,13 @@ resource "aws_lb" "this" {
   enable_waf_fail_open             = var.enable_waf_fail_open
   desync_mitigation_mode           = var.desync_mitigation_mode
 
-  # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   dynamic "access_logs" {
     for_each = length(keys(var.access_logs)) == 0 ? [] : [var.access_logs]
 
     content {
-      enabled = lookup(access_logs.value, "enabled", lookup(access_logs.value, "bucket", null) != null)
-      bucket  = lookup(access_logs.value, "bucket", null)
-      prefix  = lookup(access_logs.value, "prefix", null)
+      enabled = try(access_logs.value.enabled, try(access_logs.value.bucket, null) != null)
+      bucket  = try(access_logs.value.bucket, null)
+      prefix  = try(access_logs.value.prefix, null)
     }
   }
 
@@ -447,6 +446,37 @@ resource "aws_lb_listener_rule" "http_tcp_listener_rule" {
     content {
       type             = action.value["type"]
       target_group_arn = aws_lb_target_group.main[lookup(action.value, "target_group_index", count.index)].id
+    }
+  }
+
+  # weighted forward actions
+  dynamic "action" {
+    for_each = [
+      for action_rule in var.http_tcp_listener_rules[count.index].actions :
+      action_rule
+      if action_rule.type == "weighted-forward"
+    ]
+
+    content {
+      type = "forward"
+      forward {
+        dynamic "target_group" {
+          for_each = action.value["target_groups"]
+
+          content {
+            arn    = aws_lb_target_group.main[target_group.value["target_group_index"]].id
+            weight = target_group.value["weight"]
+          }
+        }
+        dynamic "stickiness" {
+          for_each = [lookup(action.value, "stickiness", {})]
+
+          content {
+            enabled  = try(stickiness.value["enabled"], false)
+            duration = try(stickiness.value["duration"], 1)
+          }
+        }
+      }
     }
   }
 

@@ -13,8 +13,11 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnet_ids" "all" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnets" "all" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
 
 resource "random_pet" "this" {
@@ -27,6 +30,7 @@ data "aws_route53_zone" "this" {
 
 # module "log_bucket" {
 #   source  = "terraform-aws-modules/s3-bucket/aws"
+#   version = "~> 3.0"
 #
 #   bucket                         = "logs-${random_pet.this.id}"
 #   acl                            = "log-delivery-write"
@@ -35,14 +39,15 @@ data "aws_route53_zone" "this" {
 # }
 
 module "acm" {
-  source = "terraform-aws-modules/acm/aws"
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 3.0"
 
-  domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".") # Terraform >= 0.12.17
+  domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".")
   zone_id     = data.aws_route53_zone.this.id
 }
 
 resource "aws_eip" "this" {
-  count = length(data.aws_subnet_ids.all.ids)
+  count = length(data.aws_subnets.all.ids)
 
   vpc = true
 }
@@ -63,7 +68,7 @@ module "nlb" {
   #   subnets = tolist(data.aws_subnet_ids.all.ids)
 
   #   Use `subnet_mapping` to attach EIPs
-  subnet_mapping = [for i, eip in aws_eip.this : { allocation_id : eip.id, subnet_id : tolist(data.aws_subnet_ids.all.ids)[i] }]
+  subnet_mapping = [for i, eip in aws_eip.this : { allocation_id : eip.id, subnet_id : tolist(data.aws_subnets.all.ids)[i] }]
 
   #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   #   access_logs = {

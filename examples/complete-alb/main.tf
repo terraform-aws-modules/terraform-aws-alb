@@ -13,8 +13,11 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnet_ids" "all" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnets" "all" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
 
 resource "random_pet" "this" {
@@ -38,21 +41,21 @@ module "security_group" {
   egress_rules        = ["all-all"]
 }
 
-# module "log_bucket" {
-#   source  = "terraform-aws-modules/s3-bucket/aws"
-#   version = "~> 1.0"
+#module "log_bucket" {
+#  source  = "terraform-aws-modules/s3-bucket/aws"
+#  version = "~> 3.0"
 #
-#   bucket                         = "logs-${random_pet.this.id}"
-#   acl                            = "log-delivery-write"
-#   force_destroy                  = true
-#   attach_elb_log_delivery_policy = true
-# }
+#  bucket                         = "logs-${random_pet.this.id}"
+#  acl                            = "log-delivery-write"
+#  force_destroy                  = true
+#  attach_elb_log_delivery_policy = true
+#}
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 3.0"
 
-  domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".") # Terraform >= 0.12.17
+  domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".")
   zone_id     = data.aws_route53_zone.this.id
 }
 
@@ -90,7 +93,7 @@ module "alb" {
 
   vpc_id          = data.aws_vpc.default.id
   security_groups = [module.security_group.security_group_id]
-  subnets         = data.aws_subnet_ids.all.ids
+  subnets         = data.aws_subnets.all.ids
 
   #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   #   access_logs = {
@@ -316,6 +319,35 @@ module "alb" {
     },
     {
       http_tcp_listener_index = 0
+      priority                = 4
+
+      actions = [{
+        type = "weighted-forward"
+        target_groups = [
+          {
+            target_group_index = 1
+            weight             = 2
+          },
+          {
+            target_group_index = 0
+            weight             = 1
+          }
+        ]
+        stickiness = {
+          enabled  = true
+          duration = 3600
+        }
+      }]
+
+      conditions = [{
+        query_strings = [{
+          key   = "weighted"
+          value = "true"
+        }]
+      }]
+    },
+    {
+      http_tcp_listener_index = 0
       priority                = 5000
       actions = [{
         type        = "redirect"
@@ -470,7 +502,7 @@ resource "null_resource" "download_package" {
 
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   function_name = "${random_pet.this.id}-lambda"
   description   = "My awesome lambda function"
