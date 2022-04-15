@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.9.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.8.0...v6.9.0) (2022-04-15)
+
+
+### Features
+
+* Added `weighted-forward` rules for HTTP ([#236](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/236)) ([ba77760](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/ba777608fce8a0fa5307222a9324fa54578ed437))
+
 ## [6.8.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.7.0...v6.8.0) (2022-03-12)
 
 
