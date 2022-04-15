@@ -22,14 +22,13 @@ resource "aws_lb" "this" {
   enable_waf_fail_open             = var.enable_waf_fail_open
   desync_mitigation_mode           = var.desync_mitigation_mode
 
-  # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   dynamic "access_logs" {
     for_each = length(keys(var.access_logs)) == 0 ? [] : [var.access_logs]
 
     content {
-      enabled = lookup(access_logs.value, "enabled", lookup(access_logs.value, "bucket", null) != null)
-      bucket  = lookup(access_logs.value, "bucket", null)
-      prefix  = lookup(access_logs.value, "prefix", null)
+      enabled = try(access_logs.value.enabled, try(access_logs.value.bucket, null) != null)
+      bucket  = try(access_logs.value.bucket, null)
+      prefix  = try(access_logs.value.prefix, null)
     }
   }
 
