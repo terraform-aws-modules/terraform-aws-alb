@@ -100,6 +100,7 @@ resource "aws_lb_target_group" "main" {
       enabled         = lookup(stickiness.value, "enabled", null)
       cookie_duration = lookup(stickiness.value, "cookie_duration", null)
       type            = lookup(stickiness.value, "type", null)
+      cookie_name     = lookup(stickiness.value, "cookie_name", null)
     }
   }
 
