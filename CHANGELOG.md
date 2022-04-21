@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.10.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.9.0...v6.10.0) (2022-04-21)
+
+
+### Features
+
+* Added missing `cookie_name` TG stickiness parameter support ([#245](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/245)) ([a01b7ca](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/a01b7cafa95b9770768a4430630ab0f88379fce8))
+
 ## [6.9.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.8.0...v6.9.0) (2022-04-15)
 
 
