@@ -1,5 +1,9 @@
+locals {
+  create_lb = var.create_lb && var.putin_khuylo
+}
+
 resource "aws_lb" "this" {
-  count = var.create_lb ? 1 : 0
+  count = local.create_lb ? 1 : 0
 
   name        = var.name
   name_prefix = var.name_prefix
@@ -18,14 +22,13 @@ resource "aws_lb" "this" {
   enable_waf_fail_open             = var.enable_waf_fail_open
   desync_mitigation_mode           = var.desync_mitigation_mode
 
-  # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
   dynamic "access_logs" {
     for_each = length(keys(var.access_logs)) == 0 ? [] : [var.access_logs]
 
     content {
-      enabled = lookup(access_logs.value, "enabled", lookup(access_logs.value, "bucket", null) != null)
-      bucket  = lookup(access_logs.value, "bucket", null)
-      prefix  = lookup(access_logs.value, "prefix", null)
+      enabled = try(access_logs.value.enabled, try(access_logs.value.bucket, null) != null)
+      bucket  = try(access_logs.value.bucket, null)
+      prefix  = try(access_logs.value.prefix, null)
     }
   }
 
@@ -56,7 +59,7 @@ resource "aws_lb" "this" {
 }
 
 resource "aws_lb_target_group" "main" {
-  count = var.create_lb ? length(var.target_groups) : 0
+  count = local.create_lb ? length(var.target_groups) : 0
 
   name        = lookup(var.target_groups[count.index], "name", null)
   name_prefix = lookup(var.target_groups[count.index], "name_prefix", null)
@@ -97,6 +100,7 @@ resource "aws_lb_target_group" "main" {
       enabled         = lookup(stickiness.value, "enabled", null)
       cookie_duration = lookup(stickiness.value, "cookie_duration", null)
       type            = lookup(stickiness.value, "type", null)
+      cookie_name     = lookup(stickiness.value, "cookie_name", null)
     }
   }
 
@@ -157,7 +161,7 @@ resource "aws_lambda_permission" "with_lb" {
 }
 
 resource "aws_lb_target_group_attachment" "this" {
-  for_each = var.create_lb && local.target_group_attachments != null ? local.target_group_attachments : {}
+  for_each = local.create_lb && local.target_group_attachments != null ? local.target_group_attachments : {}
 
   target_group_arn  = aws_lb_target_group.main[each.value.tg_index].arn
   target_id         = each.value.target_id
@@ -168,7 +172,7 @@ resource "aws_lb_target_group_attachment" "this" {
 }
 
 resource "aws_lb_listener_rule" "https_listener_rule" {
-  count = var.create_lb ? length(var.https_listener_rules) : 0
+  count = local.create_lb ? length(var.https_listener_rules) : 0
 
   listener_arn = aws_lb_listener.frontend_https[lookup(var.https_listener_rules[count.index], "https_listener_index", count.index)].arn
   priority     = lookup(var.https_listener_rules[count.index], "priority", null)
@@ -415,7 +419,7 @@ resource "aws_lb_listener_rule" "https_listener_rule" {
 }
 
 resource "aws_lb_listener_rule" "http_tcp_listener_rule" {
-  count = var.create_lb ? length(var.http_tcp_listener_rules) : 0
+  count = local.create_lb ? length(var.http_tcp_listener_rules) : 0
 
   listener_arn = aws_lb_listener.frontend_http_tcp[lookup(var.http_tcp_listener_rules[count.index], "http_tcp_listener_index", count.index)].arn
   priority     = lookup(var.http_tcp_listener_rules[count.index], "priority", null)
@@ -470,6 +474,37 @@ resource "aws_lb_listener_rule" "http_tcp_listener_rule" {
     content {
       type             = action.value["type"]
       target_group_arn = aws_lb_target_group.main[lookup(action.value, "target_group_index", count.index)].id
+    }
+  }
+
+  # weighted forward actions
+  dynamic "action" {
+    for_each = [
+      for action_rule in var.http_tcp_listener_rules[count.index].actions :
+      action_rule
+      if action_rule.type == "weighted-forward"
+    ]
+
+    content {
+      type = "forward"
+      forward {
+        dynamic "target_group" {
+          for_each = action.value["target_groups"]
+
+          content {
+            arn    = aws_lb_target_group.main[target_group.value["target_group_index"]].id
+            weight = target_group.value["weight"]
+          }
+        }
+        dynamic "stickiness" {
+          for_each = [lookup(action.value, "stickiness", {})]
+
+          content {
+            enabled  = try(stickiness.value["enabled"], false)
+            duration = try(stickiness.value["duration"], 1)
+          }
+        }
+      }
     }
   }
 
@@ -581,7 +616,7 @@ resource "aws_lb_listener_rule" "http_tcp_listener_rule" {
 }
 
 resource "aws_lb_listener" "frontend_http_tcp" {
-  count = var.create_lb ? length(var.http_tcp_listeners) : 0
+  count = local.create_lb ? length(var.http_tcp_listeners) : 0
 
   load_balancer_arn = aws_lb.this[0].arn
 
@@ -629,7 +664,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
 }
 
 resource "aws_lb_listener" "frontend_https" {
-  count = var.create_lb ? length(var.https_listeners) : 0
+  count = local.create_lb ? length(var.https_listeners) : 0
 
   load_balancer_arn = aws_lb.this[0].arn
 
@@ -724,7 +759,7 @@ resource "aws_lb_listener" "frontend_https" {
 }
 
 resource "aws_lb_listener_certificate" "https_listener" {
-  count = var.create_lb ? length(var.extra_ssl_certs) : 0
+  count = local.create_lb ? length(var.extra_ssl_certs) : 0
 
   listener_arn    = aws_lb_listener.frontend_https[var.extra_ssl_certs[count.index]["https_listener_index"]].arn
   certificate_arn = var.extra_ssl_certs[count.index]["certificate_arn"]
