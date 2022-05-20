@@ -133,6 +133,28 @@ locals {
       if k == "targets"
     ]
   ])...)
+
+  # Filter out the attachments for lambda functions. The ALB target group needs permission to forward a request on to
+  # the specified lambda function. This filtered list is used to create those permission resources
+  target_group_attachments_lambda = {
+    for k, v in local.target_group_attachments :
+    (k) => merge(v, { lambda_function_name = split(":", v.target_id)[6] })
+    if try(v.attach_lambda_permission, false)
+  }
+}
+
+resource "aws_lambda_permission" "lb" {
+  for_each = var.create_lb && local.target_group_attachments_lambda != null ? local.target_group_attachments_lambda : {}
+
+  function_name = each.value.lambda_function_name
+  qualifier     = try(each.value.lambda_qualifier, null)
+
+  statement_id       = try(each.value.lambda_statement_id, "AllowExecutionFromLb")
+  action             = try(each.value.lambda_action, "lambda:InvokeFunction")
+  principal          = try(each.value.lambda_principal, "elasticloadbalancing.amazonaws.com")
+  source_arn         = aws_lb_target_group.main[each.value.tg_index].arn
+  source_account     = try(each.value.lambda_source_account, null)
+  event_source_token = try(each.value.lambda_event_source_token, null)
 }
 
 resource "aws_lb_target_group_attachment" "this" {
@@ -142,6 +164,8 @@ resource "aws_lb_target_group_attachment" "this" {
   target_id         = each.value.target_id
   port              = lookup(each.value, "port", null)
   availability_zone = lookup(each.value, "availability_zone", null)
+
+  depends_on = [aws_lambda_permission.lb]
 }
 
 resource "aws_lb_listener_rule" "https_listener_rule" {

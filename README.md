@@ -33,16 +33,16 @@ module "alb" {
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
-      targets = [
-        {
+      targets = {
+        my_target = {
           target_id = "i-0123456789abcdefg"
           port = 80
-        },
-        {
+        }
+        my_other_target = {
           target_id = "i-a1b2c3d4e5f6g7h8i"
           port = 8080
         }
-      ]
+      }
     }
   ]
 
@@ -311,6 +311,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_lambda_permission.lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lb.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) | resource |
 | [aws_lb_listener.frontend_http_tcp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_lb_listener.frontend_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
