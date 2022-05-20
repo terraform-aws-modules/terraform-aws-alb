@@ -405,9 +405,18 @@ module "alb" {
       target_type                        = "lambda"
       lambda_multi_value_headers_enabled = true
       targets = {
-        my_lambda = {
-          target_id            = module.lambda_function.lambda_function_arn
-          lambda_function_name = module.lambda_function.lambda_function_name
+        lambda_with_allowed_triggers = {
+          target_id = module.lambda_with_allowed_triggers.lambda_function_arn
+        }
+      }
+    },
+    {
+      name_prefix = "l2-"
+      target_type = "lambda"
+      targets = {
+        lambda_without_allowed_triggers = {
+          target_id                = module.lambda_without_allowed_triggers.lambda_function_arn
+          attach_lambda_permission = true
         }
       }
     },
@@ -496,12 +505,12 @@ resource "null_resource" "download_package" {
   }
 }
 
-module "lambda_function" {
+module "lambda_with_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 3.0"
 
-  function_name = "${random_pet.this.id}-lambda"
-  description   = "My awesome lambda function"
+  function_name = "${random_pet.this.id}-with-allowed-triggers"
+  description   = "My awesome lambda function (with allowed triggers)"
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
 
@@ -509,6 +518,33 @@ module "lambda_function" {
 
   create_package         = false
   local_existing_package = local.downloaded
+
+  allowed_triggers = {
+    AllowExecutionFromELB = {
+      service    = "elasticloadbalancing"
+      source_arn = module.alb.target_group_arns[1] # index should match the correct target_group
+    }
+  }
+
+  depends_on = [null_resource.download_package]
+}
+
+module "lambda_without_allowed_triggers" {
+  source  = "terraform-aws-modules/lambda/aws"
+  version = "~> 3.0"
+
+  function_name = "${random_pet.this.id}-without-allowed-triggers"
+  description   = "My awesome lambda function (without allowed triggers)"
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+
+  publish = true
+
+  create_package         = false
+  local_existing_package = local.downloaded
+
+  # Allowed triggers will be managed by ALB module
+  allowed_triggers = {}
 
   depends_on = [null_resource.download_package]
 }

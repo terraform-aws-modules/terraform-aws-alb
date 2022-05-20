@@ -136,28 +136,25 @@ locals {
 
   # Filter out the attachments for lambda functions. The ALB target group needs permission to forward a request on to
   # the specified lambda function. This filtered list is used to create those permission resources
-  target_group_attachments_lambda = merge(flatten([
-    for target_group_attachments_key, target_group_attachments_value in local.target_group_attachments : [
-      for k, v in target_group_attachments_value : { (target_group_attachments_key) = target_group_attachments_value }
-      if k == "lambda_function_name"
-    ]
-  ])...)
+  target_group_attachments_lambda = {
+    for k, v in local.target_group_attachments :
+    (k) => merge(v, { lambda_function_name = split(":", v.target_id)[6] })
+    if try(v.attach_lambda_permission, false)
+  }
 }
 
-resource "aws_lambda_permission" "with_lb" {
+resource "aws_lambda_permission" "lb" {
   for_each = var.create_lb && local.target_group_attachments_lambda != null ? local.target_group_attachments_lambda : {}
 
-  # required
   function_name = each.value.lambda_function_name
+  qualifier     = try(each.value.lambda_qualifier, null)
 
-  # optional
-  action             = lookup(each.value, "lambda_action", null) != null ? each.value.lambda_action : "lambda:InvokeFunction"
-  event_source_token = lookup(each.value, "lambda_event_source_token", null)
-  principal          = lookup(each.value, "lambda_principal", null) != null ? each.value.lambda_principal : "elasticloadbalancing.amazonaws.com"
-  qualifier          = lookup(each.value, "lambda_qualifier", null)
-  source_account     = lookup(each.value, "lambda_source_account", null)
+  statement_id       = try(each.value.lambda_statement_id, "AllowExecutionFromLb")
+  action             = try(each.value.lambda_action, "lambda:InvokeFunction")
+  principal          = try(each.value.lambda_principal, "elasticloadbalancing.amazonaws.com")
   source_arn         = aws_lb_target_group.main[each.value.tg_index].arn
-  statement_id       = lookup(each.value, "lambda_statement_id", null) != null ? each.value.lambda_statement_id : "AllowExecutionFromLb"
+  source_account     = try(each.value.lambda_source_account, null)
+  event_source_token = try(each.value.lambda_event_source_token, null)
 }
 
 resource "aws_lb_target_group_attachment" "this" {
@@ -168,7 +165,7 @@ resource "aws_lb_target_group_attachment" "this" {
   port              = lookup(each.value, "port", null)
   availability_zone = lookup(each.value, "availability_zone", null)
 
-  depends_on = [aws_lambda_permission.with_lb]
+  depends_on = [aws_lambda_permission.lb]
 }
 
 resource "aws_lb_listener_rule" "https_listener_rule" {
