@@ -144,7 +144,7 @@ locals {
 }
 
 resource "aws_lambda_permission" "lb" {
-  for_each = var.create_lb && local.target_group_attachments_lambda != null ? local.target_group_attachments_lambda : {}
+  for_each = { for k, v in local.target_group_attachments_lambda : k => v if local.create_lb }
 
   function_name = each.value.lambda_function_name
   qualifier     = try(each.value.lambda_qualifier, null)
@@ -158,7 +158,7 @@ resource "aws_lambda_permission" "lb" {
 }
 
 resource "aws_lb_target_group_attachment" "this" {
-  for_each = local.create_lb && local.target_group_attachments != null ? local.target_group_attachments : {}
+  for_each = { for k, v in local.target_group_attachments : k => v if local.create_lb }
 
   target_group_arn  = aws_lb_target_group.main[each.value.tg_index].arn
   target_id         = each.value.target_id
