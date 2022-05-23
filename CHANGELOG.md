@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.11.0...v7.0.0) (2022-05-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgraded Terraform version to 1.0+. Added wrappers. (#249)
+
+### Features
+
+* Upgraded Terraform version to 1.0+. Added wrappers. ([#249](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/249)) ([25d31ee](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/25d31ee31d3a29783568b31dc883eba52de14c9d))
+
 ## [6.11.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.10.0...v6.11.0) (2022-05-20)
 
 
