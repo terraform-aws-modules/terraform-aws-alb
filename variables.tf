@@ -213,3 +213,8 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+variable "preserve_host_header" {
+  type        = bool
+  default     = false
+}
