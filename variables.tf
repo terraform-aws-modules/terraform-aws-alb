@@ -208,6 +208,12 @@ variable "desync_mitigation_mode" {
   default     = "defensive"
 }
 
+variable "preserve_host_header" {
+  description = "Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change"
+  type        = bool
+  default     = false
+}
+
 variable "putin_khuylo" {
   description = "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
   type        = bool

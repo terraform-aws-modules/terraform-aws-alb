@@ -21,6 +21,7 @@ resource "aws_lb" "this" {
   drop_invalid_header_fields       = var.drop_invalid_header_fields
   enable_waf_fail_open             = var.enable_waf_fail_open
   desync_mitigation_mode           = var.desync_mitigation_mode
+  preserve_host_header             = var.preserve_host_header
 
   dynamic "access_logs" {
     for_each = length(keys(var.access_logs)) == 0 ? [] : [var.access_logs]
