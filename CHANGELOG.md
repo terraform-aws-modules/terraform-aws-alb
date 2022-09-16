@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v7.0.0...v8.0.0) (2022-09-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* Add ip_address_type to target group resource, bumped AWS provider version (#255)
+
+### Features
+
+* Add ip_address_type to target group resource, bumped AWS provider version ([#255](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/255)) ([5d08044](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/5d080446f6e74d6dcbc6ff6110633d3e6e48c909))
+
 ## [7.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.11.0...v7.0.0) (2022-05-23)
 
 
