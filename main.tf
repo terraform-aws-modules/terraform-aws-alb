@@ -70,6 +70,7 @@ resource "aws_lb_target_group" "main" {
   protocol_version = lookup(var.target_groups[count.index], "protocol_version", null) != null ? upper(lookup(var.target_groups[count.index], "protocol_version")) : null
   target_type      = lookup(var.target_groups[count.index], "target_type", null)
 
+  connection_termination             = lookup(var.target_groups[count.index], "connection_termination", null)
   deregistration_delay               = lookup(var.target_groups[count.index], "deregistration_delay", null)
   slow_start                         = lookup(var.target_groups[count.index], "slow_start", null)
   proxy_protocol_v2                  = lookup(var.target_groups[count.index], "proxy_protocol_v2", false)
