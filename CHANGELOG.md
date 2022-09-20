@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.1.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.0.0...v8.1.0) (2022-09-20)
+
+
+### Features
+
+* Added connection_termination toggle to target group ([#257](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/257)) ([33b6ecd](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/33b6ecdc0769a63d43dab0b3287fdcecdcb4e805))
+
 ## [8.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v7.0.0...v8.0.0) (2022-09-16)
 
 
