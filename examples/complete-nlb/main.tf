@@ -107,11 +107,12 @@ module "nlb" {
 
   target_groups = [
     {
-      name_prefix        = "tu1-"
-      backend_protocol   = "TCP_UDP"
-      backend_port       = 81
-      target_type        = "instance"
-      preserve_client_ip = true
+      name_prefix            = "tu1-"
+      backend_protocol       = "TCP_UDP"
+      backend_port           = 81
+      target_type            = "instance"
+      connection_termination = true
+      preserve_client_ip     = true
       tags = {
         tcp_udp = true
       }
