@@ -42,6 +42,7 @@ Note that this example may create resources which cost money. Run `terraform des
 | <a name="module_lambda_without_allowed_triggers"></a> [lambda\_without\_allowed\_triggers](#module\_lambda\_without\_allowed\_triggers) | terraform-aws-modules/lambda/aws | ~> 3.0 |
 | <a name="module_lb_disabled"></a> [lb\_disabled](#module\_lb\_disabled) | ../../ | n/a |
 | <a name="module_security_group"></a> [security\_group](#module\_security\_group) | terraform-aws-modules/security-group/aws | ~> 4.0 |
+| <a name="module_wildcard_cert"></a> [wildcard\_cert](#module\_wildcard\_cert) | terraform-aws-modules/acm/aws | ~> 3.0 |
 
 ## Resources
 
