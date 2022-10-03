@@ -13,7 +13,7 @@ HTTP and HTTPS listeners with default actions:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 8.1.0"
+  version = "~> 8.0"
 
   name = "my-alb"
 
@@ -74,7 +74,7 @@ HTTP to HTTPS redirect and HTTPS cognito authentication:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 8.1.0"
+  version = "~> 8.0"
 
   name = "my-alb"
 
@@ -136,7 +136,7 @@ Cognito Authentication only on certain routes, with redirects for other routes:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 8.1.0"
+  version = "~> 8.0"
 
   name = "my-alb"
 
@@ -217,7 +217,7 @@ When you're using ALB Listener rules, make sure that every rule's `actions` bloc
 ```hcl
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 8.1.0"
+  version = "~> 8.0"
 
   name = "my-nlb"
 
