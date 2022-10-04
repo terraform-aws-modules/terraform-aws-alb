@@ -12,9 +12,9 @@ This wrapper does not implement any extra functionality.
 
 ```hcl
 terraform {
-  source = "tfr:///terraform-aws-modules/alb/aws//wrappers"
+  source = "tfr:///terraform-aws-modules/modules-terraform-aws-alb/aws//wrappers"
   # Alternative source:
-  # source = "git::git@github.com:terraform-aws-modules/terraform-aws-alb.git?ref=master//wrappers"
+  # source = "git::git@github.com:terraform-aws-modules/terraform-aws-modules-terraform-aws-alb.git?ref=master//wrappers"
 }
 
 inputs = {
@@ -42,7 +42,7 @@ inputs = {
 
 ```hcl
 module "wrapper" {
-  source = "terraform-aws-modules/alb/aws//wrappers"
+  source = "terraform-aws-modules/modules-terraform-aws-alb/aws//wrappers"
 
   defaults = { # Default values
     create = true
