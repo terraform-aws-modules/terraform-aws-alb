@@ -113,6 +113,10 @@ module "nlb" {
       target_type            = "instance"
       connection_termination = true
       preserve_client_ip     = true
+      stickiness = {
+        enabled = true
+        type    = "source_ip"
+      }
       tags = {
         tcp_udp = true
       }

@@ -13,7 +13,7 @@ HTTP and HTTPS listeners with default actions:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   name = "my-alb"
 
@@ -74,7 +74,7 @@ HTTP to HTTPS redirect and HTTPS cognito authentication:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   name = "my-alb"
 
@@ -136,7 +136,7 @@ Cognito Authentication only on certain routes, with redirects for other routes:
 ```hcl
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   name = "my-alb"
 
@@ -217,7 +217,7 @@ When you're using ALB Listener rules, make sure that every rule's `actions` bloc
 ```hcl
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   name = "my-nlb"
 
@@ -391,6 +391,6 @@ Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraf
 
 ## Additional information for users from Russia and Belarus
 
-* Russia has [illegally annexed Crimea in 2014](https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation) and [brought the war in Donbas](https://en.wikipedia.org/wiki/War_in_Donbas) followed by [full-scale invasion of Ukraine in 2022](https://en.wikipedia.org/wiki/2022_Russian_invasion_of_Ukraine).
-* Russia has brought sorrow and devastations to millions of Ukrainians, killed hundreds of innocent people, damaged thousands of buildings, and forced several million people to flee.
-* [Putin khuylo!](https://en.wikipedia.org/wiki/Putin_khuylo!)
+- Russia has [illegally annexed Crimea in 2014](https://en.wikipedia.org/wiki/Annexation_of_Crimea_by_the_Russian_Federation) and [brought the war in Donbas](https://en.wikipedia.org/wiki/War_in_Donbas) followed by [full-scale invasion of Ukraine in 2022](https://en.wikipedia.org/wiki/2022_Russian_invasion_of_Ukraine).
+- Russia has brought sorrow and devastations to millions of Ukrainians, killed hundreds of innocent people, damaged thousands of buildings, and forced several million people to flee.
+- [Putin khuylo!](https://en.wikipedia.org/wiki/Putin_khuylo!)
