@@ -30,11 +30,8 @@ variable "enable_cross_zone_load_balancing" {
 
 variable "extra_ssl_certs" {
   description = "A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward)."
-  type = list(object({
-    https_listener_index = number
-    certificate_arn      = string
-  }))
-  default = []
+  type        = list(map(string))
+  default     = []
 }
 
 variable "https_listeners" {
