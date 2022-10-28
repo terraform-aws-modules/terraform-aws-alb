@@ -59,6 +59,14 @@ module "acm" {
   zone_id     = data.aws_route53_zone.this.id
 }
 
+module "wildcard_cert" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 3.0"
+
+  domain_name = "*.${local.domain_name}" # trimsuffix(data.aws_route53_zone.this.name, ".")
+  zone_id     = data.aws_route53_zone.this.id
+}
+
 ##################################################################
 # AWS Cognito User Pool
 ##################################################################
@@ -176,6 +184,13 @@ module "alb" {
         user_info_endpoint     = "https://${local.domain_name}/user_info"
       }
     },
+  ]
+
+  extra_ssl_certs = [
+    {
+      https_listener_index = 0
+      certificate_arn      = module.wildcard_cert.acm_certificate_arn
+    }
   ]
 
   https_listener_rules = [
