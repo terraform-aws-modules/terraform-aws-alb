@@ -42,7 +42,7 @@ jobs:
 
       - name: Pre-commit Terraform ${{ steps.minMax.outputs.minVersion }}
         # Run only validate pre-commit check on min version supported
-        if: ${{ matrix.directory !=  '.' }}
+        if: ${{ matrix.directory !=  '.' && !contains(matrix.directory, 'wrappers') }}
         uses: clowdhaus/terraform-composite-actions/pre-commit@v1.8.0
         with:
           terraform-version: ${{ steps.minMax.outputs.minVersion }}
@@ -84,3 +84,4 @@ jobs:
         with:
           terraform-version: ${{ steps.minMax.outputs.maxVersion }}
           terraform-docs-version: ${{ env.TERRAFORM_DOCS_VERSION }}
+          install-hcledit: true
