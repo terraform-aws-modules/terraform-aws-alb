@@ -10,6 +10,12 @@ variable "drop_invalid_header_fields" {
   default     = false
 }
 
+variable "preserve_host_header" {
+  description = "Indicates whether Host header should be preserve and forward to targets without any change. Defaults to false."
+  type        = bool
+  default     = false
+}
+
 variable "enable_deletion_protection" {
   description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
   type        = bool
