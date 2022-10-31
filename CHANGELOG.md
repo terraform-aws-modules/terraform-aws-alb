@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.2.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.1.2...v8.2.0) (2022-10-31)
+
+
+### Features
+
+* Added support for preserve_host_header ([#265](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/265)) ([d69c409](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/d69c4099c9ed38c89b2f4aa6c0684b495d794e8e))
+
 ### [8.1.2](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.1.1...v8.1.2) (2022-10-28)
 
 
