@@ -19,6 +19,7 @@ resource "aws_lb" "this" {
   enable_http2                     = var.enable_http2
   ip_address_type                  = var.ip_address_type
   drop_invalid_header_fields       = var.drop_invalid_header_fields
+  preserve_host_header             = var.preserve_host_header
   enable_waf_fail_open             = var.enable_waf_fail_open
   desync_mitigation_mode           = var.desync_mitigation_mode
 
