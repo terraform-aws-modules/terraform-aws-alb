@@ -36,13 +36,13 @@ jobs:
 
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@v1.2.0
+        uses: clowdhaus/terraform-min-max@v1.2.1
         with:
           directory: ${{ matrix.directory }}
 
       - name: Pre-commit Terraform ${{ steps.minMax.outputs.minVersion }}
         # Run only validate pre-commit check on min version supported
-        if: ${{ matrix.directory !=  '.' && !contains(matrix.directory, 'wrappers') }}
+        if: ${{ matrix.directory !=  '.' }}
         uses: clowdhaus/terraform-composite-actions/pre-commit@v1.8.0
         with:
           terraform-version: ${{ steps.minMax.outputs.minVersion }}
@@ -69,7 +69,7 @@ jobs:
 
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@v1.2.0
+        uses: clowdhaus/terraform-min-max@v1.2.1
 
       - name: Pre-commit Terraform ${{ steps.minMax.outputs.maxVersion }}
         uses: clowdhaus/terraform-composite-actions/pre-commit@v1.8.0
