@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [8.2.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.2.0...v8.2.1) (2022-11-14)
+
+
+### Bug Fixes
+
+* Update CI configuration files to use latest version ([#264](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/264)) ([dd692c7](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/dd692c740690f76808cc055a62335a7080b8242f))
+
 ## [8.2.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.1.2...v8.2.0) (2022-10-31)
 
 
