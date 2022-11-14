@@ -5,7 +5,7 @@ module "wrapper" {
 
   create_lb                        = try(each.value.create_lb, var.defaults.create_lb, true)
   drop_invalid_header_fields       = try(each.value.drop_invalid_header_fields, var.defaults.drop_invalid_header_fields, false)
-  preserve_host_header             = try(each.value.preserve_host_header, var.preserve_host_header, false)
+  preserve_host_header             = try(each.value.preserve_host_header, var.defaults.preserve_host_header, false)
   enable_deletion_protection       = try(each.value.enable_deletion_protection, var.defaults.enable_deletion_protection, false)
   enable_http2                     = try(each.value.enable_http2, var.defaults.enable_http2, true)
   enable_cross_zone_load_balancing = try(each.value.enable_cross_zone_load_balancing, var.defaults.enable_cross_zone_load_balancing, false)
