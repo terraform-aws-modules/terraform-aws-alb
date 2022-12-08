@@ -65,7 +65,7 @@ resource "aws_lb_target_group" "main" {
   name        = lookup(var.target_groups[count.index], "name", null)
   name_prefix = lookup(var.target_groups[count.index], "name_prefix", null)
 
-  vpc_id           = var.vpc_id
+  vpc_id           = lookup(var.target_groups[count.index], "target_type", var.vpc_id) == "lambda" ? null : var.vpc_id
   port             = lookup(var.target_groups[count.index], "backend_port", null)
   protocol         = lookup(var.target_groups[count.index], "backend_protocol", null) != null ? upper(lookup(var.target_groups[count.index], "backend_protocol")) : null
   protocol_version = lookup(var.target_groups[count.index], "protocol_version", null) != null ? upper(lookup(var.target_groups[count.index], "protocol_version")) : null
