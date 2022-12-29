@@ -629,7 +629,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
     # Defaults to forward action if action_type not specified
     content {
       type             = lookup(default_action.value, "action_type", "forward")
-      target_group_arn = contains([null, "", "forward"], lookup(default_action.value, "action_type", "")) ? aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id : null
+      target_group_arn = contains([null, ""], lookup(default_action.value, "action_type", "")) ? aws_lb_target_group.main[lookup(default_action.value, "target_group_index", count.index)].id : null
 
       dynamic "redirect" {
         for_each = length(keys(lookup(default_action.value, "redirect", {}))) == 0 ? [] : [lookup(default_action.value, "redirect", {})]
@@ -651,6 +651,30 @@ resource "aws_lb_listener" "frontend_http_tcp" {
           content_type = fixed_response.value["content_type"]
           message_body = lookup(fixed_response.value, "message_body", null)
           status_code  = lookup(fixed_response.value, "status_code", null)
+        }
+      }
+
+      dynamic "forward" {
+        for_each = length(keys(lookup(default_action.value, "forward", {}))) == 0 ? [] : [lookup(default_action.value, "forward", {})]
+
+        content {
+          dynamic "target_group" {
+            for_each = forward.value["target_groups"]
+
+            content {
+              arn    = aws_lb_target_group.main[target_group.value["target_group_index"]].id
+              weight = lookup(target_group.value, "weight", null)
+            }
+          }
+
+          dynamic "stickiness" {
+            for_each = length(keys(lookup(forward.value, "stickiness", {}))) == 0 ? [] : [lookup(forward.value, "stickiness", {})]
+
+            content {
+              enabled  = lookup(stickiness.value, "enabled", false)
+              duration = lookup(stickiness.value, "duration", 60)
+            }
+          }
         }
       }
     }
