@@ -40,4 +40,10 @@ module "wrapper" {
   enable_waf_fail_open             = try(each.value.enable_waf_fail_open, var.defaults.enable_waf_fail_open, false)
   desync_mitigation_mode           = try(each.value.desync_mitigation_mode, var.defaults.desync_mitigation_mode, "defensive")
   putin_khuylo                     = try(each.value.putin_khuylo, var.defaults.putin_khuylo, true)
+  create_security_group            = try(each.value.create_security_group, var.defaults.create_security_group, true)
+  security_group_name              = try(each.value.security_group_name, var.defaults.security_group_name, null)
+  security_group_use_name_prefix   = try(each.value.security_group_use_name_prefix, var.defaults.security_group_use_name_prefix, true)
+  security_group_description       = try(each.value.security_group_description, var.defaults.security_group_description, null)
+  security_group_rules             = try(each.value.security_group_rules, var.defaults.security_group_rules, {})
+  security_group_tags              = try(each.value.security_group_tags, var.defaults.security_group_tags, {})
 }

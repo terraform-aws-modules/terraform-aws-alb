@@ -10,7 +10,7 @@ resource "aws_lb" "this" {
 
   load_balancer_type = var.load_balancer_type
   internal           = var.internal
-  security_groups    = var.security_groups
+  security_groups    = var.create_security_group ? concat([aws_security_group.this[0].id], var.security_groups) : var.security_groups
   subnets            = var.subnets
 
   idle_timeout                     = var.idle_timeout
@@ -24,7 +24,7 @@ resource "aws_lb" "this" {
   desync_mitigation_mode           = var.desync_mitigation_mode
 
   dynamic "access_logs" {
-    for_each = length(keys(var.access_logs)) == 0 ? [] : [var.access_logs]
+    for_each = length(var.access_logs) > 0 ? [var.access_logs] : []
 
     content {
       enabled = try(access_logs.value.enabled, try(access_logs.value.bucket, null) != null)
@@ -66,44 +66,44 @@ resource "aws_lb_target_group" "main" {
   name_prefix = lookup(var.target_groups[count.index], "name_prefix", null)
 
   vpc_id           = var.vpc_id
-  port             = lookup(var.target_groups[count.index], "backend_port", null)
-  protocol         = lookup(var.target_groups[count.index], "backend_protocol", null) != null ? upper(lookup(var.target_groups[count.index], "backend_protocol")) : null
-  protocol_version = lookup(var.target_groups[count.index], "protocol_version", null) != null ? upper(lookup(var.target_groups[count.index], "protocol_version")) : null
-  target_type      = lookup(var.target_groups[count.index], "target_type", null)
+  port             = try(var.target_groups[count.index].backend_port, null)
+  protocol         = try(upper(var.target_groups[count.index].backend_protocol), null)
+  protocol_version = try(upper(var.target_groups[count.index].protocol_version), null)
+  target_type      = try(var.target_groups[count.index].target_type, null)
 
-  connection_termination             = lookup(var.target_groups[count.index], "connection_termination", null)
-  deregistration_delay               = lookup(var.target_groups[count.index], "deregistration_delay", null)
-  slow_start                         = lookup(var.target_groups[count.index], "slow_start", null)
-  proxy_protocol_v2                  = lookup(var.target_groups[count.index], "proxy_protocol_v2", false)
-  lambda_multi_value_headers_enabled = lookup(var.target_groups[count.index], "lambda_multi_value_headers_enabled", false)
-  load_balancing_algorithm_type      = lookup(var.target_groups[count.index], "load_balancing_algorithm_type", null)
-  preserve_client_ip                 = lookup(var.target_groups[count.index], "preserve_client_ip", null)
-  ip_address_type                    = lookup(var.target_groups[count.index], "ip_address_type", null)
+  connection_termination             = try(var.target_groups[count.index].connection_termination, null)
+  deregistration_delay               = try(var.target_groups[count.index].deregistration_delay, null)
+  slow_start                         = try(var.target_groups[count.index].slow_start, null)
+  proxy_protocol_v2                  = try(var.target_groups[count.index].proxy_protocol_v2, false)
+  lambda_multi_value_headers_enabled = try(var.target_groups[count.index].lambda_multi_value_headers_enabled, false)
+  load_balancing_algorithm_type      = try(var.target_groups[count.index].load_balancing_algorithm_type, null)
+  preserve_client_ip                 = try(var.target_groups[count.index].preserve_client_ip, null)
+  ip_address_type                    = try(var.target_groups[count.index].ip_address_type, null)
 
   dynamic "health_check" {
-    for_each = length(keys(lookup(var.target_groups[count.index], "health_check", {}))) == 0 ? [] : [lookup(var.target_groups[count.index], "health_check", {})]
+    for_each = try([var.target_groups[count.index].health_check], [])
 
     content {
-      enabled             = lookup(health_check.value, "enabled", null)
-      interval            = lookup(health_check.value, "interval", null)
-      path                = lookup(health_check.value, "path", null)
-      port                = lookup(health_check.value, "port", null)
-      healthy_threshold   = lookup(health_check.value, "healthy_threshold", null)
-      unhealthy_threshold = lookup(health_check.value, "unhealthy_threshold", null)
-      timeout             = lookup(health_check.value, "timeout", null)
-      protocol            = lookup(health_check.value, "protocol", null)
-      matcher             = lookup(health_check.value, "matcher", null)
+      enabled             = try(health_check.value.enabled, null)
+      interval            = try(health_check.value.interval, null)
+      path                = try(health_check.value.path, null)
+      port                = try(health_check.value.port, null)
+      healthy_threshold   = try(health_check.value.healthy_threshold, null)
+      unhealthy_threshold = try(health_check.value.unhealthy_threshold, null)
+      timeout             = try(health_check.value.timeout, null)
+      protocol            = try(health_check.value.protocol, null)
+      matcher             = try(health_check.value.matcher, null)
     }
   }
 
   dynamic "stickiness" {
-    for_each = length(keys(lookup(var.target_groups[count.index], "stickiness", {}))) == 0 ? [] : [lookup(var.target_groups[count.index], "stickiness", {})]
+    for_each = try([var.target_groups[count.index].stickiness], [])
 
     content {
-      enabled         = lookup(stickiness.value, "enabled", null)
-      cookie_duration = lookup(stickiness.value, "cookie_duration", null)
-      type            = lookup(stickiness.value, "type", null)
-      cookie_name     = lookup(stickiness.value, "cookie_name", null)
+      enabled         = lookup(stickiness.value.enabled, null)
+      cookie_duration = lookup(stickiness.value.cookie_duration, null)
+      type            = lookup(stickiness.value.type, null)
+      cookie_name     = lookup(stickiness.value.cookie_name, null)
     }
   }
 
@@ -112,7 +112,7 @@ resource "aws_lb_target_group" "main" {
     var.target_group_tags,
     lookup(var.target_groups[count.index], "tags", {}),
     {
-      "Name" = lookup(var.target_groups[count.index], "name", lookup(var.target_groups[count.index], "name_prefix", ""))
+      "Name" = try(var.target_groups[count.index].name, var.target_groups[count.index].name_prefix, "")
     },
   )
 
@@ -763,4 +763,53 @@ resource "aws_lb_listener_certificate" "https_listener" {
 
   listener_arn    = aws_lb_listener.frontend_https[var.extra_ssl_certs[count.index]["https_listener_index"]].arn
   certificate_arn = var.extra_ssl_certs[count.index]["certificate_arn"]
+}
+
+################################################################################
+# Security Group
+################################################################################
+
+locals {
+  create_security_group = local.create_lb && var.create_security_group
+  security_group_name   = try(coalesce(var.security_group_name, var.name, var.name_prefix), "")
+}
+
+data "aws_subnet" "this" {
+  count = local.create_security_group ? 1 : 0
+
+  id = element(var.subnets, 0)
+}
+
+resource "aws_security_group" "this" {
+  count = local.create_security_group ? 1 : 0
+
+  name        = var.security_group_use_name_prefix ? null : local.security_group_name
+  name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
+  description = var.security_group_description
+  vpc_id      = data.aws_subnet.this[0].vpc_id
+
+  tags = merge(var.tags, var.security_group_tags)
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_security_group_rule" "this" {
+  for_each = { for k, v in var.security_group_rules : k => v if local.create_security_group }
+
+  # Required
+  security_group_id = aws_security_group.this[0].id
+  protocol          = each.value.protocol
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  type              = each.value.type
+
+  # Optional
+  description              = lookup(each.value, "description", null)
+  cidr_blocks              = lookup(each.value, "cidr_blocks", null)
+  ipv6_cidr_blocks         = lookup(each.value, "ipv6_cidr_blocks", null)
+  prefix_list_ids          = lookup(each.value, "prefix_list_ids", null)
+  self                     = lookup(each.value, "self", null)
+  source_security_group_id = lookup(each.value, "source_security_group_id", null)
 }
