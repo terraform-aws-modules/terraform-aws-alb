@@ -774,21 +774,19 @@ locals {
   security_group_name   = try(coalesce(var.security_group_name, var.name, var.name_prefix), "")
 }
 
-data "aws_subnet" "this" {
-  count = local.create_security_group ? 1 : 0
-
-  id = element(var.subnets, 0)
-}
-
 resource "aws_security_group" "this" {
   count = local.create_security_group ? 1 : 0
 
   name        = var.security_group_use_name_prefix ? null : local.security_group_name
   name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
   description = var.security_group_description
-  vpc_id      = data.aws_subnet.this[0].vpc_id
+  vpc_id      = var.vpc_id
 
-  tags = merge(var.tags, var.security_group_tags)
+  tags = merge(
+    var.tags,
+    var.security_group_tags,
+    { "Name" = local.security_group_name },
+  )
 
   lifecycle {
     create_before_destroy = true

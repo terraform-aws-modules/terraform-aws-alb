@@ -15,7 +15,7 @@ locals {
 
   tags = {
     Example    = local.name
-    GithubRepo = "terraform-aws-eks"
+    GithubRepo = "terraform-aws-alb"
     GithubOrg  = "terraform-aws-modules"
   }
 }
@@ -33,6 +33,9 @@ module "alb" {
 
   vpc_id  = module.vpc.vpc_id
   subnets = module.vpc.public_subnets
+  # Attach security groups
+  security_groups = [module.vpc.default_security_group_id]
+  # Attach rules to the created security group
   security_group_rules = {
     ingress_all_http = {
       type        = "ingress"
