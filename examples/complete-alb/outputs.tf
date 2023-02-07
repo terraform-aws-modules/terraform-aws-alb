@@ -62,3 +62,17 @@ output "target_group_attachments" {
   description = "ARNs of the target group attachment IDs."
   value       = module.alb.target_group_attachments
 }
+
+################################################################################
+# Security Group
+################################################################################
+
+output "security_group_arn" {
+  description = "Amazon Resource Name (ARN) of the security group"
+  value       = module.alb.security_group_arn
+}
+
+output "security_group_id" {
+  description = "ID of the security group"
+  value       = module.alb.security_group_id
+}
