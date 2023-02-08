@@ -11,8 +11,6 @@ locals {
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  domain_name = "terraform-aws-modules.modules.tf"
-
   tags = {
     Example    = local.name
     GithubRepo = "terraform-aws-alb"
@@ -41,7 +39,7 @@ module "alb" {
       type        = "ingress"
       from_port   = 80
       to_port     = 80
-      protocol    = "http"
+      protocol    = "tcp"
       description = "HTTP web traffic"
       cidr_blocks = ["0.0.0.0/0"]
     }
@@ -62,10 +60,10 @@ module "alb" {
     }
   }
 
-  #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
-  #   access_logs = {
-  #     bucket = module.log_bucket.s3_bucket_id
-  #   }
+  # # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
+  # access_logs = {
+  #   bucket = module.log_bucket.s3_bucket_id
+  # }
 
   http_tcp_listeners = [
     # Forward action is default, either when defined or undefined
@@ -135,12 +133,12 @@ module "alb" {
           display = "page"
           prompt  = "login"
         }
-        authorization_endpoint = "https://${local.domain_name}/auth"
+        authorization_endpoint = "https://${var.domain_name}/auth"
         client_id              = "client_id"
         client_secret          = "client_secret"
-        issuer                 = "https://${local.domain_name}"
-        token_endpoint         = "https://${local.domain_name}/token"
-        user_info_endpoint     = "https://${local.domain_name}/user_info"
+        issuer                 = "https://${var.domain_name}"
+        token_endpoint         = "https://${var.domain_name}/token"
+        user_info_endpoint     = "https://${var.domain_name}/user_info"
       }
     },
   ]
@@ -189,12 +187,12 @@ module "alb" {
             display = "page"
             prompt  = "login"
           }
-          authorization_endpoint = "https://${local.domain_name}/auth"
+          authorization_endpoint = "https://${var.domain_name}/auth"
           client_id              = "client_id"
           client_secret          = "client_secret"
-          issuer                 = "https://${local.domain_name}"
-          token_endpoint         = "https://${local.domain_name}/token"
-          user_info_endpoint     = "https://${local.domain_name}/user_info"
+          issuer                 = "https://${var.domain_name}"
+          token_endpoint         = "https://${var.domain_name}/token"
+          user_info_endpoint     = "https://${var.domain_name}/user_info"
         },
         {
           type               = "forward"
@@ -460,6 +458,7 @@ data "aws_ami" "amazon_linux" {
 resource "aws_instance" "this" {
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3.nano"
+  subnet_id     = element(module.vpc.private_subnets, 0)
 }
 
 #############################################
@@ -525,9 +524,9 @@ module "lambda_without_allowed_triggers" {
   depends_on = [null_resource.download_package]
 }
 
-##################################################################
-# Data sources to get VPC and subnets
-##################################################################
+################################################################################
+# Supporting resources
+################################################################################
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -548,14 +547,14 @@ module "vpc" {
 }
 
 data "aws_route53_zone" "this" {
-  name = local.domain_name
+  name = var.domain_name
 }
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 3.0"
 
-  domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".")
+  domain_name = var.domain_name
   zone_id     = data.aws_route53_zone.this.id
 }
 
@@ -563,7 +562,7 @@ module "wildcard_cert" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 3.0"
 
-  domain_name = "*.${local.domain_name}" # trimsuffix(data.aws_route53_zone.this.name, ".")
+  domain_name = "*.${var.domain_name}"
   zone_id     = data.aws_route53_zone.this.id
 }
 
@@ -580,7 +579,7 @@ resource "aws_cognito_user_pool_client" "this" {
   user_pool_id                         = aws_cognito_user_pool.this.id
   generate_secret                      = true
   allowed_oauth_flows                  = ["code", "implicit"]
-  callback_urls                        = ["https://${local.domain_name}/callback"]
+  callback_urls                        = ["https://${var.domain_name}/callback"]
   allowed_oauth_scopes                 = ["email", "openid"]
   allowed_oauth_flows_user_pool_client = true
 }

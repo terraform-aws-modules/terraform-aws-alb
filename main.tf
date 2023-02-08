@@ -10,7 +10,7 @@ resource "aws_lb" "this" {
 
   load_balancer_type = var.load_balancer_type
   internal           = var.internal
-  security_groups    = var.create_security_group ? concat([aws_security_group.this[0].id], var.security_groups) : var.security_groups
+  security_groups    = var.create_security_group && var.load_balancer_type == "application" ? concat([aws_security_group.this[0].id], var.security_groups) : var.security_groups
   subnets            = var.subnets
 
   idle_timeout                     = var.idle_timeout
@@ -100,10 +100,10 @@ resource "aws_lb_target_group" "main" {
     for_each = try([var.target_groups[count.index].stickiness], [])
 
     content {
-      enabled         = lookup(stickiness.value.enabled, null)
-      cookie_duration = lookup(stickiness.value.cookie_duration, null)
-      type            = lookup(stickiness.value.type, null)
-      cookie_name     = lookup(stickiness.value.cookie_name, null)
+      enabled         = try(stickiness.value.enabled, null)
+      cookie_duration = try(stickiness.value.cookie_duration, null)
+      type            = try(stickiness.value.type, null)
+      cookie_name     = try(stickiness.value.cookie_name, null)
     }
   }
 
@@ -770,7 +770,7 @@ resource "aws_lb_listener_certificate" "https_listener" {
 ################################################################################
 
 locals {
-  create_security_group = local.create_lb && var.create_security_group
+  create_security_group = local.create_lb && var.create_security_group && var.load_balancer_type == "application"
   security_group_name   = try(coalesce(var.security_group_name, var.name, var.name_prefix), "")
 }
 
