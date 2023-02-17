@@ -219,3 +219,43 @@ variable "putin_khuylo" {
   type        = bool
   default     = true
 }
+
+################################################################################
+# Security Group
+################################################################################
+
+variable "create_security_group" {
+  description = "Determines if a security group is created"
+  type        = bool
+  default     = true
+}
+
+variable "security_group_name" {
+  description = "Name to use on security group created"
+  type        = string
+  default     = null
+}
+
+variable "security_group_use_name_prefix" {
+  description = "Determines whether the security group name (`security_group_name`) is used as a prefix"
+  type        = bool
+  default     = true
+}
+
+variable "security_group_description" {
+  description = "Description of the security group created"
+  type        = string
+  default     = null
+}
+
+variable "security_group_rules" {
+  description = "Security group rules to add to the security group created"
+  type        = any
+  default     = {}
+}
+
+variable "security_group_tags" {
+  description = "A map of additional tags to add to the security group created"
+  type        = map(string)
+  default     = {}
+}

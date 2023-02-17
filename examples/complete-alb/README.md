@@ -22,7 +22,6 @@ Note that this example may create resources which cost money. Run `terraform des
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.27 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 2.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 
 ## Providers
 
@@ -30,7 +29,6 @@ Note that this example may create resources which cost money. Run `terraform des
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.27 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 2.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
 
 ## Modules
 
@@ -41,7 +39,7 @@ Note that this example may create resources which cost money. Run `terraform des
 | <a name="module_lambda_with_allowed_triggers"></a> [lambda\_with\_allowed\_triggers](#module\_lambda\_with\_allowed\_triggers) | terraform-aws-modules/lambda/aws | ~> 3.0 |
 | <a name="module_lambda_without_allowed_triggers"></a> [lambda\_without\_allowed\_triggers](#module\_lambda\_without\_allowed\_triggers) | terraform-aws-modules/lambda/aws | ~> 3.0 |
 | <a name="module_lb_disabled"></a> [lb\_disabled](#module\_lb\_disabled) | ../../ | n/a |
-| <a name="module_security_group"></a> [security\_group](#module\_security\_group) | terraform-aws-modules/security-group/aws | ~> 4.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 3.0 |
 | <a name="module_wildcard_cert"></a> [wildcard\_cert](#module\_wildcard\_cert) | terraform-aws-modules/acm/aws | ~> 3.0 |
 
 ## Resources
@@ -53,15 +51,15 @@ Note that this example may create resources which cost money. Run `terraform des
 | [aws_cognito_user_pool_domain.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cognito_user_pool_domain) | resource |
 | [aws_instance.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
 | [null_resource.download_package](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [random_pet.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) | resource |
 | [aws_ami.amazon_linux](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_route53_zone.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
-| [aws_subnets.all](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
-| [aws_vpc.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | The domain name for which the certificate should be issued | `string` | `"terraform-aws-modules.modules.tf"` | no |
 
 ## Outputs
 
@@ -76,6 +74,8 @@ No inputs.
 | <a name="output_lb_dns_name"></a> [lb\_dns\_name](#output\_lb\_dns\_name) | The DNS name of the load balancer. |
 | <a name="output_lb_id"></a> [lb\_id](#output\_lb\_id) | The ID and ARN of the load balancer we created. |
 | <a name="output_lb_zone_id"></a> [lb\_zone\_id](#output\_lb\_zone\_id) | The zone\_id of the load balancer to assist with creating DNS records. |
+| <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |
 | <a name="output_target_group_arn_suffixes"></a> [target\_group\_arn\_suffixes](#output\_target\_group\_arn\_suffixes) | ARN suffixes of our target groups - can be used with CloudWatch. |
 | <a name="output_target_group_arns"></a> [target\_group\_arns](#output\_target\_group\_arns) | ARNs of the target groups. Useful for passing to your Auto Scaling group. |
 | <a name="output_target_group_attachments"></a> [target\_group\_attachments](#output\_target\_group\_attachments) | ARNs of the target group attachment IDs. |

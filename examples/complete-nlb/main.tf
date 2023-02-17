@@ -1,82 +1,47 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = local.region
 }
+
+data "aws_availability_zones" "available" {}
 
 locals {
-  domain_name = "terraform-aws-modules.modules.tf"
-}
+  name   = "ex-${basename(path.cwd)}"
+  region = "eu-west-1"
 
-##################################################################
-# Data sources to get VPC and subnets
-##################################################################
-data "aws_vpc" "default" {
-  default = true
-}
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
-data "aws_subnets" "all" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-alb"
+    GithubOrg  = "terraform-aws-modules"
   }
 }
 
-resource "random_pet" "this" {
-  length = 2
-}
-
-data "aws_route53_zone" "this" {
-  name = local.domain_name
-}
-
-# module "log_bucket" {
-#   source  = "terraform-aws-modules/s3-bucket/aws"
-#   version = "~> 3.0"
-#
-#   bucket                         = "logs-${random_pet.this.id}"
-#   acl                            = "log-delivery-write"
-#   force_destroy                  = true
-#   attach_elb_log_delivery_policy = true
-# }
-
-module "acm" {
-  source  = "terraform-aws-modules/acm/aws"
-  version = "~> 3.0"
-
-  domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".")
-  zone_id     = data.aws_route53_zone.this.id
-}
-
-resource "aws_eip" "this" {
-  count = length(data.aws_subnets.all.ids)
-
-  vpc = true
-}
-
 ##################################################################
-# Network Load Balancer with Elastic IPs attached
+# Network Load Balancer
 ##################################################################
+
 module "nlb" {
   source = "../../"
 
-  name = "complete-nlb-${random_pet.this.id}"
+  name = local.name
 
   load_balancer_type = "network"
+  vpc_id             = module.vpc.vpc_id
 
-  vpc_id = data.aws_vpc.default.id
+  # Use `subnets` if you don't want to attach EIPs
+  # subnets = module.vpc.private_subnets
 
-  #   Use `subnets` if you don't want to attach EIPs
-  #   subnets = tolist(data.aws_subnet_ids.all.ids)
+  # Use `subnet_mapping` to attach EIPs
+  subnet_mapping = [for i, eip in aws_eip.this : { allocation_id : eip.id, subnet_id : module.vpc.private_subnets[i] }]
 
-  #   Use `subnet_mapping` to attach EIPs
-  subnet_mapping = [for i, eip in aws_eip.this : { allocation_id : eip.id, subnet_id : tolist(data.aws_subnets.all.ids)[i] }]
+  # # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
+  # access_logs = {
+  #   bucket = module.log_bucket.s3_bucket_id
+  # }
 
-  #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
-  #   access_logs = {
-  #     bucket = module.log_bucket.s3_bucket_id
-  #   }
-
-
-  #  TCP_UDP, UDP, TCP
+  # TCP_UDP, UDP, TCP
   http_tcp_listeners = [
     {
       port               = 81
@@ -150,4 +115,45 @@ module "nlb" {
       target_type      = "instance"
     },
   ]
+
+  tags = local.tags
+}
+
+################################################################################
+# Supporting resources
+################################################################################
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 3.0"
+
+  name = local.name
+  cidr = local.vpc_cidr
+
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
+
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
+  enable_dns_hostnames = true
+
+  tags = local.tags
+}
+
+data "aws_route53_zone" "this" {
+  name = var.domain_name
+}
+
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 3.0"
+
+  domain_name = var.domain_name
+  zone_id     = data.aws_route53_zone.this.id
+}
+
+resource "aws_eip" "this" {
+  count = length(local.azs)
+  vpc   = true
 }

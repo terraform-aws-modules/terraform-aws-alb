@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+### [8.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.3.0...v8.3.1) (2023-02-08)
+
+
+### Bug Fixes
+
+* Correct stickiness syntax and ensure that security group is not created for network load balancers ([#277](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/277)) ([0c02a23](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/0c02a23863838002eb1a596b53e9a234e01fb9d5))
+
+## [8.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.2.2...v8.3.0) (2023-02-07)
+
+
+### Features
+
+* Add support for creating a security group along with the load balancer ([#273](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/273)) ([8232b47](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/8232b477aa0291ce5a4f2475efed0b05dfad31af))
+
 ### [8.2.2](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.2.1...v8.2.2) (2023-01-24)
 
 
