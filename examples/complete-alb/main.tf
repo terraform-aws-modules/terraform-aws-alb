@@ -76,6 +76,23 @@ module "alb" {
     {
       port        = 81
       protocol    = "HTTP"
+      action_type = "forward"
+      forward = {
+        target_groups = [
+          {
+            target_group_index = 0
+            weight             = 100
+          },
+          {
+            target_group_index = 1
+            weight             = 0
+          }
+        ]
+      }
+    },
+    {
+      port        = 82
+      protocol    = "HTTP"
       action_type = "redirect"
       redirect = {
         port        = "443"
@@ -84,7 +101,7 @@ module "alb" {
       }
     },
     {
-      port        = 82
+      port        = 83
       protocol    = "HTTP"
       action_type = "fixed-response"
       fixed_response = {
