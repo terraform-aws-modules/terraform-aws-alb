@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.3.1...v8.4.0) (2023-03-03)
+
+
+### Features
+
+* Default action forward action type ([#269](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/269)) ([4a14075](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/4a1407553d1459eefa387249d37b971ac5cdccbf))
+
 ### [8.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.3.0...v8.3.1) (2023-02-08)
 
 
