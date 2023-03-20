@@ -79,6 +79,7 @@ resource "aws_lb_target_group" "main" {
   load_balancing_algorithm_type      = try(var.target_groups[count.index].load_balancing_algorithm_type, null)
   preserve_client_ip                 = try(var.target_groups[count.index].preserve_client_ip, null)
   ip_address_type                    = try(var.target_groups[count.index].ip_address_type, null)
+  load_balancing_cross_zone_enabled  = try(var.target_groups[count.index].load_balancing_cross_zone_enabled, null)
 
   dynamic "health_check" {
     for_each = try([var.target_groups[count.index].health_check], [])

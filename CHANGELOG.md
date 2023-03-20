@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.4.0...v8.5.0) (2023-03-18)
+
+
+### Features
+
+* Add `load_balancing_cross_zone_enabled` option to `aws_lb_target_group` ([#282](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/282)) ([0178d70](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/0178d70cd3a4e80b15e5f4bdd3f476057c4d1db1))
+
 ## [8.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.3.1...v8.4.0) (2023-03-03)
 
 
