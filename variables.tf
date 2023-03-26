@@ -34,6 +34,18 @@ variable "enable_cross_zone_load_balancing" {
   default     = false
 }
 
+variable "enable_tls_version_and_cipher_suite_headers" {
+  description = "Indicates whether the two headers (x-amzn-tls-version and x-amzn-tls-cipher-suite), which contain information about the negotiated TLS version and cipher suite, are added to the client request before sending it to the target."
+  type        = bool
+  default     = false
+}
+
+variable "enable_xff_client_port" {
+  description = "Indicates whether the X-Forwarded-For header should preserve the source port that the client used to connect to the load balancer in application load balancers."
+  type        = bool
+  default     = true
+}
+
 variable "extra_ssl_certs" {
   description = "A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate_arn, https_listener_index (the index of the listener within https_listeners which the cert applies toward)."
   type        = list(map(string))
@@ -212,6 +224,12 @@ variable "desync_mitigation_mode" {
   description = "Determines how the load balancer handles requests that might pose a security risk to an application due to HTTP desync."
   type        = string
   default     = "defensive"
+}
+
+variable "xff_header_processing_mode" {
+  description = "Determines how the load balancer modifies the X-Forwarded-For header in the HTTP request before sending the request to the target."
+  type        = string
+  default     = "append"
 }
 
 variable "putin_khuylo" {

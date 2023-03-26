@@ -13,15 +13,18 @@ resource "aws_lb" "this" {
   security_groups    = var.create_security_group && var.load_balancer_type == "application" ? concat([aws_security_group.this[0].id], var.security_groups) : var.security_groups
   subnets            = var.subnets
 
-  idle_timeout                     = var.idle_timeout
-  enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
-  enable_deletion_protection       = var.enable_deletion_protection
-  enable_http2                     = var.enable_http2
-  ip_address_type                  = var.ip_address_type
-  drop_invalid_header_fields       = var.drop_invalid_header_fields
-  preserve_host_header             = var.preserve_host_header
-  enable_waf_fail_open             = var.enable_waf_fail_open
-  desync_mitigation_mode           = var.desync_mitigation_mode
+  idle_timeout                                = var.idle_timeout
+  enable_cross_zone_load_balancing            = var.enable_cross_zone_load_balancing
+  enable_deletion_protection                  = var.enable_deletion_protection
+  enable_http2                                = var.enable_http2
+  enable_tls_version_and_cipher_suite_headers = var.enable_tls_version_and_cipher_suite_headers
+  enable_xff_client_port                      = var.enable_xff_client_port
+  ip_address_type                             = var.ip_address_type
+  drop_invalid_header_fields                  = var.drop_invalid_header_fields
+  preserve_host_header                        = var.preserve_host_header
+  enable_waf_fail_open                        = var.enable_waf_fail_open
+  desync_mitigation_mode                      = var.desync_mitigation_mode
+  xff_header_processing_mode                  = var.xff_header_processing_mode
 
   dynamic "access_logs" {
     for_each = length(var.access_logs) > 0 ? [var.access_logs] : []

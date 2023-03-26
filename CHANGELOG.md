@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.6.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.5.0...v8.6.0) (2023-03-24)
+
+
+### Features
+
+* Add support for XFF/TLS headers ([#284](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/284)) ([2d7fcb9](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/2d7fcb92ffd86ec03d1b38e32e18edde314d7834))
+
 ## [8.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.4.0...v8.5.0) (2023-03-18)
 
 
