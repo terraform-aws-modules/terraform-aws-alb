@@ -413,6 +413,7 @@ module "alb" {
   ]
 
   tags = {
+    Name    = "foo-bar"
     Project = "Unknown"
   }
 
