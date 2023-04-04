@@ -811,9 +811,9 @@ resource "aws_security_group" "this" {
   vpc_id      = var.vpc_id
 
   tags = merge(
+    { "Name" = local.security_group_name },
     var.tags,
     var.security_group_tags,
-    { "Name" = local.security_group_name },
   )
 
   lifecycle {
