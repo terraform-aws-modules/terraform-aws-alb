@@ -142,7 +142,9 @@ locals {
   ])...)
 
   # Filter out the attachments for lambda functions. The ALB target group needs permission to forward a request on to
-  # the specified lambda function. This filtered list is used to create those permission resources
+  # the specified lambda function. This filtered list is used to create those permission resources.
+  # To get the lambda_function_name, the 6th index is taken from the lambda_function_arn format below
+  # arn:aws:lambda:<region>:<account-id>:function:my-function-name:<version-number>
   target_group_attachments_lambda = {
     for k, v in local.target_group_attachments :
     (k) => merge(v, { lambda_function_name = split(":", v.target_id)[6] })
