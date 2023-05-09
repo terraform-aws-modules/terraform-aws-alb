@@ -1,101 +1,69 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = local.region
 }
+
+data "aws_availability_zones" "available" {}
 
 locals {
-  domain_name = "terraform-aws-modules.modules.tf"
-}
+  name   = "ex-${basename(path.cwd)}"
+  region = "eu-west-1"
 
-##################################################################
-# Data sources to get VPC and subnets
-##################################################################
-data "aws_vpc" "default" {
-  default = true
-}
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
-data "aws_subnet_ids" "all" {
-  vpc_id = data.aws_vpc.default.id
-}
-
-resource "random_pet" "this" {
-  length = 2
-}
-
-data "aws_route53_zone" "this" {
-  name = local.domain_name
-}
-
-module "security_group" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 4.0"
-
-  name        = "alb-sg-${random_pet.this.id}"
-  description = "Security group for example usage with ALB"
-  vpc_id      = data.aws_vpc.default.id
-
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-  ingress_rules       = ["http-80-tcp", "all-icmp"]
-  egress_rules        = ["all-all"]
-}
-
-# module "log_bucket" {
-#   source  = "terraform-aws-modules/s3-bucket/aws"
-#   version = "~> 1.0"
-#
-#   bucket                         = "logs-${random_pet.this.id}"
-#   acl                            = "log-delivery-write"
-#   force_destroy                  = true
-#   attach_elb_log_delivery_policy = true
-# }
-
-module "acm" {
-  source  = "terraform-aws-modules/acm/aws"
-  version = "~> 3.0"
-
-  domain_name = local.domain_name # trimsuffix(data.aws_route53_zone.this.name, ".") # Terraform >= 0.12.17
-  zone_id     = data.aws_route53_zone.this.id
-}
-
-##################################################################
-# AWS Cognito User Pool
-##################################################################
-resource "aws_cognito_user_pool" "this" {
-  name = "user-pool-${random_pet.this.id}"
-}
-
-resource "aws_cognito_user_pool_client" "this" {
-  name                                 = "user-pool-client-${random_pet.this.id}"
-  user_pool_id                         = aws_cognito_user_pool.this.id
-  generate_secret                      = true
-  allowed_oauth_flows                  = ["code", "implicit"]
-  callback_urls                        = ["https://${local.domain_name}/callback"]
-  allowed_oauth_scopes                 = ["email", "openid"]
-  allowed_oauth_flows_user_pool_client = true
-}
-
-resource "aws_cognito_user_pool_domain" "this" {
-  domain       = random_pet.this.id
-  user_pool_id = aws_cognito_user_pool.this.id
+  tags = {
+    Example    = local.name
+    GithubRepo = "terraform-aws-alb"
+    GithubOrg  = "terraform-aws-modules"
+  }
 }
 
 ##################################################################
 # Application Load Balancer
 ##################################################################
+
 module "alb" {
   source = "../../"
 
-  name = "complete-alb-${random_pet.this.id}"
+  name = local.name
 
   load_balancer_type = "application"
 
-  vpc_id          = data.aws_vpc.default.id
-  security_groups = [module.security_group.security_group_id]
-  subnets         = data.aws_subnet_ids.all.ids
+  vpc_id  = module.vpc.vpc_id
+  subnets = module.vpc.public_subnets
+  # Attach security groups
+  security_groups = [module.vpc.default_security_group_id]
+  # Attach rules to the created security group
+  security_group_rules = {
+    ingress_all_http = {
+      type        = "ingress"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      description = "HTTP web traffic"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress_all_icmp = {
+      type        = "ingress"
+      from_port   = -1
+      to_port     = -1
+      protocol    = "icmp"
+      description = "ICMP"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress_all = {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
 
-  #   # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
-  #   access_logs = {
-  #     bucket = module.log_bucket.s3_bucket_id
-  #   }
+  # # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
+  # access_logs = {
+  #   bucket = module.log_bucket.s3_bucket_id
+  # }
 
   http_tcp_listeners = [
     # Forward action is default, either when defined or undefined
@@ -108,6 +76,23 @@ module "alb" {
     {
       port        = 81
       protocol    = "HTTP"
+      action_type = "forward"
+      forward = {
+        target_groups = [
+          {
+            target_group_index = 0
+            weight             = 100
+          },
+          {
+            target_group_index = 1
+            weight             = 0
+          }
+        ]
+      }
+    },
+    {
+      port        = 82
+      protocol    = "HTTP"
       action_type = "redirect"
       redirect = {
         port        = "443"
@@ -116,7 +101,7 @@ module "alb" {
       }
     },
     {
-      port        = 82
+      port        = 83
       protocol    = "HTTP"
       action_type = "fixed-response"
       fixed_response = {
@@ -147,7 +132,7 @@ module "alb" {
           prompt  = "login"
         }
         on_unauthenticated_request = "authenticate"
-        session_cookie_name        = "session-${random_pet.this.id}"
+        session_cookie_name        = "session-${local.name}"
         session_timeout            = 3600
         user_pool_arn              = aws_cognito_user_pool.this.arn
         user_pool_client_id        = aws_cognito_user_pool_client.this.id
@@ -165,14 +150,21 @@ module "alb" {
           display = "page"
           prompt  = "login"
         }
-        authorization_endpoint = "https://${local.domain_name}/auth"
+        authorization_endpoint = "https://${var.domain_name}/auth"
         client_id              = "client_id"
         client_secret          = "client_secret"
-        issuer                 = "https://${local.domain_name}"
-        token_endpoint         = "https://${local.domain_name}/token"
-        user_info_endpoint     = "https://${local.domain_name}/user_info"
+        issuer                 = "https://${var.domain_name}"
+        token_endpoint         = "https://${var.domain_name}/token"
+        user_info_endpoint     = "https://${var.domain_name}/user_info"
       }
     },
+  ]
+
+  extra_ssl_certs = [
+    {
+      https_listener_index = 0
+      certificate_arn      = module.wildcard_cert.acm_certificate_arn
+    }
   ]
 
   https_listener_rules = [
@@ -184,7 +176,7 @@ module "alb" {
           type = "authenticate-cognito"
 
           on_unauthenticated_request = "authenticate"
-          session_cookie_name        = "session-${random_pet.this.id}"
+          session_cookie_name        = "session-${local.name}"
           session_timeout            = 3600
           user_pool_arn              = aws_cognito_user_pool.this.arn
           user_pool_client_id        = aws_cognito_user_pool_client.this.id
@@ -212,12 +204,12 @@ module "alb" {
             display = "page"
             prompt  = "login"
           }
-          authorization_endpoint = "https://${local.domain_name}/auth"
+          authorization_endpoint = "https://${var.domain_name}/auth"
           client_id              = "client_id"
           client_secret          = "client_secret"
-          issuer                 = "https://${local.domain_name}"
-          token_endpoint         = "https://${local.domain_name}/token"
-          user_info_endpoint     = "https://${local.domain_name}/user_info"
+          issuer                 = "https://${var.domain_name}"
+          token_endpoint         = "https://${var.domain_name}/token"
+          user_info_endpoint     = "https://${var.domain_name}/user_info"
         },
         {
           type               = "forward"
@@ -316,6 +308,35 @@ module "alb" {
     },
     {
       http_tcp_listener_index = 0
+      priority                = 4
+
+      actions = [{
+        type = "weighted-forward"
+        target_groups = [
+          {
+            target_group_index = 1
+            weight             = 2
+          },
+          {
+            target_group_index = 0
+            weight             = 1
+          }
+        ]
+        stickiness = {
+          enabled  = true
+          duration = 3600
+        }
+      }]
+
+      conditions = [{
+        query_strings = [{
+          key   = "weighted"
+          value = "true"
+        }]
+      }]
+    },
+    {
+      http_tcp_listener_index = 0
       priority                = 5000
       actions = [{
         type        = "redirect"
@@ -337,11 +358,12 @@ module "alb" {
 
   target_groups = [
     {
-      name_prefix          = "h1"
-      backend_protocol     = "HTTP"
-      backend_port         = 80
-      target_type          = "instance"
-      deregistration_delay = 10
+      name_prefix                       = "h1"
+      backend_protocol                  = "HTTP"
+      backend_port                      = 80
+      target_type                       = "instance"
+      deregistration_delay              = 10
+      load_balancing_cross_zone_enabled = false
       health_check = {
         enabled             = true
         interval            = 30
@@ -373,13 +395,18 @@ module "alb" {
       target_type                        = "lambda"
       lambda_multi_value_headers_enabled = true
       targets = {
-        # Lambda function permission should be granted before
-        # it is used. There can be an error:
-        # NB: Error registering targets with target group:
-        # AccessDenied: elasticloadbalancing principal does not
-        # have permission to invoke ... from target group ...
-        my_lambda = {
-          target_id = module.lambda_function.lambda_function_arn
+        lambda_with_allowed_triggers = {
+          target_id = module.lambda_with_allowed_triggers.lambda_function_arn
+        }
+      }
+    },
+    {
+      name_prefix = "l2-"
+      target_type = "lambda"
+      targets = {
+        lambda_without_allowed_triggers = {
+          target_id                = module.lambda_without_allowed_triggers.lambda_function_arn
+          attach_lambda_permission = true
         }
       }
     },
@@ -413,6 +440,7 @@ module "alb" {
 #########################
 # LB will not be created
 #########################
+
 module "lb_disabled" {
   source = "../../"
 
@@ -422,6 +450,7 @@ module "lb_disabled" {
 ##################
 # Extra resources
 ##################
+
 data "aws_ami" "amazon_linux" {
   most_recent = true
 
@@ -447,6 +476,7 @@ data "aws_ami" "amazon_linux" {
 resource "aws_instance" "this" {
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3.nano"
+  subnet_id     = element(module.vpc.private_subnets, 0)
 }
 
 #############################################
@@ -468,12 +498,12 @@ resource "null_resource" "download_package" {
   }
 }
 
-module "lambda_function" {
+module "lambda_with_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
-  function_name = "${random_pet.this.id}-lambda"
-  description   = "My awesome lambda function"
+  function_name = "${local.name}-with-allowed-triggers"
+  description   = "My awesome lambda function (with allowed triggers)"
   handler       = "index.lambda_handler"
   runtime       = "python3.8"
 
@@ -490,4 +520,89 @@ module "lambda_function" {
   }
 
   depends_on = [null_resource.download_package]
+}
+
+module "lambda_without_allowed_triggers" {
+  source  = "terraform-aws-modules/lambda/aws"
+  version = "~> 3.0"
+
+  function_name = "${local.name}-without-allowed-triggers"
+  description   = "My awesome lambda function (without allowed triggers)"
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+
+  publish = true
+
+  create_package         = false
+  local_existing_package = local.downloaded
+
+  # Allowed triggers will be managed by ALB module
+  allowed_triggers = {}
+
+  depends_on = [null_resource.download_package]
+}
+
+################################################################################
+# Supporting resources
+################################################################################
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 3.0"
+
+  name = local.name
+  cidr = local.vpc_cidr
+
+  azs             = local.azs
+  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
+  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
+
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
+  enable_dns_hostnames = true
+
+  tags = local.tags
+}
+
+data "aws_route53_zone" "this" {
+  name = var.domain_name
+}
+
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 3.0"
+
+  domain_name = var.domain_name
+  zone_id     = data.aws_route53_zone.this.id
+}
+
+module "wildcard_cert" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 3.0"
+
+  domain_name = "*.${var.domain_name}"
+  zone_id     = data.aws_route53_zone.this.id
+}
+
+##################################################################
+# AWS Cognito User Pool
+##################################################################
+
+resource "aws_cognito_user_pool" "this" {
+  name = "user-pool-${local.name}"
+}
+
+resource "aws_cognito_user_pool_client" "this" {
+  name                                 = "user-pool-client-${local.name}"
+  user_pool_id                         = aws_cognito_user_pool.this.id
+  generate_secret                      = true
+  allowed_oauth_flows                  = ["code", "implicit"]
+  callback_urls                        = ["https://${var.domain_name}/callback"]
+  allowed_oauth_scopes                 = ["email", "openid"]
+  allowed_oauth_flows_user_pool_client = true
+}
+
+resource "aws_cognito_user_pool_domain" "this" {
+  domain       = local.name
+  user_pool_id = aws_cognito_user_pool.this.id
 }

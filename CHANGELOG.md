@@ -2,6 +2,140 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.6.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.5.0...v8.6.0) (2023-03-24)
+
+
+### Features
+
+* Add support for XFF/TLS headers ([#284](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/284)) ([2d7fcb9](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/2d7fcb92ffd86ec03d1b38e32e18edde314d7834))
+
+## [8.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.4.0...v8.5.0) (2023-03-18)
+
+
+### Features
+
+* Add `load_balancing_cross_zone_enabled` option to `aws_lb_target_group` ([#282](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/282)) ([0178d70](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/0178d70cd3a4e80b15e5f4bdd3f476057c4d1db1))
+
+## [8.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.3.1...v8.4.0) (2023-03-03)
+
+
+### Features
+
+* Default action forward action type ([#269](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/269)) ([4a14075](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/4a1407553d1459eefa387249d37b971ac5cdccbf))
+
+### [8.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.3.0...v8.3.1) (2023-02-08)
+
+
+### Bug Fixes
+
+* Correct stickiness syntax and ensure that security group is not created for network load balancers ([#277](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/277)) ([0c02a23](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/0c02a23863838002eb1a596b53e9a234e01fb9d5))
+
+## [8.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.2.2...v8.3.0) (2023-02-07)
+
+
+### Features
+
+* Add support for creating a security group along with the load balancer ([#273](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/273)) ([8232b47](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/8232b477aa0291ce5a4f2475efed0b05dfad31af))
+
+### [8.2.2](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.2.1...v8.2.2) (2023-01-24)
+
+
+### Bug Fixes
+
+* Use a version for  to avoid GitHub API rate limiting on CI workflows ([#270](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/270)) ([66eb6d2](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/66eb6d27e69fc1ffdcf9117cc80e821cc1c36660))
+
+### [8.2.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.2.0...v8.2.1) (2022-11-14)
+
+
+### Bug Fixes
+
+* Update CI configuration files to use latest version ([#264](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/264)) ([dd692c7](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/dd692c740690f76808cc055a62335a7080b8242f))
+
+## [8.2.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.1.2...v8.2.0) (2022-10-31)
+
+
+### Features
+
+* Added support for preserve_host_header ([#265](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/265)) ([d69c409](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/d69c4099c9ed38c89b2f4aa6c0684b495d794e8e))
+
+### [8.1.2](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.1.1...v8.1.2) (2022-10-28)
+
+
+### Bug Fixes
+
+* Allow for override of Name tag on load balancer ([#262](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/262)) ([40d10dd](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/40d10dd54c8f4091bdc65f86e5c54e422951101e))
+
+### [8.1.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.1.0...v8.1.1) (2022-10-28)
+
+
+### Bug Fixes
+
+* Matched type of extra certificate var in module to type expected in resource ([#259](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/259)) ([144af83](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/144af83cf291dddbc2d424862054ac8d61555c8e))
+
+## [8.1.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.0.0...v8.1.0) (2022-09-20)
+
+
+### Features
+
+* Added connection_termination toggle to target group ([#257](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/257)) ([33b6ecd](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/33b6ecdc0769a63d43dab0b3287fdcecdcb4e805))
+
+## [8.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v7.0.0...v8.0.0) (2022-09-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* Add ip_address_type to target group resource, bumped AWS provider version (#255)
+
+### Features
+
+* Add ip_address_type to target group resource, bumped AWS provider version ([#255](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/255)) ([5d08044](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/5d080446f6e74d6dcbc6ff6110633d3e6e48c909))
+
+## [7.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.11.0...v7.0.0) (2022-05-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgraded Terraform version to 1.0+. Added wrappers. (#249)
+
+### Features
+
+* Upgraded Terraform version to 1.0+. Added wrappers. ([#249](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/249)) ([25d31ee](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/25d31ee31d3a29783568b31dc883eba52de14c9d))
+
+## [6.11.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.10.0...v6.11.0) (2022-05-20)
+
+
+### Features
+
+* Added support for lambda permissions when the target is a lambda function ([#240](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/240)) ([e79573d](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/e79573d0869ca91fb088e91bc8a3429ecc60c1f8))
+
+## [6.10.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.9.0...v6.10.0) (2022-04-21)
+
+
+### Features
+
+* Added missing `cookie_name` TG stickiness parameter support ([#245](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/245)) ([a01b7ca](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/a01b7cafa95b9770768a4430630ab0f88379fce8))
+
+## [6.9.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.8.0...v6.9.0) (2022-04-15)
+
+
+### Features
+
+* Added `weighted-forward` rules for HTTP ([#236](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/236)) ([ba77760](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/ba777608fce8a0fa5307222a9324fa54578ed437))
+
+## [6.8.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.7.0...v6.8.0) (2022-03-12)
+
+
+### Features
+
+* Made it clear that we stand with Ukraine ([34ba506](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/34ba5062591068c77e2f8dc8c454284bbf039ddd))
+
+## [6.7.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.1...v6.7.0) (2022-02-04)
+
+
+### Features
+
+* Add support for enable_waf_fail_open and desync_mitigation_mode ([#235](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/235)) ([a4a79df](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/a4a79dfb66fd868d93b9405617c6ca8938a42893))
+
 ## [6.6.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v6.6.0...v6.6.1) (2021-11-22)
 
 
