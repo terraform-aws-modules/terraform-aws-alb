@@ -34,13 +34,13 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | ~> 3.0 |
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | ~> 4.0 |
 | <a name="module_alb"></a> [alb](#module\_alb) | ../../ | n/a |
-| <a name="module_lambda_with_allowed_triggers"></a> [lambda\_with\_allowed\_triggers](#module\_lambda\_with\_allowed\_triggers) | terraform-aws-modules/lambda/aws | ~> 3.0 |
-| <a name="module_lambda_without_allowed_triggers"></a> [lambda\_without\_allowed\_triggers](#module\_lambda\_without\_allowed\_triggers) | terraform-aws-modules/lambda/aws | ~> 3.0 |
+| <a name="module_lambda_with_allowed_triggers"></a> [lambda\_with\_allowed\_triggers](#module\_lambda\_with\_allowed\_triggers) | terraform-aws-modules/lambda/aws | ~> 5.0 |
+| <a name="module_lambda_without_allowed_triggers"></a> [lambda\_without\_allowed\_triggers](#module\_lambda\_without\_allowed\_triggers) | terraform-aws-modules/lambda/aws | ~> 5.0 |
 | <a name="module_lb_disabled"></a> [lb\_disabled](#module\_lb\_disabled) | ../../ | n/a |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 3.0 |
-| <a name="module_wildcard_cert"></a> [wildcard\_cert](#module\_wildcard\_cert) | terraform-aws-modules/acm/aws | ~> 3.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
+| <a name="module_wildcard_cert"></a> [wildcard\_cert](#module\_wildcard\_cert) | terraform-aws-modules/acm/aws | ~> 4.0 |
 
 ## Resources
 
