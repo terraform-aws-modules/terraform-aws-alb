@@ -1,5 +1,11 @@
 provider "aws" {
   region = local.region
+
+  # Make it faster by skipping something
+  skip_metadata_api_check     = true
+  skip_region_validation      = true
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
 }
 
 data "aws_availability_zones" "available" {}
@@ -125,7 +131,7 @@ module "nlb" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -134,8 +140,8 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
+  # Disabled NAT gateway to save a few seconds running this example
+  enable_nat_gateway   = false
   enable_dns_hostnames = true
 
   tags = local.tags
@@ -147,7 +153,7 @@ data "aws_route53_zone" "this" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   domain_name = var.domain_name
   zone_id     = data.aws_route53_zone.this.id
@@ -155,5 +161,6 @@ module "acm" {
 
 resource "aws_eip" "this" {
   count = length(local.azs)
-  vpc   = true
+
+  domain = "vpc"
 }
