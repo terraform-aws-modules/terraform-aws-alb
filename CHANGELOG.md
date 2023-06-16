@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.7.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.6.1...v8.7.0) (2023-06-16)
+
+
+### Features
+
+* Add web acl association ([#291](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/291)) ([b3b00f0](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/b3b00f0b7a46f473d630dcd4ca6cce3d9a70629f))
+
 ### [8.6.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.6.0...v8.6.1) (2023-06-06)
 
 
