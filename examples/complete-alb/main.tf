@@ -1,5 +1,11 @@
 provider "aws" {
   region = local.region
+
+  # Make it faster by skipping something
+  skip_metadata_api_check     = true
+  skip_region_validation      = true
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
 }
 
 data "aws_availability_zones" "available" {}
@@ -500,7 +506,7 @@ resource "null_resource" "download_package" {
 
 module "lambda_with_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   function_name = "${local.name}-with-allowed-triggers"
   description   = "My awesome lambda function (with allowed triggers)"
@@ -524,7 +530,7 @@ module "lambda_with_allowed_triggers" {
 
 module "lambda_without_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   function_name = "${local.name}-without-allowed-triggers"
   description   = "My awesome lambda function (without allowed triggers)"
@@ -548,7 +554,7 @@ module "lambda_without_allowed_triggers" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -557,8 +563,8 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
+  # Disabled NAT gateway to save a few seconds running this example
+  enable_nat_gateway   = false
   enable_dns_hostnames = true
 
   tags = local.tags
@@ -570,7 +576,7 @@ data "aws_route53_zone" "this" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   domain_name = var.domain_name
   zone_id     = data.aws_route53_zone.this.id
@@ -578,7 +584,7 @@ module "acm" {
 
 module "wildcard_cert" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   domain_name = "*.${var.domain_name}"
   zone_id     = data.aws_route53_zone.this.id

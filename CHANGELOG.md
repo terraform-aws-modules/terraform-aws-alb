@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [8.6.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.6.0...v8.6.1) (2023-06-06)
+
+
+### Bug Fixes
+
+* Explicitly setting http_tcp_listener.action_type to forward fails ([#281](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/281)) ([b6cf424](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/b6cf42464c2f7ac6202a7393c44fdd1eec346562))
+
 ## [8.6.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.5.0...v8.6.0) (2023-03-24)
 
 
