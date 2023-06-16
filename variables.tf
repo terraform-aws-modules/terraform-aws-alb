@@ -277,3 +277,9 @@ variable "security_group_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "web_acl_arn" {
+  description = "WAF ARN to associate this LB with."
+  type        = string
+  default     = null
+}

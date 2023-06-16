@@ -322,6 +322,7 @@ No modules.
 | [aws_lb_target_group_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment) | resource |
 | [aws_security_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group_rule.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_wafv2_web_acl_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_association) | resource |
 
 ## Inputs
 
@@ -372,6 +373,7 @@ No modules.
 | <a name="input_target_group_tags"></a> [target\_group\_tags](#input\_target\_group\_tags) | A map of tags to add to all target groups | `map(string)` | `{}` | no |
 | <a name="input_target_groups"></a> [target\_groups](#input\_target\_groups) | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port | `any` | `[]` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC id where the load balancer and other resources will be deployed. | `string` | `null` | no |
+| <a name="input_web_acl_arn"></a> [web\_acl\_arn](#input\_web\_acl\_arn) | WAF ARN to associate this LB with. | `string` | `null` | no |
 | <a name="input_xff_header_processing_mode"></a> [xff\_header\_processing\_mode](#input\_xff\_header\_processing\_mode) | Determines how the load balancer modifies the X-Forwarded-For header in the HTTP request before sending the request to the target. | `string` | `"append"` | no |
 
 ## Outputs
