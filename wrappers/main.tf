@@ -49,4 +49,5 @@ module "wrapper" {
   security_group_description                  = try(each.value.security_group_description, var.defaults.security_group_description, null)
   security_group_rules                        = try(each.value.security_group_rules, var.defaults.security_group_rules, {})
   security_group_tags                         = try(each.value.security_group_tags, var.defaults.security_group_tags, {})
+  web_acl_arn                                 = try(each.value.web_acl_arn, var.defaults.web_acl_arn, null)
 }
