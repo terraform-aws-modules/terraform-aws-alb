@@ -164,6 +164,23 @@ module "alb" {
         user_info_endpoint     = "https://${var.domain_name}/user_info"
       }
     },
+    {
+      port            = 446
+      protocol        = "HTTPS"
+      certificate_arn = module.acm.acm_certificate_arn
+      forward = {
+        target_groups = [
+          {
+            target_group_index = 0
+            weight             = 1
+          },
+          {
+            target_group_index = 1
+            weight             = 0
+          }
+        ]
+      }
+    },
   ]
 
   extra_ssl_certs = [
