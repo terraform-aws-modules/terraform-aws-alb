@@ -1,26 +1,20 @@
 provider "aws" {
   region = local.region
-
-  # Make it faster by skipping something
-  skip_metadata_api_check     = true
-  skip_region_validation      = true
-  skip_credentials_validation = true
-  skip_requesting_account_id  = true
 }
 
 data "aws_availability_zones" "available" {}
 
 locals {
-  name   = "ex-${basename(path.cwd)}"
   region = "eu-west-1"
+  name   = "ex-${basename(path.cwd)}"
 
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
+    Name       = local.name
     Example    = local.name
-    GithubRepo = "terraform-aws-alb"
-    GithubOrg  = "terraform-aws-modules"
+    Repository = "https://github.com/terraform-aws-modules/terraform-aws-alb"
   }
 }
 
@@ -36,73 +30,116 @@ module "nlb" {
   load_balancer_type = "network"
   vpc_id             = module.vpc.vpc_id
 
-  # Use `subnets` if you don't want to attach EIPs
+  # https://github.com/hashicorp/terraform-provider-aws/issues/17281
   # subnets = module.vpc.private_subnets
 
   # Use `subnet_mapping` to attach EIPs
-  subnet_mapping = [for i, eip in aws_eip.this : { allocation_id : eip.id, subnet_id : module.vpc.private_subnets[i] }]
-
-  # # See notes in README (ref: https://github.com/terraform-providers/terraform-provider-aws/issues/7987)
-  # access_logs = {
-  #   bucket = module.log_bucket.s3_bucket_id
-  # }
-
-  # TCP_UDP, UDP, TCP
-  http_tcp_listeners = [
+  subnet_mapping = [for i, eip in aws_eip.this :
     {
-      port               = 81
-      protocol           = "TCP_UDP"
-      target_group_index = 0
-    },
-    {
-      port               = 82
-      protocol           = "UDP"
-      target_group_index = 1
-    },
-    {
-      port               = 83
-      protocol           = "TCP"
-      target_group_index = 2
-    },
+      allocation_id = eip.id
+      subnet_id     = module.vpc.private_subnets[i]
+    }
   ]
 
-  #  TLS
-  https_listeners = [
-    {
-      port               = 84
-      protocol           = "TLS"
-      certificate_arn    = module.acm.acm_certificate_arn
-      target_group_index = 3
-    },
-  ]
+  # For example only
+  enable_deletion_protection = false
 
-  target_groups = [
-    {
-      name_prefix            = "tu1-"
-      backend_protocol       = "TCP_UDP"
-      backend_port           = 81
+  # Security Group
+  security_group_ingress_rules = {
+    all_tcp = {
+      from_port   = 80
+      to_port     = 84
+      ip_protocol = "tcp"
+      description = "TCP traffic"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    all_udp = {
+      from_port   = 80
+      to_port     = 84
+      ip_protocol = "udp"
+      description = "UDP traffic"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+  }
+  security_group_egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = module.vpc.vpc_cidr_block
+    }
+  }
+
+  access_logs = {
+    bucket = module.log_bucket.s3_bucket_id
+  }
+
+  listeners = {
+    one = {
+      port     = 81
+      protocol = "TCP_UDP"
+      forward = {
+        target_group_key = "target-one"
+      }
+    }
+
+    two = {
+      port     = 82
+      protocol = "UDP"
+      forward = {
+        target_group_key = "target-two"
+      }
+    }
+
+    three = {
+      port     = 83
+      protocol = "TCP"
+      forward = {
+        target_group_key = "target-three"
+      }
+    }
+
+    four = {
+      port            = 84
+      protocol        = "TLS"
+      certificate_arn = module.acm.acm_certificate_arn
+      forward = {
+        target_group_key = "target-four"
+      }
+    }
+  }
+
+  target_groups = {
+    target-one = {
+      name_prefix            = "t1-"
+      protocol               = "TCP_UDP"
+      port                   = 81
       target_type            = "instance"
+      target_id              = aws_instance.this.id
       connection_termination = true
       preserve_client_ip     = true
+
       stickiness = {
-        enabled = true
-        type    = "source_ip"
+        type = "source_ip"
       }
+
       tags = {
         tcp_udp = true
       }
-    },
-    {
-      name_prefix      = "u1-"
-      backend_protocol = "UDP"
-      backend_port     = 82
-      target_type      = "instance"
-    },
-    {
-      name_prefix          = "t1-"
-      backend_protocol     = "TCP"
-      backend_port         = 83
+    }
+
+    target-two = {
+      name_prefix = "t2-"
+      protocol    = "UDP"
+      port        = 82
+      target_type = "instance"
+      target_id   = aws_instance.this.id
+    }
+
+    target-three = {
+      name_prefix          = "t3-"
+      protocol             = "TCP"
+      port                 = 83
       target_type          = "ip"
+      target_id            = aws_instance.this.private_ip
       deregistration_delay = 10
       health_check = {
         enabled             = true
@@ -113,14 +150,16 @@ module "nlb" {
         unhealthy_threshold = 3
         timeout             = 6
       }
-    },
-    {
-      name_prefix      = "t2-"
-      backend_protocol = "TLS"
-      backend_port     = 84
-      target_type      = "instance"
-    },
-  ]
+    }
+
+    target-four = {
+      name_prefix = "t4-"
+      protocol    = "TLS"
+      port        = 84
+      target_type = "instance"
+      target_id   = aws_instance.this.id
+    }
+  }
 
   tags = local.tags
 }
@@ -140,9 +179,7 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
-  # Disabled NAT gateway to save a few seconds running this example
-  enable_nat_gateway   = false
-  enable_dns_hostnames = true
+  enable_nat_gateway = false
 
   tags = local.tags
 }
@@ -163,4 +200,36 @@ resource "aws_eip" "this" {
   count = length(local.azs)
 
   domain = "vpc"
+}
+
+data "aws_ssm_parameter" "al2" {
+  name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+}
+
+resource "aws_instance" "this" {
+  ami           = data.aws_ssm_parameter.al2.value
+  instance_type = "t3.nano"
+  subnet_id     = element(module.vpc.private_subnets, 0)
+}
+
+module "log_bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "~> 3.0"
+
+  bucket_prefix = "${local.name}-logs-"
+  acl           = "log-delivery-write"
+
+  # For example only
+  force_destroy = true
+
+  control_object_ownership = true
+  object_ownership         = "ObjectWriter"
+
+  attach_elb_log_delivery_policy = true # Required for ALB logs
+  attach_lb_log_delivery_policy  = true # Required for ALB/NLB logs
+
+  attach_deny_insecure_transport_policy = true
+  attach_require_latest_tls_policy      = true
+
+  tags = local.tags
 }

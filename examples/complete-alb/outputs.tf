@@ -1,66 +1,55 @@
-output "lb_id" {
-  description = "The ID and ARN of the load balancer we created."
-  value       = module.alb.lb_id
+################################################################################
+# Load Balancer
+################################################################################
+
+output "id" {
+  description = "The ID and ARN of the load balancer we created"
+  value       = module.alb.id
 }
 
-output "lb_arn" {
-  description = "The ID and ARN of the load balancer we created."
-  value       = module.alb.lb_arn
+output "arn" {
+  description = "The ID and ARN of the load balancer we created"
+  value       = module.alb.arn
 }
 
-output "lb_dns_name" {
-  description = "The DNS name of the load balancer."
-  value       = module.alb.lb_dns_name
+output "arn_suffix" {
+  description = "ARN suffix of our load balancer - can be used with CloudWatch"
+  value       = module.alb.arn_suffix
 }
 
-output "lb_arn_suffix" {
-  description = "ARN suffix of our load balancer - can be used with CloudWatch."
-  value       = module.alb.lb_arn_suffix
+output "dns_name" {
+  description = "The DNS name of the load balancer"
+  value       = module.alb.dns_name
 }
 
-output "lb_zone_id" {
-  description = "The zone_id of the load balancer to assist with creating DNS records."
-  value       = module.alb.lb_zone_id
+output "zone_id" {
+  description = "The zone_id of the load balancer to assist with creating DNS records"
+  value       = module.alb.zone_id
 }
 
-output "http_tcp_listener_arns" {
-  description = "The ARN of the TCP and HTTP load balancer listeners created."
-  value       = module.alb.http_tcp_listener_arns
+################################################################################
+# Listener(s)
+################################################################################
+
+output "listeners" {
+  description = "Map of listeners created and their attributes"
+  value       = module.alb.listeners
+  sensitive   = true
 }
 
-output "http_tcp_listener_ids" {
-  description = "The IDs of the TCP and HTTP load balancer listeners created."
-  value       = module.alb.http_tcp_listener_ids
+output "listener_rules" {
+  description = "Map of listeners rules created and their attributes"
+  value       = module.alb.listener_rules
+  sensitive   = true
 }
 
-output "https_listener_arns" {
-  description = "The ARNs of the HTTPS load balancer listeners created."
-  value       = module.alb.https_listener_arns
-}
+################################################################################
+# Target Group(s)
+################################################################################
 
-output "https_listener_ids" {
-  description = "The IDs of the load balancer listeners created."
-  value       = module.alb.https_listener_ids
-}
-
-output "target_group_arns" {
-  description = "ARNs of the target groups. Useful for passing to your Auto Scaling group."
-  value       = module.alb.target_group_arns
-}
-
-output "target_group_arn_suffixes" {
-  description = "ARN suffixes of our target groups - can be used with CloudWatch."
-  value       = module.alb.target_group_arn_suffixes
-}
-
-output "target_group_names" {
-  description = "Name of the target group. Useful for passing to your CodeDeploy Deployment Group."
-  value       = module.alb.target_group_names
-}
-
-output "target_group_attachments" {
-  description = "ARNs of the target group attachment IDs."
-  value       = module.alb.target_group_attachments
+output "target_groups" {
+  description = "Map of target groups created and their attributes"
+  value       = module.alb.target_groups
 }
 
 ################################################################################
@@ -75,4 +64,13 @@ output "security_group_arn" {
 output "security_group_id" {
   description = "ID of the security group"
   value       = module.alb.security_group_id
+}
+
+################################################################################
+# Route53 Record(s)
+################################################################################
+
+output "route53_records" {
+  description = "The Route53 records created and attached to the load balancer"
+  value       = module.alb.route53_records
 }
