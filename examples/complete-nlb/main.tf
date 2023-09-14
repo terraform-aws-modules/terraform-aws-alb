@@ -73,42 +73,42 @@ module "nlb" {
   }
 
   listeners = {
-    one = {
+    ex-one = {
       port     = 81
       protocol = "TCP_UDP"
       forward = {
-        target_group_key = "target-one"
+        target_group_key = "ex-target-one"
       }
     }
 
-    two = {
+    ex-two = {
       port     = 82
       protocol = "UDP"
       forward = {
-        target_group_key = "target-two"
+        target_group_key = "ex-target-two"
       }
     }
 
-    three = {
+    ex-three = {
       port     = 83
       protocol = "TCP"
       forward = {
-        target_group_key = "target-three"
+        target_group_key = "ex-target-three"
       }
     }
 
-    four = {
+    ex-four = {
       port            = 84
       protocol        = "TLS"
       certificate_arn = module.acm.acm_certificate_arn
       forward = {
-        target_group_key = "target-four"
+        target_group_key = "ex-target-four"
       }
     }
   }
 
   target_groups = {
-    target-one = {
+    ex-target-one = {
       name_prefix            = "t1-"
       protocol               = "TCP_UDP"
       port                   = 81
@@ -126,7 +126,7 @@ module "nlb" {
       }
     }
 
-    target-two = {
+    ex-target-two = {
       name_prefix = "t2-"
       protocol    = "UDP"
       port        = 82
@@ -134,7 +134,7 @@ module "nlb" {
       target_id   = aws_instance.this.id
     }
 
-    target-three = {
+    ex-target-three = {
       name_prefix          = "t3-"
       protocol             = "TCP"
       port                 = 83
@@ -152,7 +152,7 @@ module "nlb" {
       }
     }
 
-    target-four = {
+    ex-target-four = {
       name_prefix = "t4-"
       protocol    = "TLS"
       port        = 84
@@ -178,8 +178,6 @@ module "vpc" {
   azs             = local.azs
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
-
-  enable_nat_gateway = false
 
   tags = local.tags
 }

@@ -496,7 +496,7 @@ resource "aws_lb_target_group" "this" {
 ################################################################################
 
 resource "aws_lb_target_group_attachment" "this" {
-  for_each = { for k, v in var.target_groups : k => v if local.create && lookup(v, "target_id", null) != null }
+  for_each = { for k, v in var.target_groups : k => v if local.create && lookup(v, "create_attachment", true) }
 
   target_group_arn  = aws_lb_target_group.this[each.key].arn
   target_id         = each.value.target_id

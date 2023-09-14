@@ -8,7 +8,6 @@ Please consult the `examples` directory for reference example configurations. If
 - `target_groups` no longer support multiple targets per target group. There are alternate methods to achieve similar functionality such as weighted target groups or using an autoscaling group as a target when targetting EC2 instances.
 - The previous methods for creating listeners have been removed in favor of one argument, `listeners`, which take a map of listener definitions that are created using the `for_each` meta-argument in order to provide better stability when adding/removing listener definitions. Previously the `target_group_index` was used to associate/reference a target group; that is now replaced with `target_group_key` which is the key of the target group definition in the `target_groups` map.
 - `security_group_rules` has been replaced by `security_group_ingress_rules` and `security_group_egress_rules` to align with the new underlying resources.
--
 - Minimum supported version of Terraform AWS provider updated to `v5.13` to support the latest features provided via the resources utilized.
 - Minimum supported version of Terraform updated to `v1.0`
 - The `Name` tag has been removed from resources
@@ -837,14 +836,14 @@ module "alb" {
 Each listener will need to be migrated using the index position in v8.x to the key of the listener in v9.x - see example state move commands below:
 
 ```sh
-tf state mv 'module.alb.aws_lb_listener.frontend_http_tcp[0]' 'module.alb.aws_lb_listener.this["default"]'
-tf state mv 'module.alb.aws_lb_listener.frontend_http_tcp[1]' 'module.alb.aws_lb_listener.this["http-weighted-target"]'
-tf state mv 'module.alb.aws_lb_listener.frontend_http_tcp[2]' 'module.alb.aws_lb_listener.this["http-https-redirect"]'
-tf state mv 'module.alb.aws_lb_listener.frontend_http_tcp[3]' 'module.alb.aws_lb_listener.this["fixed-response"]'
+terraform state mv 'module.alb.aws_lb_listener.frontend_http_tcp[0]' 'module.alb.aws_lb_listener.this["default"]'
+terraform state mv 'module.alb.aws_lb_listener.frontend_http_tcp[1]' 'module.alb.aws_lb_listener.this["http-weighted-target"]'
+terraform state mv 'module.alb.aws_lb_listener.frontend_http_tcp[2]' 'module.alb.aws_lb_listener.this["http-https-redirect"]'
+terraform state mv 'module.alb.aws_lb_listener.frontend_http_tcp[3]' 'module.alb.aws_lb_listener.this["fixed-response"]'
 
-tf state mv 'module.alb.aws_lb_listener.frontend_https[0]' 'module.alb.aws_lb_listener.this["https"]'
-tf state mv 'module.alb.aws_lb_listener.frontend_https[1]' 'module.alb.aws_lb_listener.this["cognito"]'
-tf state mv 'module.alb.aws_lb_listener.frontend_https[2]' 'module.alb.aws_lb_listener.this["oidc"]'
+terraform state mv 'module.alb.aws_lb_listener.frontend_https[0]' 'module.alb.aws_lb_listener.this["https"]'
+terraform state mv 'module.alb.aws_lb_listener.frontend_https[1]' 'module.alb.aws_lb_listener.this["cognito"]'
+terraform state mv 'module.alb.aws_lb_listener.frontend_https[2]' 'module.alb.aws_lb_listener.this["oidc"]'
 ```
 
 ### Listener Rule(s)
@@ -853,16 +852,16 @@ Each listener rule will need to be migrated using the index position in v8.x to 
 
 ```sh
 # HTTP
-tf state mv 'module.alb.aws_lb_listener_rule.http_tcp_listener_rule[0]' 'module.alb.aws_lb_listener_rule.this["http-https-redirect/fixed-response"]'
-tf state mv 'module.alb.aws_lb_listener_rule.http_tcp_listener_rule[1]' 'module.alb.aws_lb_listener_rule.this["http-https-redirect/weighted-forward"]'
-tf state mv 'module.alb.aws_lb_listener_rule.http_tcp_listener_rule[2]' 'module.alb.aws_lb_listener_rule.this["http-https-redirect/redirect"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.http_tcp_listener_rule[0]' 'module.alb.aws_lb_listener_rule.this["http-https-redirect/fixed-response"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.http_tcp_listener_rule[1]' 'module.alb.aws_lb_listener_rule.this["http-https-redirect/weighted-forward"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.http_tcp_listener_rule[2]' 'module.alb.aws_lb_listener_rule.this["http-https-redirect/redirect"]'
 
 # HTTPS
-tf state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[0]' 'module.alb.aws_lb_listener_rule.this["https/cognito"]'
-tf state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[1]' 'module.alb.aws_lb_listener_rule.this["cognito/oidc"]'
-tf state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[2]' 'module.alb.aws_lb_listener_rule.this["https/fixed-response"]'
-tf state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[3]' 'module.alb.aws_lb_listener_rule.this["https/weight-forward"]'
-tf state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[4]' 'module.alb.aws_lb_listener_rule.this["https/redirect"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[0]' 'module.alb.aws_lb_listener_rule.this["https/cognito"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[1]' 'module.alb.aws_lb_listener_rule.this["cognito/oidc"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[2]' 'module.alb.aws_lb_listener_rule.this["https/fixed-response"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[3]' 'module.alb.aws_lb_listener_rule.this["https/weight-forward"]'
+terraform state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[4]' 'module.alb.aws_lb_listener_rule.this["https/redirect"]'
 ```
 
 ### Additional SSL Certificate(s)
@@ -870,7 +869,7 @@ tf state mv 'module.alb.aws_lb_listener_rule.https_listener_rule[4]' 'module.alb
 Each additional SSL certificate will need to be migrated using the index position in v8.x to the <key/index> of the additional SSL certificate in v9.x - see example state move commands below:
 
 ```sh
-tf state mv 'module.alb.aws_lb_listener_certificate.https_listener[0]' 'module.alb.aws_lb_listener_certificate.this["https/0"]'
+terraform state mv 'module.alb.aws_lb_listener_certificate.https_listener[0]' 'module.alb.aws_lb_listener_certificate.this["https/0"]'
 ```
 
 ### Target Group(s)
@@ -878,9 +877,9 @@ tf state mv 'module.alb.aws_lb_listener_certificate.https_listener[0]' 'module.a
 Each target group will need to be migrated using the index position in v8.x to the key of the target group in v9.x - see example state move commands below:
 
 ```sh
-tf state mv 'module.alb.aws_lb_target_group.main[0]' 'module.alb.aws_lb_target_group.this["instance"]'
-tf state mv 'module.alb.aws_lb_target_group.main[1]' 'module.alb.aws_lb_target_group.this["lambda-with-trigger"]'
-tf state mv 'module.alb.aws_lb_target_group.main[2]' 'module.alb.aws_lb_target_group.this["lambda-without-trigger"]'
+terraform state mv 'module.alb.aws_lb_target_group.main[0]' 'module.alb.aws_lb_target_group.this["instance"]'
+terraform state mv 'module.alb.aws_lb_target_group.main[1]' 'module.alb.aws_lb_target_group.this["lambda-with-trigger"]'
+terraform state mv 'module.alb.aws_lb_target_group.main[2]' 'module.alb.aws_lb_target_group.this["lambda-without-trigger"]'
 ```
 
 ### Lambda Permission(s)
@@ -888,5 +887,45 @@ tf state mv 'module.alb.aws_lb_target_group.main[2]' 'module.alb.aws_lb_target_g
 Each lambda permission will need to be migrated using the <index.key> position in v8.x to the key of the lambda permission in v9.x - see example state move commands below:
 
 ```sh
-tf state mv 'module.alb.aws_lambda_permission.lb["2.lambda_without_allowed_triggers"]' 'module.alb.aws_lambda_permission.this["lambda-without-trigger"]'
+terraform state mv 'module.alb.aws_lambda_permission.lb["2.lambda_without_allowed_triggers"]' 'module.alb.aws_lambda_permission.this["lambda-without-trigger"]'
+```
+
+### Security Group Rule(s)
+
+The security group rules have been changed from the `aws_security_group_rule` resource to the new `aws_vpc_security_group_ingress_rule`/`aws_vpc_security_group_egress_rule` resources.
+If you do not wish for the rules to be recreated during the upgrade, you will need to remove the existing rules from the Terraform state, and re-import (you cannot `terrraform mv` across
+different resource types). For example, for one rule you would perform the following given the following code snippets:
+
+Example of security group rules for v8.x
+
+```hcl
+  security_group_rules = {
+    ingress_all_http = {
+      type        = "ingress"
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      description = "HTTP web traffic"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+```
+
+Example of security group rules for v8.x
+
+```hcl
+  security_group_ingress_rules = {
+    all_http = {
+      from_port   = 80
+      to_port     = 80
+      ip_protocol = "tcp"
+      description = "HTTP web traffic"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+  }
+```
+
+```sh
+terraform state rm 'aws_security_group_rule.this["ingress_all_http"]'
+terraform import 'aws_vpc_security_group_ingress_rule.this["all_http"]' sgr-xxx # ensure the key matches your updated implementation
 ```

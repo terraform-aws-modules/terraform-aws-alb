@@ -61,7 +61,7 @@ module "alb" {
   }
 
   listeners = {
-    http-https-redirect = {
+    ex-http-https-redirect = {
       port     = 80
       protocol = "HTTP"
       redirect = {
@@ -71,7 +71,7 @@ module "alb" {
       }
 
       rules = {
-        fixed-response = {
+        ex-fixed-response = {
           priority = 3
           actions = [{
             type         = "fixed-response"
@@ -88,17 +88,17 @@ module "alb" {
           }]
         }
 
-        weighted-forward = {
+        ex-weighted-forward = {
           priority = 4
           actions = [{
             type = "weighted-forward"
             target_groups = [
               {
-                target_group_key = "lambda-with-trigger"
+                target_group_key = "ex-lambda-with-trigger"
                 weight           = 2
               },
               {
-                target_group_key = "instance"
+                target_group_key = "ex-instance"
                 weight           = 1
               }
             ]
@@ -116,7 +116,7 @@ module "alb" {
           }]
         }
 
-        redirect = {
+        ex-redirect = {
           priority = 5000
           actions = [{
             type        = "redirect"
@@ -137,24 +137,24 @@ module "alb" {
       }
     }
 
-    http-weighted-target = {
+    ex-http-weighted-target = {
       port     = 81
       protocol = "HTTP"
       weighted_forward = {
         target_groups = [
           {
-            target_group_key = "lambda-with-trigger"
+            target_group_key = "ex-lambda-with-trigger"
             weight           = 60
           },
           {
-            target_group_key = "instance"
+            target_group_key = "ex-instance"
             weight           = 40
           }
         ]
       }
     }
 
-    fixed-response = {
+    ex-fixed-response = {
       port     = 82
       protocol = "HTTP"
       fixed_response = {
@@ -164,7 +164,7 @@ module "alb" {
       }
     }
 
-    https = {
+    ex-https = {
       port                        = 443
       protocol                    = "HTTPS"
       ssl_policy                  = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
@@ -172,11 +172,11 @@ module "alb" {
       additional_certificate_arns = [module.wildcard_cert.acm_certificate_arn]
 
       forward = {
-        target_group_key = "instance"
+        target_group_key = "ex-instance"
       }
 
       rules = {
-        cognito = {
+        ex-cognito = {
           actions = [
             {
               type                       = "authenticate-cognito"
@@ -189,7 +189,7 @@ module "alb" {
             },
             {
               type             = "forward"
-              target_group_key = "instance"
+              target_group_key = "ex-instance"
             }
           ]
 
@@ -200,7 +200,7 @@ module "alb" {
           }]
         }
 
-        fixed-response = {
+        ex-fixed-response = {
           priority = 3
           actions = [{
             type         = "fixed-response"
@@ -217,17 +217,17 @@ module "alb" {
           }]
         }
 
-        weighted-forward = {
+        ex-weighted-forward = {
           priority = 4
           actions = [{
             type = "weighted-forward"
             target_groups = [
               {
-                target_group_key = "instance"
+                target_group_key = "ex-instance"
                 weight           = 2
               },
               {
-                target_group_key = "lambda-with-trigger"
+                target_group_key = "ex-lambda-with-trigger"
                 weight           = 1
               }
             ]
@@ -245,7 +245,7 @@ module "alb" {
           }]
         }
 
-        redirect = {
+        ex-redirect = {
           priority = 5000
           actions = [{
             type        = "redirect"
@@ -266,7 +266,7 @@ module "alb" {
       }
     }
 
-    cognito = {
+    ex-cognito = {
       port            = 444
       protocol        = "HTTPS"
       certificate_arn = module.acm.acm_certificate_arn
@@ -285,11 +285,11 @@ module "alb" {
       }
 
       forward = {
-        target_group_key = "instance"
+        target_group_key = "ex-instance"
       }
 
       rules = {
-        oidc = {
+        ex-oidc = {
           priority = 2
 
           actions = [
@@ -308,7 +308,7 @@ module "alb" {
             },
             {
               type             = "forward"
-              target_group_key = "lambda-with-trigger"
+              target_group_key = "ex-lambda-with-trigger"
             }
           ]
 
@@ -321,7 +321,7 @@ module "alb" {
       }
     }
 
-    oidc = {
+    ex-oidc = {
       port            = 445
       protocol        = "HTTPS"
       certificate_arn = module.acm.acm_certificate_arn
@@ -340,13 +340,13 @@ module "alb" {
       }
 
       forward = {
-        target_group_key = "instance"
+        target_group_key = "ex-instance"
       }
     }
   }
 
   target_groups = {
-    instance = {
+    ex-instance = {
       name_prefix                       = "h1"
       backend_protocol                  = "HTTP"
       backend_port                      = 80
@@ -374,14 +374,14 @@ module "alb" {
       }
     }
 
-    lambda-with-trigger = {
+    ex-lambda-with-trigger = {
       name_prefix                        = "l1-"
       target_type                        = "lambda"
       lambda_multi_value_headers_enabled = true
       target_id                          = module.lambda_with_allowed_triggers.lambda_function_arn
     }
 
-    lambda-without-trigger = {
+    ex-lambda-without-trigger = {
       name_prefix              = "l2-"
       target_type              = "lambda"
       target_id                = module.lambda_without_allowed_triggers.lambda_function_arn
@@ -433,7 +433,7 @@ resource "null_resource" "download_package" {
 
 module "lambda_with_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 3.0"
+  version = "~> 6.0"
 
   function_name = "${local.name}-with-allowed-triggers"
   description   = "My awesome lambda function (with allowed triggers)"
@@ -447,7 +447,7 @@ module "lambda_with_allowed_triggers" {
   allowed_triggers = {
     AllowExecutionFromELB = {
       service    = "elasticloadbalancing"
-      source_arn = module.alb.target_groups["lambda-with-trigger"].arn
+      source_arn = module.alb.target_groups["ex-lambda-with-trigger"].arn
     }
   }
 
@@ -456,7 +456,7 @@ module "lambda_with_allowed_triggers" {
 
 module "lambda_without_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 3.0"
+  version = "~> 6.0"
 
   function_name = "${local.name}-without-allowed-triggers"
   description   = "My awesome lambda function (without allowed triggers)"
@@ -488,9 +488,6 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
-  enable_nat_gateway = true
-  single_nat_gateway = true
-
   tags = local.tags
 }
 
@@ -500,7 +497,7 @@ data "aws_route53_zone" "this" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   domain_name = var.domain_name
   zone_id     = data.aws_route53_zone.this.id
@@ -508,7 +505,7 @@ module "acm" {
 
 module "wildcard_cert" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   domain_name = "*.${var.domain_name}"
   zone_id     = data.aws_route53_zone.this.id
