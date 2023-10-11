@@ -1,10 +1,10 @@
 output "lb_id" {
-  description = "The ID and ARN of the load balancer we created"
+  description = "The ID of the load balancer we created"
   value       = try(aws_lb.this[0].id, "")
 }
 
 output "lb_arn" {
-  description = "The ID and ARN of the load balancer we created"
+  description = "The ARN of the load balancer we created"
   value       = try(aws_lb.this[0].arn, "")
 }
 
