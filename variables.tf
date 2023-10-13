@@ -43,7 +43,7 @@ variable "enable_tls_version_and_cipher_suite_headers" {
 variable "enable_xff_client_port" {
   description = "Indicates whether the X-Forwarded-For header should preserve the source port that the client used to connect to the load balancer in application load balancers."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "extra_ssl_certs" {

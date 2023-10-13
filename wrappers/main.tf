@@ -10,7 +10,7 @@ module "wrapper" {
   enable_http2                                = try(each.value.enable_http2, var.defaults.enable_http2, true)
   enable_cross_zone_load_balancing            = try(each.value.enable_cross_zone_load_balancing, var.defaults.enable_cross_zone_load_balancing, false)
   enable_tls_version_and_cipher_suite_headers = try(each.value.enable_tls_version_and_cipher_suite_headers, var.defaults.enable_tls_version_and_cipher_suite_headers, false)
-  enable_xff_client_port                      = try(each.value.enable_xff_client_port, var.defaults.enable_xff_client_port, true)
+  enable_xff_client_port                      = try(each.value.enable_xff_client_port, var.defaults.enable_xff_client_port, false)
   extra_ssl_certs                             = try(each.value.extra_ssl_certs, var.defaults.extra_ssl_certs, [])
   https_listeners                             = try(each.value.https_listeners, var.defaults.https_listeners, [])
   http_tcp_listeners                          = try(each.value.http_tcp_listeners, var.defaults.http_tcp_listeners, [])
