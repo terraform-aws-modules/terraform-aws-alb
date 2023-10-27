@@ -17,7 +17,7 @@ module "wrapper" {
   enable_http2                                = try(each.value.enable_http2, var.defaults.enable_http2, null)
   enable_tls_version_and_cipher_suite_headers = try(each.value.enable_tls_version_and_cipher_suite_headers, var.defaults.enable_tls_version_and_cipher_suite_headers, null)
   enable_waf_fail_open                        = try(each.value.enable_waf_fail_open, var.defaults.enable_waf_fail_open, null)
-  enable_xff_client_port                      = try(each.value.enable_xff_client_port, var.defaults.enable_xff_client_port, true)
+  enable_xff_client_port                      = try(each.value.enable_xff_client_port, var.defaults.enable_xff_client_port, null)
   idle_timeout                                = try(each.value.idle_timeout, var.defaults.idle_timeout, null)
   internal                                    = try(each.value.internal, var.defaults.internal, null)
   ip_address_type                             = try(each.value.ip_address_type, var.defaults.ip_address_type, null)

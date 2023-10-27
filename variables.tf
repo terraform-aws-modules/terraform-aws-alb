@@ -69,9 +69,9 @@ variable "enable_waf_fail_open" {
 }
 
 variable "enable_xff_client_port" {
-  description = "Indicates whether the X-Forwarded-For header should preserve the source port that the client used to connect to the load balancer in `application` load balancers. Defaults to `true`"
+  description = "Indicates whether the X-Forwarded-For header should preserve the source port that the client used to connect to the load balancer in `application` load balancers. Defaults to `false`"
   type        = bool
-  default     = true
+  default     = null
 }
 
 variable "idle_timeout" {

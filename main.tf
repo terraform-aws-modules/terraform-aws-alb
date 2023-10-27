@@ -2,6 +2,7 @@ data "aws_partition" "current" {}
 
 locals {
   create = var.create && var.putin_khuylo
+  tags   = merge(var.tags, { terraform-aws-modules = "alb" })
 }
 
 ################################################################################
@@ -51,7 +52,7 @@ resource "aws_lb" "this" {
   }
 
   subnets                    = var.subnets
-  tags                       = var.tags
+  tags                       = local.tags
   xff_header_processing_mode = var.xff_header_processing_mode
 
   timeouts {
@@ -191,7 +192,7 @@ resource "aws_lb_listener" "this" {
   port              = try(each.value.port, var.default_port)
   protocol          = try(each.value.protocol, var.default_protocol)
   ssl_policy        = contains(["HTTPS", "TLS"], try(each.value.protocol, var.default_protocol)) ? try(each.value.ssl_policy, "ELBSecurityPolicy-TLS13-1-2-Res-2021-06") : try(each.value.ssl_policy, null)
-  tags              = merge(var.tags, try(each.value.tags, {}))
+  tags              = merge(local.tags, try(each.value.tags, {}))
 }
 
 ################################################################################
@@ -388,7 +389,7 @@ resource "aws_lb_listener_rule" "this" {
     }
   }
 
-  tags = merge(var.tags, try(each.value.tags, {}))
+  tags = merge(local.tags, try(each.value.tags, {}))
 }
 
 ################################################################################
@@ -484,7 +485,7 @@ resource "aws_lb_target_group" "this" {
   target_type = try(each.value.target_type, null)
   vpc_id      = try(each.value.vpc_id, var.vpc_id)
 
-  tags = merge(var.tags, try(each.value.tags, {}))
+  tags = merge(local.tags, try(each.value.tags, {}))
 
   lifecycle {
     create_before_destroy = true
@@ -554,7 +555,7 @@ resource "aws_security_group" "this" {
   description = coalesce(var.security_group_description, "Security group for ${local.security_group_name} ${var.load_balancer_type} load balancer")
   vpc_id      = var.vpc_id
 
-  tags = merge(var.tags, var.security_group_tags)
+  tags = merge(local.tags, var.security_group_tags)
 
   lifecycle {
     create_before_destroy = true
@@ -577,7 +578,7 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
 
-  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+  tags = merge(local.tags, var.security_group_tags, try(each.value.tags, {}))
 }
 
 resource "aws_vpc_security_group_ingress_rule" "this" {
@@ -596,7 +597,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   referenced_security_group_id = lookup(each.value, "referenced_security_group_id", null)
   to_port                      = try(each.value.to_port, null)
 
-  tags = merge(var.tags, var.security_group_tags, try(each.value.tags, {}))
+  tags = merge(local.tags, var.security_group_tags, try(each.value.tags, {}))
 }
 
 ################################################################################
