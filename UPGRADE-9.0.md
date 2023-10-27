@@ -894,7 +894,7 @@ terraform state mv 'module.alb.aws_lambda_permission.lb["2.lambda_without_allowe
 
 The security group rules have been changed from the `aws_security_group_rule` resource to the new `aws_vpc_security_group_ingress_rule`/`aws_vpc_security_group_egress_rule` resources.
 If you do not wish for the rules to be recreated during the upgrade, you will need to remove the existing rules from the Terraform state, and re-import (you cannot `terrraform state mv` across
-different resource types). For example, for one rule you would perform the following given the following code snippets:
+different resource types). For example, for one rule, you would perform the following snippet:
 
 Example of security group rules for v8.x
 
