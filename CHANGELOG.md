@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.7.0...v9.0.0) (2023-10-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Refactor module to use maps instead of lists (#305)
+
+### Features
+
+* Refactor module to use maps instead of lists ([#305](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/305)) ([39d5627](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/39d5627d51251c0ccbe9d404cf1ea9ccb4f5b3b7))
+
 ## [8.7.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.6.1...v8.7.0) (2023-06-16)
 
 
