@@ -6,13 +6,15 @@ Terraform module which creates Application and Network Load Balancer resources o
 
 ## Usage
 
+When you're using ALB Listener rules, make sure that every rule's `actions` block ends in a `forward`, `redirect`, or `fixed-response` action so that every rule will resolve to some sort of an HTTP response. Checkout the [AWS documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-rules.html) for more information.
+
 ### Application Load Balancer
 
-HTTP and HTTPS listeners with default actions:
+#### HTTP to HTTPS redirect
 
 ```hcl
 module "alb" {
-  source  = "terraform-aws-modules/alb/aws"
+  source = "terraform-aws-modules/alb/aws"
 
   name    = "my-alb"
   vpc_id  = "vpc-abcde012"
@@ -22,14 +24,14 @@ module "alb" {
   security_group_ingress_rules = {
     all_http = {
       from_port   = 80
-      to_port     = 82
+      to_port     = 80
       ip_protocol = "tcp"
       description = "HTTP web traffic"
       cidr_ipv4   = "0.0.0.0/0"
     }
     all_https = {
       from_port   = 443
-      to_port     = 445
+      to_port     = 443
       ip_protocol = "tcp"
       description = "HTTPS web traffic"
       cidr_ipv4   = "0.0.0.0/0"
@@ -38,7 +40,7 @@ module "alb" {
   security_group_egress_rules = {
     all = {
       ip_protocol = "-1"
-      cidr_ipv4   = module.vpc.vpc_cidr_block
+      cidr_ipv4   = "10.0.0.0/16"
     }
   }
 
@@ -47,22 +49,32 @@ module "alb" {
   }
 
   listeners = {
-    http = {
+    ex-http-https-redirect = {
       port     = 80
       protocol = "HTTP"
-
-      forward = {
-        target_group_key = "instance"
+      redirect = {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
       }
     }
-    https = {
+    ex-https = {
       port            = 443
       protocol        = "HTTPS"
       certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
 
       forward = {
-        target_group_key = "instance"
+        target_group_key = "ex-instance"
       }
+    }
+  }
+
+  target_groups = {
+    ex-instance = {
+      name_prefix      = "h1"
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "instance"
     }
   }
 
@@ -73,111 +85,89 @@ module "alb" {
 }
 ```
 
-HTTP to HTTPS redirect and HTTPS cognito authentication:
+#### Cognito authentication
 
 ```hcl
 module "alb" {
-  source  = "terraform-aws-modules/alb/aws"
-  version = "~> 8.0"
+  source = "terraform-aws-modules/alb/aws"
 
-  name = "my-alb"
+  # Truncated for brevity ...
 
-  load_balancer_type = "application"
-
-  vpc_id             = "vpc-abcde012"
-  subnets            = ["subnet-abcde012", "subnet-bcde012a"]
-  security_groups    = ["sg-edcd9784", "sg-edcd9785"]
-
-  access_logs = {
-    bucket = "my-alb-logs"
-  }
-
-  target_groups = [
-    {
-      name_prefix      = "pref-"
-      backend_protocol = "HTTPS"
-      backend_port     = 443
-      target_type      = "instance"
-    }
-  ]
-
-  https_listeners = [
-    {
-      port                 = 443
-      protocol             = "HTTPS"
-      certificate_arn      = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
-      action_type          = "authenticate-cognito"
-      target_group_index   = 0
-      authenticate_cognito = {
-        user_pool_arn       = "arn:aws:cognito-idp::123456789012:userpool/test-pool"
-        user_pool_client_id = "6oRmFiS0JHk="
-        user_pool_domain    = "test-domain-com"
-      }
-    }
-  ]
-
-  http_tcp_listeners = [
-    {
-      port        = 80
-      protocol    = "HTTP"
-      action_type = "redirect"
+  listeners = {
+    ex-http-https-redirect = {
+      port     = 80
+      protocol = "HTTP"
       redirect = {
         port        = "443"
         protocol    = "HTTPS"
         status_code = "HTTP_301"
       }
     }
-  ]
+    ex-cognito = {
+      port            = 444
+      protocol        = "HTTPS"
+      certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
 
-  tags = {
-    Environment = "Test"
+      authenticate_cognito = {
+        authentication_request_extra_params = {
+          display = "page"
+          prompt  = "login"
+        }
+        on_unauthenticated_request = "authenticate"
+        session_cookie_name        = "session-${local.name}"
+        session_timeout            = 3600
+        user_pool_arn              = "arn:aws:cognito-idp:us-west-2:123456789012:userpool/us-west-2_abcdefghi"
+        user_pool_client_id        = "us-west-2_fak3p001B"
+        user_pool_domain           = "https://fak3p001B.auth.us-west-2.amazoncognito.com"
+      }
+
+      forward = {
+        target_group_key = "ex-instance"
+      }
+
+      rules = {
+        ex-oidc = {
+          priority = 2
+
+          actions = [
+            {
+              type = "authenticate-oidc"
+              authentication_request_extra_params = {
+                display = "page"
+                prompt  = "login"
+              }
+              authorization_endpoint = "https://foobar.com/auth"
+              client_id              = "client_id"
+              client_secret          = "client_secret"
+              issuer                 = "https://foobar.com"
+              token_endpoint         = "https://foobar.com/token"
+              user_info_endpoint     = "https://foobar.com/user_info"
+            },
+            {
+              type             = "forward"
+              target_group_key = "ex-instance"
+            }
+          ]
+        }
+      }
+    }
   }
 }
 ```
 
-Cognito Authentication only on certain routes, with redirects for other routes:
+#### Cognito authentication on certain paths, redirects for others
 
 ```hcl
 module "alb" {
-  source  = "terraform-aws-modules/alb/aws"
+  source = "terraform-aws-modules/alb/aws"
 
-  name    = "my-alb"
-  vpc_id  = "vpc-abcde012"
-  subnets = ["subnet-abcde012", "subnet-bcde012a"]
-
-  # Security Group
-  security_group_ingress_rules = {
-    all_http = {
-      from_port   = 80
-      to_port     = 82
-      ip_protocol = "tcp"
-      description = "HTTP web traffic"
-      cidr_ipv4   = "0.0.0.0/0"
-    }
-    all_https = {
-      from_port   = 443
-      to_port     = 445
-      ip_protocol = "tcp"
-      description = "HTTPS web traffic"
-      cidr_ipv4   = "0.0.0.0/0"
-    }
-  }
-  security_group_egress_rules = {
-    all = {
-      ip_protocol = "-1"
-      cidr_ipv4   = module.vpc.vpc_cidr_block
-    }
-  }
-
-  access_logs = {
-    bucket = "my-alb-logs"
-  }
+  # Truncated for brevity ...
 
   listeners = {
     https = {
-      port                        = 443
-      protocol                    = "HTTPS"
-      certificate_arn             = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+      port            = 443
+      protocol        = "HTTPS"
+      certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
 
       forward = {
         target_group_key = "instance"
@@ -235,21 +225,16 @@ module "alb" {
       target_type      = "instance"
     }
   }
-
-  tags = {
-    Environment = "Development"
-    Project     = "Example"
-  }
 }
 ```
 
-When you're using ALB Listener rules, make sure that every rule's `actions` block ends in a `forward`, `redirect`, or `fixed-response` action so that every rule will resolve to some sort of an HTTP response. Checkout the [AWS documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-rules.html) for more information.
+### Network Load Balancer
 
-### Network Load Balancer (TCP_UDP, UDP, TCP and TLS listeners)
+#### TCP_UDP, UDP, TCP and TLS listeners
 
 ```hcl
 module "nlb" {
-  source  = "terraform-aws-modules/alb/aws"
+  source = "terraform-aws-modules/alb/aws"
 
   name               = "my-nlb"
   load_balancer_type = "network"
@@ -276,7 +261,7 @@ module "nlb" {
   security_group_egress_rules = {
     all = {
       ip_protocol = "-1"
-      cidr_ipv4   = module.vpc.vpc_cidr_block
+      cidr_ipv4   = "10.0.0.0/16"
     }
   }
 
@@ -285,27 +270,42 @@ module "nlb" {
   }
 
   listeners = {
-    http = {
-      port     = 80
-      protocol = "HTTP"
-
+    ex-tcp-udp = {
+      port     = 81
+      protocol = "TCP_UDP"
       forward = {
-        target_group_key = "ip"
+        target_group_key = "ex-target"
       }
     }
-    https = {
-      port            = 443
-      protocol        = "HTTPS"
-      certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
 
+    ex-udp = {
+      port     = 82
+      protocol = "UDP"
       forward = {
-        target_group_key = "ip"
+        target_group_key = "ex-target"
+      }
+    }
+
+    ex-tcp = {
+      port     = 83
+      protocol = "TCP"
+      forward = {
+        target_group_key = "ex-target"
+      }
+    }
+
+    ex-tls = {
+      port            = 84
+      protocol        = "TLS"
+      certificate_arn = certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+      forward = {
+        target_group_key = "ex-target"
       }
     }
   }
 
   target_groups = {
-    ip = {
+    ex-target = {
       name_prefix      = "pref-"
       backend_protocol = "TCP"
       backend_port     = 80
