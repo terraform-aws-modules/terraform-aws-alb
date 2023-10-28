@@ -27,8 +27,9 @@ module "nlb" {
 
   name = local.name
 
-  load_balancer_type = "network"
-  vpc_id             = module.vpc.vpc_id
+  load_balancer_type               = "network"
+  vpc_id                           = module.vpc.vpc_id
+  dns_record_client_routing_policy = "availability_zone_affinity"
 
   # https://github.com/hashicorp/terraform-provider-aws/issues/17281
   # subnets = module.vpc.private_subnets
@@ -158,6 +159,9 @@ module "nlb" {
       port        = 84
       target_type = "instance"
       target_id   = aws_instance.this.id
+      target_health_state = {
+        enable_unhealthy_connection_termination = false
+      }
     }
   }
 

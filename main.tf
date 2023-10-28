@@ -24,6 +24,7 @@ resource "aws_lb" "this" {
 
   customer_owned_ipv4_pool                    = var.customer_owned_ipv4_pool
   desync_mitigation_mode                      = var.desync_mitigation_mode
+  dns_record_client_routing_policy            = var.dns_record_client_routing_policy
   drop_invalid_header_fields                  = var.drop_invalid_header_fields
   enable_cross_zone_load_balancing            = var.enable_cross_zone_load_balancing
   enable_deletion_protection                  = var.enable_deletion_protection
@@ -479,6 +480,13 @@ resource "aws_lb_target_group" "this" {
     content {
       on_deregistration = target_failover.value.on_deregistration
       on_unhealthy      = target_failover.value.on_unhealthy
+    }
+  }
+
+  dynamic "target_health_state" {
+    for_each = try([each.value.target_health_state], [])
+    content {
+      enable_unhealthy_connection_termination = try(target_health_state.value.enable_unhealthy_connection_termination, true)
     }
   }
 

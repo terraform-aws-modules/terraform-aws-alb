@@ -32,6 +32,12 @@ variable "desync_mitigation_mode" {
   default     = null
 }
 
+variable "dns_record_client_routing_policy" {
+  description = "Indicates how traffic is distributed among the load balancer Availability Zones. Possible values are any_availability_zone (default), availability_zone_affinity, or partial_availability_zone_affinity. Only valid for network type load balancers."
+  type        = string
+  default     = null
+}
+
 variable "drop_invalid_header_fields" {
   description = "Indicates whether HTTP headers with header fields that are not valid are removed by the load balancer (`true`) or routed to targets (`false`). The default is `true`. Elastic Load Balancing requires that message header names contain only alphanumeric characters and hyphens. Only valid for Load Balancers of type `application`"
   type        = bool
