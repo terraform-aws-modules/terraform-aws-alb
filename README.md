@@ -340,6 +340,8 @@ module "alb" {
 - [Complete Application Load Balancer](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/complete-alb)
 - [Complete Network Load Balancer](https://github.com/terraform-aws-modules/terraform-aws-alb/tree/master/examples/complete-nlb)
 
+See [patterns.md](https://github.com/terraform-aws-modules/terraform-aws-alb/blob/master/docs/patterns.md) for additional configuration snippets for common usage patterns.
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
