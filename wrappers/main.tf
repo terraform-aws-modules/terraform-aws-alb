@@ -11,6 +11,7 @@ module "wrapper" {
   default_port                                = try(each.value.default_port, var.defaults.default_port, 80)
   default_protocol                            = try(each.value.default_protocol, var.defaults.default_protocol, "HTTP")
   desync_mitigation_mode                      = try(each.value.desync_mitigation_mode, var.defaults.desync_mitigation_mode, null)
+  dns_record_client_routing_policy            = try(each.value.dns_record_client_routing_policy, var.defaults.dns_record_client_routing_policy, null)
   drop_invalid_header_fields                  = try(each.value.drop_invalid_header_fields, var.defaults.drop_invalid_header_fields, true)
   enable_cross_zone_load_balancing            = try(each.value.enable_cross_zone_load_balancing, var.defaults.enable_cross_zone_load_balancing, true)
   enable_deletion_protection                  = try(each.value.enable_deletion_protection, var.defaults.enable_deletion_protection, true)
