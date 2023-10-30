@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.1.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.0.0...v9.1.0) (2023-10-30)
+
+
+### Features
+
+* Add support for disabling connection termination for unhealthy targets and AZ DNS affinity ([#315](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/315)) ([c79324e](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/c79324eee6e8930bb2c5f046e4494cd967e7c6a8))
+
 ## [9.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v8.7.0...v9.0.0) (2023-10-27)
 
 
