@@ -199,8 +199,8 @@ module "alb" {
     # This key name is used by the listener/listener rules to know which target to forward traffic to
     ex_instance = {
       name_prefix                       = "h1"
-      backend_protocol                  = "HTTP"
-      backend_port                      = 80
+      protocol                          = "HTTP"
+      port                              = 80
       target_type                       = "instance"
       deregistration_delay              = 10
       load_balancing_cross_zone_enabled = true
@@ -292,8 +292,8 @@ module "alb" {
 
   target_groups = {
     ex_ip = {
-      backend_protocol                  = "HTTP"
-      backend_port                      = 80
+      protocol                          = "HTTP"
+      port                              = 80
       target_type                       = "ip"
       deregistration_delay              = 5
       load_balancing_cross_zone_enabled = true

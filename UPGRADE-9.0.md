@@ -410,8 +410,8 @@ module "alb" {
   target_groups = [
     {
       name_prefix      = "h1"
-      backend_protocol = "HTTP"
-      backend_port     = 80
+      protocol = "HTTP"
+      port     = 80
       target_type      = "instance"
 
       health_check = {
@@ -793,8 +793,8 @@ module "alb" {
   target_groups = {
     instance = {
       name_prefix      = "h1"
-      backend_protocol = "HTTP"
-      backend_port     = 80
+      protocol = "HTTP"
+      port     = 80
       target_type      = "instance"
 
       health_check = {
