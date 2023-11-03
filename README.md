@@ -72,8 +72,8 @@ module "alb" {
   target_groups = {
     ex-instance = {
       name_prefix      = "h1"
-      backend_protocol = "HTTP"
-      backend_port     = 80
+      protocol         = "HTTP"
+      port             = 80
       target_type      = "instance"
     }
   }
@@ -219,10 +219,10 @@ module "alb" {
 
   target_groups = {
     instance = {
-      name_prefix      = "default"
-      backend_protocol = "HTTPS"
-      backend_port     = 443
-      target_type      = "instance"
+      name_prefix = "default"
+      protocol    = "HTTPS"
+      port        = 443
+      target_type = "instance"
     }
   }
 }
@@ -306,10 +306,10 @@ module "nlb" {
 
   target_groups = {
     ex-target = {
-      name_prefix      = "pref-"
-      backend_protocol = "TCP"
-      backend_port     = 80
-      target_type      = "ip"
+      name_prefix = "pref-"
+      protocol    = "TCP"
+      port        = 80
+      target_type = "ip"
     }
   }
 
