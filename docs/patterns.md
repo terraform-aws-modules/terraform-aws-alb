@@ -15,7 +15,7 @@ module "alb" {
   # Truncated for brevity ...
 
   listeners = {
-    ex-http-https-redirect = {
+    http_https_redirect = {
       port     = 80
       protocol = "HTTP"
       redirect = {
@@ -39,13 +39,129 @@ module "alb" {
   # Truncated for brevity ...
 
   listeners = {
-    ex-fixed-response = {
+    fixed_response = {
       port     = 80
       protocol = "HTTP"
       fixed_response = {
         content_type = "text/plain"
         message_body = "Fixed message"
         status_code  = "200"
+      }
+    }
+  }
+}
+```
+
+### Auth0 authenticated HTTPS Listener
+
+The configuration snippet below creates an HTTPS listener that utilizes [Auth0](https://www.auth0.com) to secure access. Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
+
+```hcl
+module "alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  # Truncated for brevity ...
+
+  listeners = {
+    https_auth0 = {
+      port            = 443
+      protocol        = "HTTPS"
+      certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
+
+      authenticate_oidc = {
+        issuer                              = "https://youruser.eu.auth0.com/"
+        token_endpoint                      = "https://youruser.eu.auth0.com/oauth/token"
+        user_info_endpoint                  = "https://youruser.eu.auth0.com/userinfo"
+        authorization_endpoint              = "https://youruser.eu.auth0.com/authorize"
+        authentication_request_extra_params = {}
+        client_id                           = "clientid"
+        client_secret                       = "secret123" # a data source would be good here
+      }
+    }
+  }
+}
+```
+
+### Okta authenticated HTTPS Listener
+
+The configuration snippet below creates an HTTPS listener that utilizes [Okta](https://www.okta.com/) to secure access. Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okta-oidc-using-terraform-902cd8289db4).
+
+```hcl
+module "alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  # Truncated for brevity ...
+
+  listeners = {
+    https_okta = {
+      port            = 443
+      protocol        = "HTTPS"
+      certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
+
+      authenticate_oidc = {
+        issuer                              = "https://dev-42069.okta.com/"
+        token_endpoint                      = "https://dev-42069.okta.com/oauth2/v1/token"
+        user_info_endpoint                  = "https://dev-42069.okta.com/oauth2/v1/userinfo"
+        authorization_endpoint              = "https://dev-42069.okta.com/oauth2/v1/authorize"
+        authentication_request_extra_params = {}
+        client_id                           = "clientid"
+        client_secret                       = "secret123" # a data source would be good here
+      }
+    }
+  }
+}
+```
+
+### Google authenticated HTTPS Listener
+
+The configuration snippet below creates an HTTPS listener that utilizes Google to secure access. See the [iap_client resource](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iap_client) in the Google provider if you want to create this configuration in Terraform. Remember to set your google consent screen to internal to only allow users from your own domain.
+
+```hcl
+module "alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  # Truncated for brevity ...
+
+  listeners = {
+    https_google = {
+      port            = 443
+      protocol        = "HTTPS"
+      certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
+
+      authenticate_oidc = {
+        issuer                              = "https://accounts.google.com"
+        token_endpoint                      = "https://oauth2.googleapis.com/token"
+        user_info_endpoint                  = "https://openidconnect.googleapis.com/v1/userinfo"
+        authorization_endpoint              = "https://accounts.google.com/o/oauth2/v2/auth"
+        authentication_request_extra_params = {}
+        client_id                           = "google_client_id"
+        client_secret                       = "google_client_secret"
+      }
+    }
+  }
+}
+```
+
+### Amazon Cognito authenticated HTTPS Listener
+
+The configuration snippet below creates an HTTPS listener that utilizes [Amazon Cognito](https://aws.amazon.com/cognito/) to secure access. See the [iap_client resource](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iap_client) in the Google provider if you want to create this configuration in Terraform. Remember to set your google consent screen to internal to only allow users from your own domain.
+
+```hcl
+module "alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  # Truncated for brevity ...
+
+  listeners = {
+    https_cognito = {
+      port            = 443
+      protocol        = "HTTPS"
+      certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
+
+      authenticate_cognito = {
+        user_pool_arn       = "arn:aws:cognito-idp:eu-west-1:1234567890:userpool/eu-west-1_aBcDeFG"
+        user_pool_client_id = "clientid123"
+        user_pool_domain    = "sso.your-corp.com"
       }
     }
   }
@@ -65,7 +181,7 @@ module "alb" {
   # Truncated for brevity ...
 
   listeners = {
-    ex-https = {
+    ex_https = {
       port                        = 443
       protocol                    = "HTTPS"
       ssl_policy                  = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
@@ -81,7 +197,7 @@ module "alb" {
 
   target_groups = {
     # This key name is used by the listener/listener rules to know which target to forward traffic to
-    ex-instance = {
+    ex_instance = {
       name_prefix                       = "h1"
       backend_protocol                  = "HTTP"
       backend_port                      = 80
@@ -104,7 +220,7 @@ module "alb" {
   # Truncated for brevity ...
 
   listeners = {
-    ex-http-weighted-target = {
+    http_weighted_target = {
       port     = 80
       protocol = "HTTP"
       weighted_forward = {
@@ -123,14 +239,14 @@ module "alb" {
   }
 
   target_groups = {
-    ex-lambda-with-trigger = {
+    lambda_with_trigger = {
       name_prefix                        = "l1-"
       target_type                        = "lambda"
       lambda_multi_value_headers_enabled = true
       target_id                          = module.lambda_with_allowed_triggers.lambda_function_arn
     }
 
-    ex-lambda-without-trigger = {
+    lambda_without_trigger = {
       name_prefix              = "l2-"
       target_type              = "lambda"
       target_id                = module.lambda_without_allowed_triggers.lambda_function_arn
@@ -175,7 +291,7 @@ module "alb" {
   # Truncated for brevity ...
 
   target_groups = {
-    ex-ip = {
+    ex_ip = {
       backend_protocol                  = "HTTP"
       backend_port                      = 80
       target_type                       = "ip"
