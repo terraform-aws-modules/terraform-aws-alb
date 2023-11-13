@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.2.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.1.0...v9.2.0) (2023-11-13)
+
+
+### Features
+
+* Add ignore changes on tags to `elasticbeanstalk:shared-elb-environment-count` ([#324](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/324)) ([d6715c7](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/d6715c71bb5f1f858915f13366ae152038e299e2))
+
 ## [9.1.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.0.0...v9.1.0) (2023-10-30)
 
 
