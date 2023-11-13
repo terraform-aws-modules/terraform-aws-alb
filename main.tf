@@ -61,6 +61,12 @@ resource "aws_lb" "this" {
     update = try(var.timeouts.update, null)
     delete = try(var.timeouts.delete, null)
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags["elasticbeanstalk:shared-elb-environment-count"]
+    ]
+  }
 }
 
 ################################################################################
