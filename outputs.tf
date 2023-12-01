@@ -34,11 +34,13 @@ output "zone_id" {
 output "listeners" {
   description = "Map of listeners created and their attributes"
   value       = aws_lb_listener.this
+  sensitive   = true
 }
 
 output "listener_rules" {
   description = "Map of listeners rules created and their attributes"
   value       = aws_lb_listener_rule.this
+  sensitive   = true
 }
 
 ################################################################################
