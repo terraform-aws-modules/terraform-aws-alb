@@ -317,3 +317,41 @@ module "alb" {
   }
 }
 ```
+
+### Multiple Target Groups with For Loop
+
+The configuration snippet below creates two target groups using a for loop. This is useful to provision multiple different target groups with similar configurations at scale. The for loop will iterate over the `local.services` map definition and create corresponding `target_groups` map with the same key names and associated values.
+
+```hcl
+local {
+  services = {
+    blue = {
+      path = "/"
+      port = 80
+    }
+    green = {
+      path = "/"
+      port = 80
+    }
+  }
+}
+
+module "alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  # Truncated for brevity ...
+
+  target_groups = {
+    for key, value in local.services : key => {
+      name              = key
+      port              = value.port
+      target_type       = "ip"
+      create_attachment = false
+
+      health_check = {
+        path = value.path
+      }
+    }
+  }
+}
+```
