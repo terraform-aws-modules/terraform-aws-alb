@@ -107,7 +107,7 @@ variable "load_balancer_type" {
 variable "enforce_security_group_inbound_rules_on_private_link_traffic" {
   description = "Indicates whether inbound security group rules are enforced for traffic originating from a PrivateLink. Only valid for Load Balancers of type network. The possible values are on and off."
   type        = string
-  default     = "off"
+  default     = null
 }
 
 variable "name" {
