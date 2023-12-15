@@ -20,6 +20,12 @@ variable "access_logs" {
   default     = {}
 }
 
+variable "connection_logs" {
+  description = "Map containing access logging configuration for load balancer"
+  type        = map(string)
+  default     = {}
+}
+
 variable "customer_owned_ipv4_pool" {
   description = "The ID of the customer owned ipv4 pool to use for this load balancer"
   type        = string

@@ -22,6 +22,15 @@ resource "aws_lb" "this" {
     }
   }
 
+  dynamic "connection_logs" {
+    for_each = length(var.connection_logs) > 0 ? [var.connection_logs] : []
+    content {
+      bucket  = connection_logs.value.bucket
+      enabled = try(connection_logs.value.enabled, false)
+      prefix  = try(connection_logs.value.prefix, null)
+    }
+  }
+
   customer_owned_ipv4_pool                    = var.customer_owned_ipv4_pool
   desync_mitigation_mode                      = var.desync_mitigation_mode
   dns_record_client_routing_policy            = var.dns_record_client_routing_policy

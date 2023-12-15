@@ -58,6 +58,13 @@ module "alb" {
 
   access_logs = {
     bucket = module.log_bucket.s3_bucket_id
+    prefix = "access-logs"
+  }
+
+  connection_logs = {
+    bucket  = module.log_bucket.s3_bucket_id
+    enabled = true
+    prefix  = "connection-logs"
   }
 
   listeners = {
