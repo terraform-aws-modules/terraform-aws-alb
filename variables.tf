@@ -104,6 +104,12 @@ variable "load_balancer_type" {
   default     = "application"
 }
 
+variable "enforce_security_group_inbound_rules_on_private_link_traffic" {
+  description = "Indicates whether inbound security group rules are enforced for traffic originating from a PrivateLink. Only valid for Load Balancers of type network. The possible values are on and off."
+  type        = string
+  default     = null
+}
+
 variable "name" {
   description = "The name of the LB. This name must be unique within your AWS account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen"
   type        = string

@@ -46,6 +46,7 @@ module "nlb" {
   enable_deletion_protection = false
 
   # Security Group
+  enforce_security_group_inbound_rules_on_private_link_traffic = "off"
   security_group_ingress_rules = {
     all_tcp = {
       from_port   = 80
