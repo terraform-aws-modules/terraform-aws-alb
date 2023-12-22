@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.2.0...v9.3.0) (2023-12-22)
+
+
+### Features
+
+* Add option enforce_security_group_inbound_rules_on_private_link_traffic ([#332](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/332)) ([33feec8](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/33feec8bb5a0d71bd03097c5e640e064bb03259e))
+
 ## [9.2.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.1.0...v9.2.0) (2023-11-13)
 
 
