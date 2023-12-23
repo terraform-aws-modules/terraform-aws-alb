@@ -26,7 +26,7 @@ resource "aws_lb" "this" {
     for_each = length(var.connection_logs) > 0 ? [var.connection_logs] : []
     content {
       bucket  = connection_logs.value.bucket
-      enabled = try(connection_logs.value.enabled, false)
+      enabled = try(connection_logs.value.enabled, true)
       prefix  = try(connection_logs.value.prefix, null)
     }
   }
