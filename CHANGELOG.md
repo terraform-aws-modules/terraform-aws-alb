@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.3.0...v9.4.0) (2023-12-23)
+
+
+### Features
+
+* ALB Connection logging ([#334](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/334)) ([3167d65](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/3167d653eadf414f31fa74cdd7e453cff7513f33))
+
 ## [9.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.2.0...v9.3.0) (2023-12-22)
 
 
