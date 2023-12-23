@@ -5,6 +5,7 @@ module "wrapper" {
 
   access_logs                                                  = try(each.value.access_logs, var.defaults.access_logs, {})
   associate_web_acl                                            = try(each.value.associate_web_acl, var.defaults.associate_web_acl, false)
+  connection_logs                                              = try(each.value.connection_logs, var.defaults.connection_logs, {})
   create                                                       = try(each.value.create, var.defaults.create, true)
   create_security_group                                        = try(each.value.create_security_group, var.defaults.create_security_group, true)
   customer_owned_ipv4_pool                                     = try(each.value.customer_owned_ipv4_pool, var.defaults.customer_owned_ipv4_pool, null)
