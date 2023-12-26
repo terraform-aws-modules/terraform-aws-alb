@@ -298,7 +298,7 @@ module "nlb" {
     ex-tls = {
       port            = 84
       protocol        = "TLS"
-      certificate_arn = certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+      certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
       forward = {
         target_group_key = "ex-target"
       }
