@@ -141,7 +141,7 @@ variable "security_groups" {
 }
 
 variable "subnet_mapping" {
-  description = "A list of subnet mapping blocks describing subnets to attach to load balancer"
+  description = "A list of subnet mapping blocks describing subnets to attach to load balancer. If set, var.subnets is ignored."
   type        = list(map(string))
   default     = []
 }

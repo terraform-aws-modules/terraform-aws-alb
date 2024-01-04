@@ -62,7 +62,7 @@ resource "aws_lb" "this" {
     }
   }
 
-  subnets                    = var.subnets
+  subnets                    = length(var.subnet_mapping) == 0 ? var.subnets : null
   tags                       = local.tags
   xff_header_processing_mode = var.xff_header_processing_mode
 
