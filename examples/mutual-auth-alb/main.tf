@@ -159,6 +159,20 @@ module "alb" {
       }
     }
   }
+
+  # Route53 Record(s)
+  route53_records = {
+    A = {
+      name    = local.name
+      type    = "A"
+      zone_id = data.aws_route53_zone.this.id
+    }
+    AAAA = {
+      name    = local.name
+      type    = "AAAA"
+      zone_id = data.aws_route53_zone.this.id
+    }
+  }
 }
 
 module "trust_store" {
@@ -239,7 +253,7 @@ module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 4.0"
 
-  domain_name = var.domain_name
+  domain_name = "*.${var.domain_name}"
   zone_id     = data.aws_route53_zone.this.id
 }
 
