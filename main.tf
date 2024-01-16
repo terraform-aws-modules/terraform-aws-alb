@@ -209,7 +209,7 @@ resource "aws_lb_listener" "this" {
     for_each = try([each.value.mutual_authentication], [])
     content {
       mode                             = mutual_authentication.value.mode
-      trust_store_arn                  = mutual_authentication.value.trust_store_arn
+      trust_store_arn                  = try(mutual_authentication.value.trust_store_arn, null)
       ignore_client_certificate_expiry = try(mutual_authentication.value.ignore_client_certificate_expiry, null)
     }
   }
