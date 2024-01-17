@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [9.4.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.4.0...v9.4.1) (2024-01-12)
+
+
+### Bug Fixes
+
+* Change `subnets` default value to `null` ([#341](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/341)) ([a28fe0b](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/a28fe0b4bda318a271c5eefb1ceec9dbafc3369d))
+
 ## [9.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.3.0...v9.4.0) (2023-12-23)
 
 

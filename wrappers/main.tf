@@ -39,7 +39,7 @@ module "wrapper" {
   security_group_use_name_prefix                               = try(each.value.security_group_use_name_prefix, var.defaults.security_group_use_name_prefix, true)
   security_groups                                              = try(each.value.security_groups, var.defaults.security_groups, [])
   subnet_mapping                                               = try(each.value.subnet_mapping, var.defaults.subnet_mapping, [])
-  subnets                                                      = try(each.value.subnets, var.defaults.subnets, [])
+  subnets                                                      = try(each.value.subnets, var.defaults.subnets, null)
   tags                                                         = try(each.value.tags, var.defaults.tags, {})
   target_groups                                                = try(each.value.target_groups, var.defaults.target_groups, {})
   timeouts                                                     = try(each.value.timeouts, var.defaults.timeouts, {})
