@@ -89,6 +89,16 @@ resource "aws_lb_listener" "this" {
   alpn_policy     = try(each.value.alpn_policy, null)
   certificate_arn = try(each.value.certificate_arn, null)
 
+  dynamic "mutual_authentication" {
+    for_each = length(var.mutual_authentication) > 0 && contains(["HTTPS", "TLS"], try(each.value.protocol, var.default_protocol)) ? [var.mutual_authentication] : []
+
+    content {
+      mode                             = try(mutual_authentication.value.mode, "verify")
+      trust_store_arn                  = mutual_authentication.value.trust_store_arn
+      ignore_client_certificate_expiry = try(mutual_authentication.value.ignore_client_certificate_expiry, null)
+    }
+  }
+
   dynamic "default_action" {
     for_each = try([each.value.authenticate_cognito], [])
 

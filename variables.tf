@@ -186,6 +186,12 @@ variable "listeners" {
   default     = {}
 }
 
+variable "mutual_authentication" {
+  description = "Map containing mTLS configuration for load balancer listener"
+  type        = any
+  default     = {}
+}
+
 ################################################################################
 # Target Group
 ################################################################################
