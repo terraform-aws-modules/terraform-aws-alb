@@ -74,10 +74,6 @@ Note that this example may create resources which cost money. Run `terraform des
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |
 | <a name="output_target_groups"></a> [target\_groups](#output\_target\_groups) | Map of target groups created and their attributes |
-| <a name="output_trust_store_arn"></a> [trust\_store\_arn](#output\_trust\_store\_arn) | ARN of the trust store |
-| <a name="output_trust_store_arn_suffix"></a> [trust\_store\_arn\_suffix](#output\_trust\_store\_arn\_suffix) | ARN suffix for use with cloudwatch metrics |
-| <a name="output_trust_store_id"></a> [trust\_store\_id](#output\_trust\_store\_id) | ARN of the trust store |
-| <a name="output_trust_store_name"></a> [trust\_store\_name](#output\_trust\_store\_name) | Name of the trust store |
-| <a name="output_trust_store_revocation_id"></a> [trust\_store\_revocation\_id](#output\_trust\_store\_revocation\_id) | AWS assigned RevocationId |
+| <a name="output_trust_store"></a> [trust\_store](#output\_trust\_store) | Map of trust store attributes |
 | <a name="output_zone_id"></a> [zone\_id](#output\_zone\_id) | The zone\_id of the load balancer to assist with creating DNS records |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

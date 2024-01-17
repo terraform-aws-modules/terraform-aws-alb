@@ -18,7 +18,7 @@ output "trust_store_name" {
   value       = try(aws_lb_trust_store.this[0].name, null)
 }
 
-output "revocation_id" {
-  description = "AWS assigned RevocationId, (number)."
-  value       = try(aws_lb_trust_store_revocation.this[0].revocation_id, null)
+output "revocation_lists" {
+  description = "Map of revocation lists and their attributes."
+  value       = try(aws_lb_trust_store_revocation.this, null)
 }

@@ -12,7 +12,7 @@ resource "aws_lb_trust_store" "this" {
 resource "aws_lb_trust_store_revocation" "this" {
   for_each = { for k, v in var.revocation_lists : k => v if var.create && var.create_trust_store_revocation }
 
-  trust_store_arn               = var.create_trust_store ? aws_lb_trust_store.this[0].arn : var.trust_store_arn
+  trust_store_arn               = aws_lb_trust_store.this[0].arn
   revocations_s3_bucket         = each.value.revocations_s3_bucket
   revocations_s3_key            = each.value.revocations_s3_key
   revocations_s3_object_version = try(each.value.revocations_s3_object_version, null)

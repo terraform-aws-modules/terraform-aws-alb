@@ -67,7 +67,7 @@ module "alb" {
   security_group_ingress_rules = {
     all_https = {
       from_port   = 443
-      to_port     = 445
+      to_port     = 443
       ip_protocol = "tcp"
       description = "HTTPS web traffic"
       cidr_ipv4   = "0.0.0.0/0"

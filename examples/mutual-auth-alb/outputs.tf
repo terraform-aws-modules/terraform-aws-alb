@@ -1,29 +1,9 @@
 ################################################################################
 # Trust Store
 ################################################################################
-output "trust_store_arn_suffix" {
-  description = "ARN suffix for use with cloudwatch metrics"
-  value       = module.trust_store.trust_store_arn_suffix
-}
-
-output "trust_store_arn" {
-  description = "ARN of the trust store"
-  value       = module.trust_store.trust_store_arn
-}
-
-output "trust_store_id" {
-  description = "ARN of the trust store"
-  value       = module.trust_store.trust_store_id
-}
-
-output "trust_store_name" {
-  description = "Name of the trust store"
-  value       = module.trust_store.trust_store_name
-}
-
-output "trust_store_revocation_id" {
-  description = "AWS assigned RevocationId"
-  value       = module.trust_store.revocation_id
+output "trust_store" {
+  description = "Map of trust store attributes"
+  value       = module.trust_store
 }
 
 ################################################################################

@@ -4,12 +4,6 @@ variable "create" {
   default     = true
 }
 
-variable "create_trust_store" {
-  description = "Whether to create a trust store for use with an application load balancer."
-  type        = bool
-  default     = true
-}
-
 variable "ca_certificates_bundle_s3_bucket" {
   description = "S3 bucket name holding the client certificate CA bundle."
   type        = string
@@ -36,12 +30,6 @@ variable "name" {
 
 variable "name_prefix" {
   description = "Creates a unique name beginning with the specified prefix. Conflicts with `name`. Cannot be longer than 6 characters."
-  type        = string
-  default     = null
-}
-
-variable "trust_store_arn" {
-  description = "The trust store arn the revocation is associated with."
   type        = string
   default     = null
 }
