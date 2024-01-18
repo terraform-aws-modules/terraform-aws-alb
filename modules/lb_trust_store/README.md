@@ -1,5 +1,29 @@
 # lb_trust_store
 
+Terraform module which creates an ALB trust store and trust store revocation list resources.
+
+## Usage
+```
+module "trust_store" {
+  source = "terraform-aws-modules/alb/aws//modules/lb_trust_store"
+
+  name                             = "my-trust-store"
+  ca_certificates_bundle_s3_bucket = "my-cert-bucket"
+  ca_certificates_bundle_s3_key    = "ca_cert/RootCA.pem"
+  create_trust_store_revocation    = true
+  revocation_lists = {
+    crl_1 = {
+      revocations_s3_bucket = "my-cert-bucket"
+      revocations_s3_key    = "crl/crl_1.pem"
+    }
+    crl_2 = {
+      revocations_s3_bucket = "my-cert-bucket"
+      revocations_s3_key    = "crl/crl_2.pem"
+    }
+  }
+}
+```
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 

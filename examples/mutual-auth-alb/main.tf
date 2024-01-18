@@ -20,35 +20,20 @@ locals {
   script = <<EOF
 #!/bin/bash
 
-# create directory for csrs/certs/keys/crls
+# create directory for crls
 mkdir cert_files/
 echo 01 > cert_files/cert_serial
 echo 01 > cert_files/crl_number
 touch cert_files/crl_index
 
-# generate ca certs
-openssl genrsa -out cert_files/RootCA.key 4096
-openssl req -new -x509 -days 3650 -key cert_files/RootCA.key -out cert_files/RootCA.pem \
-  -subj "/C=IE/ST=Dublin/L=Dublin/O=terraform-aws-modules/CN=terraform-aws-modules.tf"
-
 # generate crl
-openssl ca -gencrl -keyfile cert_files/RootCA.key -cert cert_files/RootCA.pem -out cert_files/crl.pem -config ca.conf
-
-# generate client certs
-openssl genrsa -out cert_files/my_client.key 2048
-openssl req -new -key cert_files/my_client.key -out cert_files/my_client.csr \
-  -subj "/C=IE/ST=Dublin/L=Dublin/OU=terraform-aws-alb/O=terraform-aws-modules/CN=terraform-aws-modules.tf"
-openssl x509 -req -in cert_files/my_client.csr -extfile ca.conf -extensions v3_req -CA cert_files/RootCA.pem -CAkey cert_files/RootCA.key -set_serial 01 -out cert_files/my_client.pem -days 3650 -sha256
-openssl genrsa -out cert_files/my_client_revoked.key 2048
-openssl req -new -key cert_files/my_client_revoked.key -out cert_files/my_client_revoked.csr \
-  -subj "/C=IE/ST=Dublin/L=Dublin/OU=terraform-aws-alb/O=terraform-aws-modules/CN=terraform-aws-modules.tf"
-openssl x509 -req -in cert_files/my_client_revoked.csr -extfile ca.conf -extensions v3_req -CA cert_files/RootCA.pem -CAkey cert_files/RootCA.key -set_serial 02 -out cert_files/my_client_revoked.pem -days 3650 -sha256
+openssl ca -gencrl -keyfile <(echo "${tls_private_key.root_ca.private_key_pem}") -cert <(echo "${tls_self_signed_cert.root_ca.cert_pem}") -out cert_files/crl.pem -config ca.conf
 
 # revoke a client cert
-openssl ca -revoke cert_files/my_client_revoked.pem -keyfile cert_files/RootCA.key -cert cert_files/RootCA.pem -config ca.conf
+openssl ca -revoke <(echo "${tls_locally_signed_cert.my_client_revoked.cert_pem}") -keyfile <(echo "${tls_private_key.root_ca.private_key_pem}") -cert <(echo "${tls_self_signed_cert.root_ca.cert_pem}") -config ca.conf
 
 # regenerate crl after revoking a cert
-openssl ca -gencrl -keyfile cert_files/RootCA.key -cert cert_files/RootCA.pem -out cert_files/crl.pem -config ca.conf
+openssl ca -gencrl -keyfile <(echo "${tls_private_key.root_ca.private_key_pem}") -cert <(echo "${tls_self_signed_cert.root_ca.cert_pem}") -out cert_files/crl.pem -config ca.conf
 
 EOF
 }
@@ -257,11 +242,15 @@ module "acm" {
   zone_id     = data.aws_route53_zone.this.id
 }
 
-resource "null_resource" "generate_certificates" {
+resource "null_resource" "generate_crl" {
   provisioner "local-exec" {
     command     = local.script
     interpreter = ["/bin/bash", "-c"]
   }
+
+  depends_on = [
+    tls_locally_signed_cert.my_client_revoked
+  ]
 }
 
 module "certificate_bucket" {
@@ -280,11 +269,9 @@ module "ca_cert_object" {
   bucket = module.certificate_bucket.s3_bucket_id
   key    = "ca_cert/RootCA.pem"
 
-  file_source = "${path.module}/cert_files/RootCA.pem"
+  content = tls_self_signed_cert.root_ca.cert_pem
 
   tags = local.tags
-
-  depends_on = [null_resource.generate_certificates]
 }
 
 module "crl_object" {
@@ -297,5 +284,106 @@ module "crl_object" {
 
   tags = local.tags
 
-  depends_on = [null_resource.generate_certificates]
+  depends_on = [null_resource.generate_crl]
+}
+
+################################################################################
+# Client/Server Certificates
+################################################################################
+
+# Root CA
+resource "tls_private_key" "root_ca" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "tls_self_signed_cert" "root_ca" {
+  private_key_pem = tls_private_key.root_ca.private_key_pem
+
+  validity_period_hours = 43800
+
+  allowed_uses = [
+    "digital_signature",
+    "cert_signing",
+    "crl_signing",
+  ]
+
+  is_ca_certificate = true
+  dns_names         = [var.domain_name, "*.${var.domain_name}"]
+
+  subject {
+    country      = "IE"
+    province     = "Dublin"
+    locality     = "Dublin"
+    common_name  = var.domain_name
+    organization = "terraform-aws-modules"
+  }
+}
+
+# client cert
+resource "tls_private_key" "my_client" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "tls_cert_request" "my_client" {
+  private_key_pem = tls_private_key.my_client.private_key_pem
+
+  subject {
+    country      = "IE"
+    province     = "Dublin"
+    locality     = "Dublin"
+    common_name  = "my-client.${var.domain_name}"
+    organization = "terraform-aws-modules"
+  }
+}
+
+resource "tls_locally_signed_cert" "my_client" {
+  cert_request_pem   = tls_cert_request.my_client.cert_request_pem
+  ca_private_key_pem = tls_private_key.root_ca.private_key_pem
+  ca_cert_pem        = tls_self_signed_cert.root_ca.cert_pem
+
+  validity_period_hours = 12
+  set_subject_key_id    = true
+
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth"
+  ]
+}
+
+# client cert to be revoked
+resource "tls_private_key" "my_client_revoked" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "tls_cert_request" "my_client_revoked" {
+  private_key_pem = tls_private_key.my_client_revoked.private_key_pem
+
+  subject {
+    country      = "IE"
+    province     = "Dublin"
+    locality     = "Dublin"
+    common_name  = "my-client-revoked.${var.domain_name}"
+    organization = "terraform-aws-modules"
+  }
+}
+
+resource "tls_locally_signed_cert" "my_client_revoked" {
+  cert_request_pem   = tls_cert_request.my_client_revoked.cert_request_pem
+  ca_private_key_pem = tls_private_key.root_ca.private_key_pem
+  ca_cert_pem        = tls_self_signed_cert.root_ca.cert_pem
+
+  validity_period_hours = 12
+  set_subject_key_id    = true
+
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth"
+  ]
 }
