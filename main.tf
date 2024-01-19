@@ -205,6 +205,15 @@ resource "aws_lb_listener" "this" {
     }
   }
 
+  dynamic "mutual_authentication" {
+    for_each = try([each.value.mutual_authentication], [])
+    content {
+      mode                             = mutual_authentication.value.mode
+      trust_store_arn                  = try(mutual_authentication.value.trust_store_arn, null)
+      ignore_client_certificate_expiry = try(mutual_authentication.value.ignore_client_certificate_expiry, null)
+    }
+  }
+
   load_balancer_arn = aws_lb.this[0].arn
   port              = try(each.value.port, var.default_port)
   protocol          = try(each.value.protocol, var.default_protocol)
