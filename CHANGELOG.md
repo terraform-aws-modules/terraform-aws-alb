@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.4.1...v9.5.0) (2024-01-19)
+
+
+### Features
+
+* Added support for ALB trust store ([#344](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/344)) ([9f03c7a](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/9f03c7ade3de494363f9d5b3fb17932b53d3f426))
+
 ### [9.4.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.4.0...v9.4.1) (2024-01-12)
 
 
