@@ -83,8 +83,6 @@ module "alb" {
       ssl_policy      = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
       certificate_arn = module.acm.acm_certificate_arn
       mutual_authentication = {
-        # There's an issue with mode = "passthrough"
-        # https://github.com/hashicorp/terraform-provider-aws/issues/34861
         mode            = "verify"
         trust_store_arn = module.trust_store.trust_store_arn
       }
