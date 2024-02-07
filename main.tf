@@ -478,6 +478,7 @@ resource "aws_lb_target_group" "this" {
   ip_address_type                    = try(each.value.ip_address_type, null)
   lambda_multi_value_headers_enabled = try(each.value.lambda_multi_value_headers_enabled, null)
   load_balancing_algorithm_type      = try(each.value.load_balancing_algorithm_type, null)
+  load_balancing_anomaly_mitigation  = try(each.value.load_balancing_anomaly_mitigation, null)
   load_balancing_cross_zone_enabled  = try(each.value.load_balancing_cross_zone_enabled, null)
   name                               = try(each.value.name, null)
   name_prefix                        = try(each.value.name_prefix, null)

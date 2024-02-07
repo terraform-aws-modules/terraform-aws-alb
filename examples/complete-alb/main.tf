@@ -359,6 +359,8 @@ module "alb" {
       port                              = 80
       target_type                       = "instance"
       deregistration_delay              = 10
+      load_balancing_algorithm_type     = "weighted_random"
+      load_balancing_anomaly_mitigation = "on"
       load_balancing_cross_zone_enabled = false
 
       health_check = {
