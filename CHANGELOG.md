@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.6.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.5.0...v9.6.0) (2024-02-07)
+
+
+### Features
+
+* Add support for `load_balancing_anomaly_mitigation` ([#349](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/349)) ([1e3d5fb](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/1e3d5fb89c419c9b56c4728e935278e79b4527cd))
+
 ## [9.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.4.1...v9.5.0) (2024-01-19)
 
 
