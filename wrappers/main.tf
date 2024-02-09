@@ -4,6 +4,7 @@ module "wrapper" {
   for_each = var.items
 
   access_logs                                                  = try(each.value.access_logs, var.defaults.access_logs, {})
+  additional_target_group_attachments                          = try(each.value.additional_target_group_attachments, var.defaults.additional_target_group_attachments, {})
   associate_web_acl                                            = try(each.value.associate_web_acl, var.defaults.associate_web_acl, false)
   connection_logs                                              = try(each.value.connection_logs, var.defaults.connection_logs, {})
   create                                                       = try(each.value.create, var.defaults.create, true)

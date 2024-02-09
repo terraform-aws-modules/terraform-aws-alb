@@ -398,6 +398,15 @@ module "alb" {
     }
   }
 
+  additional_target_group_attachments = {
+    ex-instance-other = {
+      target_group = "ex-instance"
+      target_type  = "instance"
+      target_id    = aws_instance.other.id
+      port         = "80"
+    }
+  }
+
   # Route53 Record(s)
   route53_records = {
     A = {
@@ -525,6 +534,12 @@ data "aws_ssm_parameter" "al2" {
 }
 
 resource "aws_instance" "this" {
+  ami           = data.aws_ssm_parameter.al2.value
+  instance_type = "t3.nano"
+  subnet_id     = element(module.vpc.private_subnets, 0)
+}
+
+resource "aws_instance" "other" {
   ami           = data.aws_ssm_parameter.al2.value
   instance_type = "t3.nano"
   subnet_id     = element(module.vpc.private_subnets, 0)
