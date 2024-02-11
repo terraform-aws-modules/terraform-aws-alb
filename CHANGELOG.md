@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.7.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.6.0...v9.7.0) (2024-02-11)
+
+
+### Features
+
+* Additional target group attachments ([#351](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/351)) ([b53ce70](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/b53ce700f487884c8add1618993f3843aa458c10))
+
 ## [9.6.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.5.0...v9.6.0) (2024-02-07)
 
 
