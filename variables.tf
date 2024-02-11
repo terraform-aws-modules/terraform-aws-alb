@@ -196,6 +196,12 @@ variable "target_groups" {
   default     = {}
 }
 
+variable "additional_target_group_attachments" {
+  description = "Map of additional target group attachments to create. Use `target_group_key` to attach to the target group created in `target_groups`"
+  type        = any
+  default     = {}
+}
+
 ################################################################################
 # Security Group
 ################################################################################
