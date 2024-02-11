@@ -400,10 +400,10 @@ module "alb" {
 
   additional_target_group_attachments = {
     ex-instance-other = {
-      target_group = "ex-instance"
-      target_type  = "instance"
-      target_id    = aws_instance.other.id
-      port         = "80"
+      target_group_key = "ex-instance"
+      target_type      = "instance"
+      target_id        = aws_instance.other.id
+      port             = "80"
     }
   }
 

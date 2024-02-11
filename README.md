@@ -371,7 +371,7 @@ No modules.
 | [aws_lb_listener_certificate.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_certificate) | resource |
 | [aws_lb_listener_rule.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_rule) | resource |
 | [aws_lb_target_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) | resource |
-| [aws_lb_target_group_attachment.additional_target_group_attachments](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment) | resource |
+| [aws_lb_target_group_attachment.additional](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment) | resource |
 | [aws_lb_target_group_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment) | resource |
 | [aws_route53_record.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_security_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
@@ -385,7 +385,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_access_logs"></a> [access\_logs](#input\_access\_logs) | Map containing access logging configuration for load balancer | `map(string)` | `{}` | no |
-| <a name="input_additional_target_group_attachments"></a> [additional\_target\_group\_attachments](#input\_additional\_target\_group\_attachments) | Map of additional target group attchments to create | `any` | `{}` | no |
+| <a name="input_additional_target_group_attachments"></a> [additional\_target\_group\_attachments](#input\_additional\_target\_group\_attachments) | Map of additional target group attachments to create. Use `target_group_key` to attach to the target group created in `target_groups` | `any` | `{}` | no |
 | <a name="input_associate_web_acl"></a> [associate\_web\_acl](#input\_associate\_web\_acl) | Indicates whether a Web Application Firewall (WAF) ACL should be associated with the load balancer | `bool` | `false` | no |
 | <a name="input_connection_logs"></a> [connection\_logs](#input\_connection\_logs) | Map containing access logging configuration for load balancer | `map(string)` | `{}` | no |
 | <a name="input_create"></a> [create](#input\_create) | Controls if resources should be created (affects nearly all resources) | `bool` | `true` | no |

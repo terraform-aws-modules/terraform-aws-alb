@@ -18,9 +18,9 @@ If you found a bug, please open an issue in this repository.
     - aws_lb_listener.frontend_http_tcp_no_logs
     - aws_lb_listener.frontend_https_no_logs
     - aws_lb_listener_certificate.https_listener_no_logs
-  
+
    If you've been using ALB without access logs enabled then you need to run `terraform state mv` to rename resources to new names:
-  
+
     - aws_lb.this
     - aws_lb_target_group.main
     - aws_lb_listener.frontend_http_tcp
@@ -28,7 +28,7 @@ If you found a bug, please open an issue in this repository.
     - aws_lb_listener_certificate.https_listener
 
    For example, this command will rename ALB resource: `terraform state mv aws_lb.application_no_logs aws_lb.this`
-  
+
 2. Removed variable `target_groups_count`, `http_tcp_listeners_count`, `extra_ssl_certs_count`, `http_tcp_listeners_count`.
 
 3. Removed variable `target_groups_defaults`. Instead, all `health_check` and `stickiness` settings should be implicit for each target group.
