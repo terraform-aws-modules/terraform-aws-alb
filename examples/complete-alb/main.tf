@@ -248,6 +248,9 @@ module "alb" {
             query_string = {
               key   = "weighted"
               value = "true"
+            },
+            path_pattern = {
+              values = ["/some/path"]
             }
           }]
         }

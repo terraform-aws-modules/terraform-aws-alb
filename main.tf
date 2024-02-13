@@ -360,7 +360,7 @@ resource "aws_lb_listener_rule" "this" {
   }
 
   dynamic "condition" {
-    for_each = try(each.value.conditions, [])
+    for_each = [for condition in each.value.conditions : condition if contains(keys(condition), "host_header")]
 
     content {
       dynamic "host_header" {
@@ -370,7 +370,13 @@ resource "aws_lb_listener_rule" "this" {
           values = host_header.value.values
         }
       }
+    }
+  }
 
+  dynamic "condition" {
+    for_each = [for condition in each.value.conditions : condition if contains(keys(condition), "http_header")]
+
+    content {
       dynamic "http_header" {
         for_each = try([condition.value.http_header], [])
 
@@ -379,7 +385,13 @@ resource "aws_lb_listener_rule" "this" {
           values           = http_header.value.values
         }
       }
+    }
+  }
 
+  dynamic "condition" {
+    for_each = [for condition in each.value.conditions : condition if contains(keys(condition), "http_request_method")]
+
+    content {
       dynamic "http_request_method" {
         for_each = try([condition.value.http_request_method], [])
 
@@ -387,7 +399,13 @@ resource "aws_lb_listener_rule" "this" {
           values = http_request_method.value.values
         }
       }
+    }
+  }
 
+  dynamic "condition" {
+    for_each = [for condition in each.value.conditions : condition if contains(keys(condition), "path_pattern")]
+
+    content {
       dynamic "path_pattern" {
         for_each = try([condition.value.path_pattern], [])
 
@@ -395,7 +413,13 @@ resource "aws_lb_listener_rule" "this" {
           values = path_pattern.value.values
         }
       }
+    }
+  }
 
+  dynamic "condition" {
+    for_each = [for condition in each.value.conditions : condition if contains(keys(condition), "query_string")]
+
+    content {
       dynamic "query_string" {
         for_each = try([condition.value.query_string], [])
 
@@ -404,7 +428,13 @@ resource "aws_lb_listener_rule" "this" {
           value = query_string.value.value
         }
       }
+    }
+  }
 
+  dynamic "condition" {
+    for_each = [for condition in each.value.conditions : condition if contains(keys(condition), "source_ip")]
+
+    content {
       dynamic "source_ip" {
         for_each = try([condition.value.source_ip], [])
 
