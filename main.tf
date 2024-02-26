@@ -608,7 +608,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "this" {
-  for_each = { for k, v in var.security_group_egress_rules : k => v if local.create_security_group }
+  for_each = var.create && var.create_route53_records ? var.route53_records : {}
 
   # Required
   security_group_id = aws_security_group.this[0].id

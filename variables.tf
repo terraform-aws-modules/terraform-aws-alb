@@ -258,6 +258,12 @@ variable "security_group_tags" {
 # Route53 Record(s)
 ################################################################################
 
+variable "create_route53_records" {
+  description = "Determines whether or not to create Route53 'A' and 'AAAA' records for the loadbalancer."
+  type        = bool
+  default     = true
+}
+
 variable "route53_records" {
   description = "Map of Route53 records to create. Each record map should contain `zone_id`, `name`, and `type`"
   type        = any
