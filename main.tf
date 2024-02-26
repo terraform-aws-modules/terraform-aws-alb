@@ -650,7 +650,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
 ################################################################################
 
 resource "aws_route53_record" "this" {
-  for_each = { for k, v in var.route53_records : k => v if var.create }
+  for_each = var.create && var.create_route53_records ? var.route53_records : {}
 
   zone_id = each.value.zone_id
   name    = try(each.value.name, each.key)
