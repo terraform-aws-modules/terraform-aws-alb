@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.8.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.7.1...v9.8.0) (2024-03-08)
+
+
+### Features
+
+* Allow multiple listener rule condition blocks ([#359](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/359)) ([8132110](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/8132110bef38fb91a0fa38ef3b9b550cc5cdb3f4))
+
 ## [9.7.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.7.0...v9.7.1) (2024-03-06)
 
 
