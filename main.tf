@@ -31,6 +31,7 @@ resource "aws_lb" "this" {
     }
   }
 
+  client_keep_alive                                            = var.client_keep_alive
   customer_owned_ipv4_pool                                     = var.customer_owned_ipv4_pool
   desync_mitigation_mode                                       = var.desync_mitigation_mode
   dns_record_client_routing_policy                             = var.dns_record_client_routing_policy

@@ -67,6 +67,8 @@ module "alb" {
     prefix  = "connection-logs"
   }
 
+  client_keep_alive = 7200
+
   listeners = {
     ex-http-https-redirect = {
       port     = 80

@@ -26,6 +26,12 @@ variable "connection_logs" {
   default     = {}
 }
 
+variable "client_keep_alive" {
+  description = "Client keep alive value in seconds. The valid range is 60-604800 seconds. The default is 3600 seconds."
+  type        = number
+  default     = null
+}
+
 variable "customer_owned_ipv4_pool" {
   description = "The ID of the customer owned ipv4 pool to use for this load balancer"
   type        = string
