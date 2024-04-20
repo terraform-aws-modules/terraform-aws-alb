@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.9.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.8.0...v9.9.0) (2024-04-20)
+
+
+### Features
+
+* Add support for `client_keep_alive` ([#361](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/361)) ([66863e0](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/66863e029bf6078fe0e8f7169497ca8203ef3821))
+
 ## [9.8.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.7.1...v9.8.0) (2024-03-08)
 
 
