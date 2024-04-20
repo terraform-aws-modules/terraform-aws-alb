@@ -6,6 +6,7 @@ module "wrapper" {
   access_logs                                                  = try(each.value.access_logs, var.defaults.access_logs, {})
   additional_target_group_attachments                          = try(each.value.additional_target_group_attachments, var.defaults.additional_target_group_attachments, {})
   associate_web_acl                                            = try(each.value.associate_web_acl, var.defaults.associate_web_acl, false)
+  client_keep_alive                                            = try(each.value.client_keep_alive, var.defaults.client_keep_alive, null)
   connection_logs                                              = try(each.value.connection_logs, var.defaults.connection_logs, {})
   create                                                       = try(each.value.create, var.defaults.create, true)
   create_security_group                                        = try(each.value.create_security_group, var.defaults.create_security_group, true)
