@@ -313,7 +313,7 @@ module "nlb" {
       protocol    = "TCP"
       port        = 80
       target_type = "ip"
-      target_id   = "1.1.1.1"
+      target_id   = "10.0.47.1"
     }
   }
 
