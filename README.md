@@ -75,6 +75,7 @@ module "alb" {
       protocol         = "HTTP"
       port             = 80
       target_type      = "instance"
+      target_id        = "i-0f6d38a07d50d080f"
     }
   }
 
@@ -223,6 +224,7 @@ module "alb" {
       protocol    = "HTTPS"
       port        = 443
       target_type = "instance"
+      target_id   = "i-0f6d38a07d50d080f"
     }
   }
 }
@@ -311,6 +313,7 @@ module "nlb" {
       protocol    = "TCP"
       port        = 80
       target_type = "ip"
+      target_id   = "10.0.47.1"
     }
   }
 
