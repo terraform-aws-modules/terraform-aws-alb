@@ -590,6 +590,7 @@ resource "aws_lb_listener" "frontend_http_tcp" {
         }
       }
     }
+  }
 
   tags = merge(
     var.tags,
@@ -696,7 +697,7 @@ resource "aws_lb_listener" "frontend_https" {
     var.https_listeners_tags,
     lookup(var.https_listeners[count.index], "tags", {}),
   )
-  
+
   lifecycle {
       ignore_changes = [default_action]
     }
