@@ -540,6 +540,31 @@ resource "aws_lb_target_group" "this" {
     }
   }
 
+  dynamic "target_group_health" {
+    for_each = try([each.value.target_group_health], [])
+
+    content {
+
+      dynamic "dns_failover" {
+        for_each = try([target_group_health.value.dns_failover], [])
+
+        content {
+          minimum_healthy_targets_count      = try(dns_failover.value.minimum_healthy_targets_count, null)
+          minimum_healthy_targets_percentage = try(dns_failover.value.minimum_healthy_targets_percentage, null)
+        }
+      }
+
+      dynamic "unhealthy_state_routing" {
+        for_each = try([target_group_health.value.unhealthy_state_routing], [])
+
+        content {
+          minimum_healthy_targets_count      = try(unhealthy_state_routing.value.minimum_healthy_targets_count, null)
+          minimum_healthy_targets_percentage = try(unhealthy_state_routing.value.minimum_healthy_targets_percentage, null)
+        }
+      }
+    }
+  }
+
   dynamic "target_health_state" {
     for_each = try([each.value.target_health_state], [])
     content {
