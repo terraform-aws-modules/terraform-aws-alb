@@ -370,11 +370,9 @@ module "alb" {
 
       target_group_health = {
         dns_failover = {
-          minimum_healthy_targets_count      = 1
-          minimum_healthy_targets_percentage = 50
+          minimum_healthy_targets_count = 2
         }
         unhealthy_state_routing = {
-          minimum_healthy_targets_count      = 1
           minimum_healthy_targets_percentage = 50
         }
       }
