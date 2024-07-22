@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.10.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.9.0...v9.10.0) (2024-07-22)
+
+
+### Features
+
+* Add `target_group_health` block ([#376](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/376)) ([1e62250](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/1e62250691d2b100737b417fbdd70bd6cdfaa1a3))
+
 ## [9.9.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.8.0...v9.9.0) (2024-04-20)
 
 
