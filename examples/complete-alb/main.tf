@@ -368,6 +368,15 @@ module "alb" {
       load_balancing_anomaly_mitigation = "on"
       load_balancing_cross_zone_enabled = false
 
+      target_group_health = {
+        dns_failover = {
+          minimum_healthy_targets_count = 2
+        }
+        unhealthy_state_routing = {
+          minimum_healthy_targets_percentage = 50
+        }
+      }
+
       health_check = {
         enabled             = true
         interval            = 30
@@ -568,8 +577,14 @@ resource "aws_cognito_user_pool_client" "this" {
   allowed_oauth_flows_user_pool_client = true
 }
 
+resource "random_string" "this" {
+  length  = 5
+  upper   = false
+  special = false
+}
+
 resource "aws_cognito_user_pool_domain" "this" {
-  domain       = local.name
+  domain       = "${local.name}-${random_string.this.result}"
   user_pool_id = aws_cognito_user_pool.this.id
 }
 
