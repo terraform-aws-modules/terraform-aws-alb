@@ -162,6 +162,7 @@ module "nlb" {
       target_id   = aws_instance.this.id
       target_health_state = {
         enable_unhealthy_connection_termination = false
+        unhealthy_draining_interval             = 600
       }
     }
   }
