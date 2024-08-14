@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.11.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.10.0...v9.11.0) (2024-08-14)
+
+
+### Features
+
+* Support `target_health_state.unhealthy_draining_interval` ([#378](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/378)) ([04b7c93](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/04b7c9301578d0aa3497cf534f7b7e395c37b152))
+
 ## [9.10.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.9.0...v9.10.0) (2024-07-22)
 
 
