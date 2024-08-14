@@ -569,6 +569,7 @@ resource "aws_lb_target_group" "this" {
     for_each = try([each.value.target_health_state], [])
     content {
       enable_unhealthy_connection_termination = try(target_health_state.value.enable_unhealthy_connection_termination, true)
+      unhealthy_draining_interval             = try(target_health_state.value.unhealthy_draining_interval, null)
     }
   }
 
