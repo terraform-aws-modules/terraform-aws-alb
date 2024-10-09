@@ -422,7 +422,7 @@ resource "aws_lb_listener_rule" "this" {
 
     content {
       dynamic "query_string" {
-        for_each = try([condition.value.query_string], [])
+        for_each = try(flatten([condition.value.query_string]), [])
 
         content {
           key   = try(query_string.value.key, null)
