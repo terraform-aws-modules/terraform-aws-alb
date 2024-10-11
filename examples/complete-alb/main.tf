@@ -137,10 +137,14 @@ module "alb" {
           }]
 
           conditions = [{
-            query_string = {
+            query_string = [{
               key   = "video"
               value = "random"
-            }
+              },
+              {
+                key   = "image"
+                value = "next"
+            }]
           }]
         }
       }
