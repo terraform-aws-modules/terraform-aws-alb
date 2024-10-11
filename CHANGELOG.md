@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.11.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.11.0...v9.11.1) (2024-10-11)
+
+
+### Bug Fixes
+
+* Update CI workflow versions to latest ([#384](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/384)) ([b2ece6b](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/b2ece6bfff96d71132dba6310b8d55752084e0b1))
+
 ## [9.11.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.10.0...v9.11.0) (2024-08-14)
 
 
