@@ -24,7 +24,7 @@ module "trust_store" {
 }
 ```
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -72,4 +72,4 @@ No modules.
 | <a name="output_trust_store_arn_suffix"></a> [trust\_store\_arn\_suffix](#output\_trust\_store\_arn\_suffix) | ARN suffix for use with cloudwatch metrics. |
 | <a name="output_trust_store_id"></a> [trust\_store\_id](#output\_trust\_store\_id) | ARN of the trust store (matches `arn`). |
 | <a name="output_trust_store_name"></a> [trust\_store\_name](#output\_trust\_store\_name) | Name of the trust store. |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
