@@ -42,6 +42,7 @@ resource "aws_lb" "this" {
   enable_tls_version_and_cipher_suite_headers                  = var.enable_tls_version_and_cipher_suite_headers
   enable_waf_fail_open                                         = var.enable_waf_fail_open
   enable_xff_client_port                                       = var.enable_xff_client_port
+  enable_zonal_shift                                           = var.enable_zonal_shift
   enforce_security_group_inbound_rules_on_private_link_traffic = var.enforce_security_group_inbound_rules_on_private_link_traffic
   idle_timeout                                                 = var.idle_timeout
   internal                                                     = var.internal
@@ -215,11 +216,12 @@ resource "aws_lb_listener" "this" {
     }
   }
 
-  load_balancer_arn = aws_lb.this[0].arn
-  port              = try(each.value.port, var.default_port)
-  protocol          = try(each.value.protocol, var.default_protocol)
-  ssl_policy        = contains(["HTTPS", "TLS"], try(each.value.protocol, var.default_protocol)) ? try(each.value.ssl_policy, "ELBSecurityPolicy-TLS13-1-2-Res-2021-06") : try(each.value.ssl_policy, null)
-  tags              = merge(local.tags, try(each.value.tags, {}))
+  load_balancer_arn        = aws_lb.this[0].arn
+  port                     = try(each.value.port, var.default_port)
+  protocol                 = try(each.value.protocol, var.default_protocol)
+  ssl_policy               = contains(["HTTPS", "TLS"], try(each.value.protocol, var.default_protocol)) ? try(each.value.ssl_policy, "ELBSecurityPolicy-TLS13-1-2-Res-2021-06") : try(each.value.ssl_policy, null)
+  tcp_idle_timeout_seconds = try(each.value.tcp_idle_timeout_seconds, null)
+  tags                     = merge(local.tags, try(each.value.tags, {}))
 }
 
 ################################################################################

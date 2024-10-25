@@ -92,6 +92,12 @@ variable "enable_xff_client_port" {
   default     = null
 }
 
+variable "enable_zonal_shift" {
+  description = "Whether zonal shift is enabled"
+  type        = bool
+  default     = null
+}
+
 variable "idle_timeout" {
   description = "The time in seconds that the connection is allowed to be idle. Only valid for Load Balancers of type `application`. Default: `60`"
   type        = number
