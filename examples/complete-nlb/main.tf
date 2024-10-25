@@ -92,8 +92,9 @@ module "nlb" {
     }
 
     ex-three = {
-      port     = 83
-      protocol = "TCP"
+      port                     = 83
+      protocol                 = "TCP"
+      tcp_idle_timeout_seconds = 60
       forward = {
         target_group_key = "ex-target-three"
       }
