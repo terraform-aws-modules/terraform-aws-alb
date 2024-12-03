@@ -92,7 +92,7 @@ resource "aws_lb_listener" "this" {
   certificate_arn = try(each.value.certificate_arn, null)
 
   dynamic "default_action" {
-    for_each = try([each.value.authenticate_cognito], [])
+    for_each = can(coalesce(each.value.authenticate_cognito)) ? [each.value.authenticate_cognito] : []
 
     content {
       authenticate_cognito {
@@ -112,7 +112,7 @@ resource "aws_lb_listener" "this" {
   }
 
   dynamic "default_action" {
-    for_each = try([each.value.authenticate_oidc], [])
+    for_each = can(coalesce(each.value.authentication_oidc)) ? [each.value.authenticate_oidc] : []
 
     content {
       authenticate_oidc {
@@ -135,7 +135,7 @@ resource "aws_lb_listener" "this" {
   }
 
   dynamic "default_action" {
-    for_each = try([each.value.fixed_response], [])
+    for_each = can(coalesce(each.value.fixed_response)) ? [each.value.fixed_response] : []
 
     content {
       fixed_response {
@@ -150,7 +150,7 @@ resource "aws_lb_listener" "this" {
   }
 
   dynamic "default_action" {
-    for_each = try([each.value.forward], [])
+    for_each = can(coalesce(each.value.forward)) ? [each.value.forward] : []
 
     content {
       order            = try(default_action.value.order, null)
@@ -160,12 +160,12 @@ resource "aws_lb_listener" "this" {
   }
 
   dynamic "default_action" {
-    for_each = try([each.value.weighted_forward], [])
+    for_each = can(coalesce(each.value.weighted_forward)) ? [each.value.weighted_forward] : []
 
     content {
       forward {
         dynamic "target_group" {
-          for_each = try(default_action.value.target_groups, [])
+          for_each = can(coalesce(default_action.value.target_groups)) ? default_action.value.target_groups : []
 
           content {
             arn    = try(target_group.value.arn, aws_lb_target_group.this[target_group.value.target_group_key].arn, null)
@@ -174,7 +174,7 @@ resource "aws_lb_listener" "this" {
         }
 
         dynamic "stickiness" {
-          for_each = try([default_action.value.stickiness], [])
+          for_each = can(coalesce(default_action.value.stickiness)) ? [default_action.value.stickiness] : []
 
           content {
             duration = try(stickiness.value.duration, 60)
@@ -189,7 +189,7 @@ resource "aws_lb_listener" "this" {
   }
 
   dynamic "default_action" {
-    for_each = try([each.value.redirect], [])
+    for_each = can(coalesce(each.value.redirect)) ? [each.value.redirect] : []
 
     content {
       order = try(default_action.value.order, null)
@@ -208,7 +208,7 @@ resource "aws_lb_listener" "this" {
   }
 
   dynamic "mutual_authentication" {
-    for_each = try([each.value.mutual_authentication], [])
+    for_each = can(coalesce(each.value.mutual_authentication)) ? [each.value.mutual_authentication] : []
     content {
       mode                             = mutual_authentication.value.mode
       trust_store_arn                  = try(mutual_authentication.value.trust_store_arn, null)
@@ -367,7 +367,7 @@ resource "aws_lb_listener_rule" "this" {
 
     content {
       dynamic "host_header" {
-        for_each = try([condition.value.host_header], [])
+        for_each = can(coalesce(condition.value.host_header)) ? [condition.value.host_header] : []
 
         content {
           values = host_header.value.values
@@ -381,7 +381,7 @@ resource "aws_lb_listener_rule" "this" {
 
     content {
       dynamic "http_header" {
-        for_each = try([condition.value.http_header], [])
+        for_each = can(coalesce(condition.value.http_header)) ? [condition.value.http_header] : []
 
         content {
           http_header_name = http_header.value.http_header_name
@@ -396,7 +396,7 @@ resource "aws_lb_listener_rule" "this" {
 
     content {
       dynamic "http_request_method" {
-        for_each = try([condition.value.http_request_method], [])
+        for_each = can(coalesce(condition.value.http_request_method)) ? [condition.value.http_request_method] : []
 
         content {
           values = http_request_method.value.values
@@ -410,7 +410,7 @@ resource "aws_lb_listener_rule" "this" {
 
     content {
       dynamic "path_pattern" {
-        for_each = try([condition.value.path_pattern], [])
+        for_each = can(coalesce(condition.value.path_pattern)) ? [condition.value.path_pattern] : []
 
         content {
           values = path_pattern.value.values
@@ -424,7 +424,7 @@ resource "aws_lb_listener_rule" "this" {
 
     content {
       dynamic "query_string" {
-        for_each = try(flatten([condition.value.query_string]), [])
+        for_each = can(coalesce(condition.value.query_string)) ? [condition.value.query_string] : []
 
         content {
           key   = try(query_string.value.key, null)
@@ -439,7 +439,7 @@ resource "aws_lb_listener_rule" "this" {
 
     content {
       dynamic "source_ip" {
-        for_each = try([condition.value.source_ip], [])
+        for_each = can(coalesce(condition.value.source_ip)) ? [condition.value.source_ip] : []
 
         content {
           values = source_ip.value.values
@@ -493,7 +493,7 @@ resource "aws_lb_target_group" "this" {
   deregistration_delay   = try(each.value.deregistration_delay, null)
 
   dynamic "health_check" {
-    for_each = try([each.value.health_check], [])
+    for_each = can(coalesce(each.value.health_check)) ? [each.value.health_check] : []
 
     content {
       enabled             = try(health_check.value.enabled, null)
@@ -523,7 +523,7 @@ resource "aws_lb_target_group" "this" {
   slow_start                         = try(each.value.slow_start, null)
 
   dynamic "stickiness" {
-    for_each = try([each.value.stickiness], [])
+    for_each = can(coalesce(each.value.stickiness)) ? [each.value.stickiness] : []
 
     content {
       cookie_duration = try(stickiness.value.cookie_duration, null)
@@ -534,7 +534,7 @@ resource "aws_lb_target_group" "this" {
   }
 
   dynamic "target_failover" {
-    for_each = try(each.value.target_failover, [])
+    for_each = can(coalesce(each.value.target_failover)) ? each.value.target_failover : []
 
     content {
       on_deregistration = target_failover.value.on_deregistration
@@ -543,12 +543,11 @@ resource "aws_lb_target_group" "this" {
   }
 
   dynamic "target_group_health" {
-    for_each = try([each.value.target_group_health], [])
+    for_each = can(coalesce(each.value.target_group_health)) ? [each.value.target_group_health] : []
 
     content {
-
       dynamic "dns_failover" {
-        for_each = try([target_group_health.value.dns_failover], [])
+        for_each = can(coalesce(target_group_health.value.dns_failover)) ? [target_group_health.value.dns_failover] : []
 
         content {
           minimum_healthy_targets_count      = try(dns_failover.value.minimum_healthy_targets_count, null)
@@ -557,7 +556,7 @@ resource "aws_lb_target_group" "this" {
       }
 
       dynamic "unhealthy_state_routing" {
-        for_each = try([target_group_health.value.unhealthy_state_routing], [])
+        for_each = can(coalesce(target_group_health.value.unhealthy_state_routing)) ? [target_group_health.value.unhealthy_state_routing] : []
 
         content {
           minimum_healthy_targets_count      = try(unhealthy_state_routing.value.minimum_healthy_targets_count, null)
@@ -568,7 +567,7 @@ resource "aws_lb_target_group" "this" {
   }
 
   dynamic "target_health_state" {
-    for_each = try([each.value.target_health_state], [])
+    for_each = can(coalesce(each.value.target_health_state)) ? [each.value.target_health_state] : []
     content {
       enable_unhealthy_connection_termination = try(target_health_state.value.enable_unhealthy_connection_termination, true)
       unhealthy_draining_interval             = try(target_health_state.value.unhealthy_draining_interval, null)
