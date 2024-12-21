@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.13.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.12.0...v9.13.0) (2024-12-21)
+
+
+### Features
+
+* Support `aws_lb_listener.mutual_authentication.advertise_trust_store_ca_names` ([#395](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/395)) ([eba2647](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/eba2647f271b53f0a1f2f5ca6aa70b39254d53d0))
+
 ## [9.12.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.11.2...v9.12.0) (2024-10-25)
 
 
