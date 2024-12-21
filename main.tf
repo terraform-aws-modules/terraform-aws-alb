@@ -213,6 +213,7 @@ resource "aws_lb_listener" "this" {
       mode                             = mutual_authentication.value.mode
       trust_store_arn                  = try(mutual_authentication.value.trust_store_arn, null)
       ignore_client_certificate_expiry = try(mutual_authentication.value.ignore_client_certificate_expiry, null)
+      advertise_trust_store_ca_names   = try(mutual_authentication.value.advertise_trust_store_ca_names, null)
     }
   }
 
