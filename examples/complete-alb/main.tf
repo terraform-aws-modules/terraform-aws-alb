@@ -359,6 +359,31 @@ module "alb" {
         target_group_key = "ex-instance"
       }
     }
+
+    ex-response-headers = {
+      port            = "443"
+      protocol        = "HTTPS"
+      ssl_policy      = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
+      certificate_arn = module.acm.acm_certificate_arn
+
+      fixed_response = {
+        content_type = "text/plain"
+        message_body = "Fixed message"
+        status_code  = "200"
+      }
+
+      routing_http_response_server_enabled                                = false
+      routing_http_response_strict_transport_security_header_value        = "max-age=31536000; includeSubDomains; preload"
+      routing_http_response_access_control_allow_origin_header_value      = "https://example.com"
+      routing_http_response_access_control_allow_methods_header_value     = "TRACE,GET"
+      routing_http_response_access_control_allow_headers_header_value     = "Accept-Language,Content-Language"
+      routing_http_response_access_control_allow_credentials_header_value = "true"
+      routing_http_response_access_control_expose_headers_header_value    = "Cache-Control"
+      routing_http_response_access_control_max_age_header_value           = 86400
+      routing_http_response_content_security_policy_header_value          = "*"
+      routing_http_response_x_content_type_options_header_value           = "nosniff"
+      routing_http_response_x_frame_options_header_value                  = "SAMEORIGIN"
+    }
   }
 
   target_groups = {
