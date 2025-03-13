@@ -217,7 +217,7 @@ resource "aws_lb_listener" "this" {
     }
   }
 
-  routing_http_response_server_enabled                                = try(each.value.routing_http_response_server_enabled, false)
+  routing_http_response_server_enabled                                = try(each.value.routing_http_response_server_enabled, null)
   routing_http_response_strict_transport_security_header_value        = try(each.value.routing_http_response_strict_transport_security_header_value, null)
   routing_http_response_access_control_allow_origin_header_value      = try(each.value.routing_http_response_access_control_allow_origin_header_value, null)
   routing_http_response_access_control_allow_methods_header_value     = try(each.value.routing_http_response_access_control_allow_methods_header_value, null)
@@ -235,7 +235,6 @@ resource "aws_lb_listener" "this" {
   ssl_policy               = contains(["HTTPS", "TLS"], try(each.value.protocol, var.default_protocol)) ? try(each.value.ssl_policy, "ELBSecurityPolicy-TLS13-1-2-Res-2021-06") : try(each.value.ssl_policy, null)
   tcp_idle_timeout_seconds = try(each.value.tcp_idle_timeout_seconds, null)
   tags                     = merge(local.tags, try(each.value.tags, {}))
-
 }
 
 ################################################################################
