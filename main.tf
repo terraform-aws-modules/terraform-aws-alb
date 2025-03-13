@@ -217,6 +217,18 @@ resource "aws_lb_listener" "this" {
     }
   }
 
+  routing_http_response_server_enabled                                = try(each.value.routing_http_response_server_enabled, null)
+  routing_http_response_strict_transport_security_header_value        = try(each.value.routing_http_response_strict_transport_security_header_value, null)
+  routing_http_response_access_control_allow_origin_header_value      = try(each.value.routing_http_response_access_control_allow_origin_header_value, null)
+  routing_http_response_access_control_allow_methods_header_value     = try(each.value.routing_http_response_access_control_allow_methods_header_value, null)
+  routing_http_response_access_control_allow_headers_header_value     = try(each.value.routing_http_response_access_control_allow_headers_header_value, null)
+  routing_http_response_access_control_allow_credentials_header_value = try(each.value.routing_http_response_access_control_allow_credentials_header_value, null)
+  routing_http_response_access_control_expose_headers_header_value    = try(each.value.routing_http_response_access_control_expose_headers_header_value, null)
+  routing_http_response_access_control_max_age_header_value           = try(each.value.routing_http_response_access_control_max_age_header_value, null)
+  routing_http_response_content_security_policy_header_value          = try(each.value.routing_http_response_content_security_policy_header_value, null)
+  routing_http_response_x_content_type_options_header_value           = try(each.value.routing_http_response_x_content_type_options_header_value, null)
+  routing_http_response_x_frame_options_header_value                  = try(each.value.routing_http_response_x_frame_options_header_value, null)
+
   load_balancer_arn        = aws_lb.this[0].arn
   port                     = try(each.value.port, var.default_port)
   protocol                 = try(each.value.protocol, var.default_protocol)
