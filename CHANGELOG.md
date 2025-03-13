@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.14.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.13.0...v9.14.0) (2025-03-13)
+
+
+### Features
+
+* Support http respond headers for  ALB listeners ([#398](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/398)) ([9cf65cc](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/9cf65ccf2a1cf35bbc87e4670508c91f8b137b1d))
+
 ## [9.13.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.12.0...v9.13.0) (2024-12-21)
 
 
