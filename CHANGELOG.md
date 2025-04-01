@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.15.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.14.0...v9.15.0) (2025-04-01)
+
+
+### Features
+
+* Support HTTPS request headers renaming ([#402](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/402)) ([0cb7aff](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/0cb7affd6abaa72c0bc54c757199749b95bd7e8f))
+
 ## [9.14.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.13.0...v9.14.0) (2025-03-13)
 
 
