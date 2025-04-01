@@ -229,6 +229,15 @@ resource "aws_lb_listener" "this" {
   routing_http_response_x_content_type_options_header_value           = try(each.value.routing_http_response_x_content_type_options_header_value, null)
   routing_http_response_x_frame_options_header_value                  = try(each.value.routing_http_response_x_frame_options_header_value, null)
 
+  routing_http_request_x_amzn_tls_version_header_name                   = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_tls_version_header_name, null) : null
+  routing_http_request_x_amzn_tls_cipher_suite_header_name              = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_tls_cipher_suite_header_name, null) : null
+  routing_http_request_x_amzn_mtls_clientcert_header_name               = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_mtls_clientcert_header_name, null) : null
+  routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name, null) : null
+  routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_mtls_clientcert_issuer_header_name, null) : null
+  routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_mtls_clientcert_subject_header_name, null) : null
+  routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_mtls_clientcert_validity_header_name, null) : null
+  routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = try(each.value.protocol, var.default_protocol, null) == "HTTPS" ? try(each.value.routing_http_request_x_amzn_mtls_clientcert_leaf_header_name, null) : null
+
   load_balancer_arn        = aws_lb.this[0].arn
   port                     = try(each.value.port, var.default_port)
   protocol                 = try(each.value.protocol, var.default_protocol)

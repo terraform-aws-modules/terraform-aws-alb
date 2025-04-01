@@ -384,6 +384,28 @@ module "alb" {
       routing_http_response_x_content_type_options_header_value           = "nosniff"
       routing_http_response_x_frame_options_header_value                  = "SAMEORIGIN"
     }
+
+    ex-request-headers = {
+      port            = "443"
+      protocol        = "HTTPS"
+      ssl_policy      = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
+      certificate_arn = module.acm.acm_certificate_arn
+
+      fixed_response = {
+        content_type = "text/plain"
+        message_body = "Fixed message"
+        status_code  = "200"
+      }
+
+      routing_http_request_x_amzn_tls_version_header_name                   = "X-Amzn-Tls-Version-Custom"
+      routing_http_request_x_amzn_tls_cipher_suite_header_name              = "X-Amzn-Tls-Cipher-Suite-Custom"
+      routing_http_request_x_amzn_mtls_clientcert_header_name               = "X-Amzn-Mtls-Clientcert-Custom"
+      routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = "X-Amzn-Mtls-Clientcert-Serial-Number-Custom"
+      routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = "X-Amzn-Mtls-Clientcert-Issuer-Custom"
+      routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = "X-Amzn-Mtls-Clientcert-Subject-Custom"
+      routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = "X-Amzn-Mtls-Clientcert-Validity-Custom"
+      routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = "X-Amzn-Mtls-Clientcert-Leaf-Custom"
+    }
   }
 
   target_groups = {
