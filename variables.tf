@@ -26,6 +26,12 @@ variable "connection_logs" {
   default     = {}
 }
 
+variable "ipam_pools" {
+  description = "The IPAM pools to use with the load balancer"
+  type        = map(string)
+  default     = {}
+}
+
 variable "client_keep_alive" {
   description = "Client keep alive value in seconds. The valid range is 60-604800 seconds. The default is 3600 seconds."
   type        = number
