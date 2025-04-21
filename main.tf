@@ -33,6 +33,7 @@ resource "aws_lb" "this" {
 
   dynamic "ipam_pools" {
     for_each = length(var.ipam_pools) > 0 ? [var.ipam_pools] : []
+
     content {
       ipv4_ipam_pool_id = ipam_pools.value.ipv4_ipam_pool_id
     }

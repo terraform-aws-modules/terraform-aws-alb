@@ -27,6 +27,7 @@ module "wrapper" {
   idle_timeout                                                 = try(each.value.idle_timeout, var.defaults.idle_timeout, null)
   internal                                                     = try(each.value.internal, var.defaults.internal, null)
   ip_address_type                                              = try(each.value.ip_address_type, var.defaults.ip_address_type, null)
+  ipam_pools                                                   = try(each.value.ipam_pools, var.defaults.ipam_pools, {})
   listeners                                                    = try(each.value.listeners, var.defaults.listeners, {})
   load_balancer_type                                           = try(each.value.load_balancer_type, var.defaults.load_balancer_type, "application")
   name                                                         = try(each.value.name, var.defaults.name, null)
