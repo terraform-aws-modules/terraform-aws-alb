@@ -67,6 +67,10 @@ module "alb" {
     prefix  = "connection-logs"
   }
 
+  ipam_pools = {
+    ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
+  }
+
   client_keep_alive = 7200
 
   listeners = {
@@ -659,4 +663,29 @@ module "log_bucket" {
   attach_require_latest_tls_policy      = true
 
   tags = local.tags
+}
+
+##################################################################
+# AWS VPC IPAM
+##################################################################
+
+resource "aws_vpc_ipam" "this" {
+  operating_regions {
+    region_name = local.region
+  }
+}
+
+resource "aws_vpc_ipam_pool" "this" {
+  address_family                    = "ipv4"
+  ipam_scope_id                     = aws_vpc_ipam.this.public_default_scope_id
+  locale                            = local.region
+  allocation_default_netmask_length = 30
+
+  public_ip_source = "amazon"
+  aws_service      = "ec2"
+}
+
+resource "aws_vpc_ipam_pool_cidr" "this" {
+  ipam_pool_id   = aws_vpc_ipam_pool.this.id
+  netmask_length = 30
 }
