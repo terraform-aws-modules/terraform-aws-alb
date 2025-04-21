@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.16.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.15.0...v9.16.0) (2025-04-21)
+
+
+### Features
+
+* Add support for `ipam_pools` ([#403](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/403)) ([c50f278](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/c50f278c65a92fa59b3c7ab39d8533d7ae264e5e))
+
 ## [9.15.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.14.0...v9.15.0) (2025-04-01)
 
 
