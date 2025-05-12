@@ -558,7 +558,7 @@ resource "aws_lb_target_group" "this" {
     content {
       cookie_duration = try(stickiness.value.cookie_duration, null)
       cookie_name     = try(stickiness.value.cookie_name, null)
-      enabled         = try(stickiness.value.enabled, true)
+      enabled         = try(stickiness.value.enabled, false)
       type            = var.load_balancer_type == "network" ? "source_ip" : stickiness.value.type
     }
   }
