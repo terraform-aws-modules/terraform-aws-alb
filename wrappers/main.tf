@@ -32,6 +32,7 @@ module "wrapper" {
   load_balancer_type                                           = try(each.value.load_balancer_type, var.defaults.load_balancer_type, "application")
   name                                                         = try(each.value.name, var.defaults.name, null)
   name_prefix                                                  = try(each.value.name_prefix, var.defaults.name_prefix, null)
+  minimum_load_balancer_capacity                               = try(each.value.minimum_load_balancer_capacity, var.defaults.minimum_load_balancer_capacity, null)
   preserve_host_header                                         = try(each.value.preserve_host_header, var.defaults.preserve_host_header, null)
   putin_khuylo                                                 = try(each.value.putin_khuylo, var.defaults.putin_khuylo, true)
   route53_records                                              = try(each.value.route53_records, var.defaults.route53_records, {})

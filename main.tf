@@ -39,6 +39,14 @@ resource "aws_lb" "this" {
     }
   }
 
+  dynamic "minimum_load_balancer_capacity" {
+    for_each = var.minimum_load_balancer_capacity != null ? [var.minimum_load_balancer_capacity] : []
+
+    content {
+      capacity_units = minimum_load_balancer_capacity.value
+    }
+  }
+
   client_keep_alive                                            = var.client_keep_alive
   customer_owned_ipv4_pool                                     = var.customer_owned_ipv4_pool
   desync_mitigation_mode                                       = var.desync_mitigation_mode
