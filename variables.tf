@@ -138,10 +138,6 @@ variable "minimum_load_balancer_capacity" {
   description = "Minimum capacity for a load balancer. Only valid for Load Balancers of type `application` or `network`"
   type        = number
   default     = null
-  validation {
-    condition     = var.minimum_load_balancer_capacity == null || contains(["application", "network"], var.load_balancer_type)
-    error_message = "The minimum_load_balancer_capacity variable is only valid for load balancers of type 'application' or 'network'."
-  }
 }
 
 variable "name" {
