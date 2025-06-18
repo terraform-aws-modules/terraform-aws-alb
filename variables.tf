@@ -136,8 +136,8 @@ variable "enforce_security_group_inbound_rules_on_private_link_traffic" {
 
 variable "minimum_load_balancer_capacity" {
   description = "Minimum capacity for a load balancer. Only valid for Load Balancers of type `application` or `network`"
-  type        = number
-  default     = null
+  type        = any
+  default     = {}
 }
 
 variable "name" {

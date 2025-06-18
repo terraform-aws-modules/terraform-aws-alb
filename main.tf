@@ -40,10 +40,10 @@ resource "aws_lb" "this" {
   }
 
   dynamic "minimum_load_balancer_capacity" {
-    for_each = var.minimum_load_balancer_capacity != null ? [var.minimum_load_balancer_capacity] : []
+    for_each = length(var.minimum_load_balancer_capacity) > 0 ? [var.minimum_load_balancer_capacity] : []
 
     content {
-      capacity_units = minimum_load_balancer_capacity.value
+      capacity_units = minimum_load_balancer_capacity.value.capacity_units
     }
   }
 
