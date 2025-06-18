@@ -352,13 +352,13 @@ See [patterns.md](https://github.com/terraform-aws-modules/terraform-aws-alb/blo
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.93 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.99 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.93 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.99 |
 
 ## Modules
 
@@ -414,6 +414,7 @@ No modules.
 | <a name="input_ipam_pools"></a> [ipam\_pools](#input\_ipam\_pools) | The IPAM pools to use with the load balancer | `map(string)` | `{}` | no |
 | <a name="input_listeners"></a> [listeners](#input\_listeners) | Map of listener configurations to create | `any` | `{}` | no |
 | <a name="input_load_balancer_type"></a> [load\_balancer\_type](#input\_load\_balancer\_type) | The type of load balancer to create. Possible values are `application`, `gateway`, or `network`. The default value is `application` | `string` | `"application"` | no |
+| <a name="input_minimum_load_balancer_capacity"></a> [minimum\_load\_balancer\_capacity](#input\_minimum\_load\_balancer\_capacity) | Minimum capacity for a load balancer. Only valid for Load Balancers of type `application` or `network` | `any` | `{}` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the LB. This name must be unique within your AWS account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen | `string` | `null` | no |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | Creates a unique name beginning with the specified prefix. Conflicts with `name` | `string` | `null` | no |
 | <a name="input_preserve_host_header"></a> [preserve\_host\_header](#input\_preserve\_host\_header) | Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change. Defaults to `false` | `bool` | `null` | no |

@@ -71,6 +71,10 @@ module "alb" {
     ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
   }
 
+  minimum_load_balancer_capacity = {
+    capacity_units = 10
+  }
+
   client_keep_alive = 7200
 
   listeners = {

@@ -134,6 +134,12 @@ variable "enforce_security_group_inbound_rules_on_private_link_traffic" {
   default     = null
 }
 
+variable "minimum_load_balancer_capacity" {
+  description = "Minimum capacity for a load balancer. Only valid for Load Balancers of type `application` or `network`"
+  type        = any
+  default     = {}
+}
+
 variable "name" {
   description = "The name of the LB. This name must be unique within your AWS account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen"
   type        = string
