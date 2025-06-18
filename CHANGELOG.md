@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [9.17.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.16.0...v9.17.0) (2025-06-18)
+
+
+### Features
+
+* Added support form minimum_load_balancer_capacity. ([#405](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/405)) ([3f2f8ce](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/3f2f8cec27f48f93f286e827109982c940faa1dd))
+
 ## [9.16.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.15.0...v9.16.0) (2025-04-21)
 
 
