@@ -94,6 +94,7 @@ resource "aws_lb" "this" {
     ignore_changes = [
       tags["elasticbeanstalk:shared-elb-environment-count"]
     ]
+    prevent_destroy = var.enable_alb_prevent_destroy
   }
 }
 

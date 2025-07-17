@@ -188,6 +188,12 @@ variable "timeouts" {
   default     = {}
 }
 
+variable "enable_alb_prevent_destroy" {
+  description = "Whether to add lifecycle.prevent_destroy to the ALB resource"
+  type        = bool
+  default     = false
+}
+
 ################################################################################
 # Listener(s)
 ################################################################################
