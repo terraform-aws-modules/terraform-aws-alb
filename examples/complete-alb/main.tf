@@ -67,10 +67,6 @@ module "alb" {
     prefix  = "connection-logs"
   }
 
-  ipam_pools = {
-    ipv4_ipam_pool_id = aws_vpc_ipam_pool.this.id
-  }
-
   minimum_load_balancer_capacity = {
     capacity_units = 10
   }
@@ -91,10 +87,11 @@ module "alb" {
         ex-fixed-response = {
           priority = 3
           actions = [{
-            type         = "fixed-response"
-            content_type = "text/plain"
-            status_code  = 200
-            message_body = "This is a fixed response"
+            fixed_response = {
+              content_type = "text/plain"
+              status_code  = 200
+              message_body = "This is a fixed response"
+            }
           }]
 
           conditions = [{
@@ -108,51 +105,55 @@ module "alb" {
         ex-weighted-forward = {
           priority = 4
           actions = [{
-            type = "weighted-forward"
-            target_groups = [
-              {
-                target_group_key = "ex-lambda-with-trigger"
-                weight           = 2
-              },
-              {
-                target_group_key = "ex-instance"
-                weight           = 1
+            weighted_forward = {
+              target_groups = [
+                {
+                  key    = "ex-lambda-with-trigger"
+                  weight = 2
+                },
+                {
+                  key    = "ex-instance"
+                  weight = 1
+                }
+              ]
+              stickiness = {
+                enabled  = true
+                duration = 3600
               }
-            ]
-            stickiness = {
-              enabled  = true
-              duration = 3600
             }
           }]
 
           conditions = [{
-            query_string = {
+            query_string = [{
               key   = "weighted"
               value = "true"
-            }
+            }]
           }]
         }
 
         ex-redirect = {
           priority = 5000
           actions = [{
-            type        = "redirect"
-            status_code = "HTTP_302"
-            host        = "www.youtube.com"
-            path        = "/watch"
-            query       = "v=dQw4w9WgXcQ"
-            protocol    = "HTTPS"
+            redirect = {
+              status_code = "HTTP_302"
+              host        = "www.youtube.com"
+              path        = "/watch"
+              query       = "v=dQw4w9WgXcQ"
+              protocol    = "HTTPS"
+            }
           }]
 
           conditions = [{
-            query_string = [{
-              key   = "video"
-              value = "random"
+            query_string = [
+              {
+                key   = "video"
+                value = "random"
               },
               {
                 key   = "image"
                 value = "next"
-            }]
+              }
+            ]
           }]
         }
       }
@@ -164,12 +165,12 @@ module "alb" {
       weighted_forward = {
         target_groups = [
           {
-            target_group_key = "ex-lambda-with-trigger"
-            weight           = 60
+            key    = "ex-lambda-with-trigger"
+            weight = 60
           },
           {
-            target_group_key = "ex-instance"
-            weight           = 40
+            key    = "ex-instance"
+            weight = 40
           }
         ]
       }
@@ -200,17 +201,19 @@ module "alb" {
         ex-cognito = {
           actions = [
             {
-              type                       = "authenticate-cognito"
-              on_unauthenticated_request = "authenticate"
-              session_cookie_name        = "session-${local.name}"
-              session_timeout            = 3600
-              user_pool_arn              = aws_cognito_user_pool.this.arn
-              user_pool_client_id        = aws_cognito_user_pool_client.this.id
-              user_pool_domain           = aws_cognito_user_pool_domain.this.domain
+              authenticate_cognito = {
+                on_unauthenticated_request = "authenticate"
+                session_cookie_name        = "session-${local.name}"
+                session_timeout            = 3600
+                user_pool_arn              = aws_cognito_user_pool.this.arn
+                user_pool_client_id        = aws_cognito_user_pool_client.this.id
+                user_pool_domain           = aws_cognito_user_pool_domain.this.domain
+              }
             },
             {
-              type             = "forward"
-              target_group_key = "ex-instance"
+              forward = {
+                target_group_key = "ex-instance"
+              }
             }
           ]
 
@@ -224,10 +227,11 @@ module "alb" {
         ex-fixed-response = {
           priority = 3
           actions = [{
-            type         = "fixed-response"
-            content_type = "text/plain"
-            status_code  = 200
-            message_body = "This is a fixed response"
+            fixed_response = {
+              content_type = "text/plain"
+              status_code  = 200
+              message_body = "This is a fixed response"
+            }
           }]
 
           conditions = [{
@@ -241,28 +245,29 @@ module "alb" {
         ex-weighted-forward = {
           priority = 4
           actions = [{
-            type = "weighted-forward"
-            target_groups = [
-              {
-                target_group_key = "ex-instance"
-                weight           = 2
-              },
-              {
-                target_group_key = "ex-lambda-with-trigger"
-                weight           = 1
+            weighted_forward = {
+              target_groups = [
+                {
+                  key    = "ex-instance"
+                  weight = 2
+                },
+                {
+                  key    = "ex-lambda-with-trigger"
+                  weight = 1
+                }
+              ]
+              stickiness = {
+                enabled  = true
+                duration = 3600
               }
-            ]
-            stickiness = {
-              enabled  = true
-              duration = 3600
             }
           }]
 
           conditions = [{
-            query_string = {
+            query_string = [{
               key   = "weighted"
               value = "true"
-            },
+            }],
             path_pattern = {
               values = ["/some/path"]
             }
@@ -272,19 +277,20 @@ module "alb" {
         ex-redirect = {
           priority = 5000
           actions = [{
-            type        = "redirect"
-            status_code = "HTTP_302"
-            host        = "www.youtube.com"
-            path        = "/watch"
-            query       = "v=dQw4w9WgXcQ"
-            protocol    = "HTTPS"
+            redirect = {
+              status_code = "HTTP_302"
+              host        = "www.youtube.com"
+              path        = "/watch"
+              query       = "v=dQw4w9WgXcQ"
+              protocol    = "HTTPS"
+            }
           }]
 
           conditions = [{
-            query_string = {
+            query_string = [{
               key   = "video"
               value = "random"
-            }
+            }]
           }]
         }
       }
@@ -318,21 +324,23 @@ module "alb" {
 
           actions = [
             {
-              type = "authenticate-oidc"
-              authentication_request_extra_params = {
-                display = "page"
-                prompt  = "login"
+              authenticate_oidc = {
+                authentication_request_extra_params = {
+                  display = "page"
+                  prompt  = "login"
+                }
+                authorization_endpoint = "https://${var.domain_name}/auth"
+                client_id              = "client_id"
+                client_secret          = "client_secret"
+                issuer                 = "https://${var.domain_name}"
+                token_endpoint         = "https://${var.domain_name}/token"
+                user_info_endpoint     = "https://${var.domain_name}/user_info"
               }
-              authorization_endpoint = "https://${var.domain_name}/auth"
-              client_id              = "client_id"
-              client_secret          = "client_secret"
-              issuer                 = "https://${var.domain_name}"
-              token_endpoint         = "https://${var.domain_name}/token"
-              user_info_endpoint     = "https://${var.domain_name}/user_info"
             },
             {
-              type             = "forward"
-              target_group_key = "ex-lambda-with-trigger"
+              forward = {
+                target_group_key = "ex-lambda-with-trigger"
+              }
             }
           ]
 
@@ -508,7 +516,7 @@ module "alb_disabled" {
 ################################################################################
 
 locals {
-  package_url = "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-lambda/master/examples/fixtures/python3.8-zip/existing_package.zip"
+  package_url = "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-lambda/master/examples/fixtures/python-zip/existing_package.zip"
   downloaded  = "downloaded_package_${md5(local.package_url)}.zip"
 }
 
@@ -524,12 +532,12 @@ resource "null_resource" "download_package" {
 
 module "lambda_with_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   function_name = "${local.name}-with-allowed-triggers"
   description   = "My awesome lambda function (with allowed triggers)"
   handler       = "index.lambda_handler"
-  runtime       = "python3.8"
+  runtime       = "python3.13"
 
   publish                = true
   create_package         = false
@@ -547,12 +555,12 @@ module "lambda_with_allowed_triggers" {
 
 module "lambda_without_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   function_name = "${local.name}-without-allowed-triggers"
   description   = "My awesome lambda function (without allowed triggers)"
   handler       = "index.lambda_handler"
-  runtime       = "python3.8"
+  runtime       = "python3.13"
 
   publish                = true
   create_package         = false
@@ -570,7 +578,7 @@ module "lambda_without_allowed_triggers" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -588,7 +596,7 @@ data "aws_route53_zone" "this" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 4.0"
+  version = "~> 6.0"
 
   domain_name = var.domain_name
   zone_id     = data.aws_route53_zone.this.id
@@ -596,24 +604,24 @@ module "acm" {
 
 module "wildcard_cert" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 4.0"
+  version = "~> 6.0"
 
   domain_name = "*.${var.domain_name}"
   zone_id     = data.aws_route53_zone.this.id
 }
 
-data "aws_ssm_parameter" "al2" {
-  name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+data "aws_ssm_parameter" "al2023" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
 
 resource "aws_instance" "this" {
-  ami           = data.aws_ssm_parameter.al2.value
+  ami           = data.aws_ssm_parameter.al2023.value
   instance_type = "t3.nano"
   subnet_id     = element(module.vpc.private_subnets, 0)
 }
 
 resource "aws_instance" "other" {
-  ami           = data.aws_ssm_parameter.al2.value
+  ami           = data.aws_ssm_parameter.al2023.value
   instance_type = "t3.nano"
   subnet_id     = element(module.vpc.private_subnets, 0)
 }
@@ -649,7 +657,7 @@ resource "aws_cognito_user_pool_domain" "this" {
 
 module "log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   bucket_prefix = "${local.name}-logs-"
   acl           = "log-delivery-write"
@@ -667,29 +675,4 @@ module "log_bucket" {
   attach_require_latest_tls_policy      = true
 
   tags = local.tags
-}
-
-##################################################################
-# AWS VPC IPAM
-##################################################################
-
-resource "aws_vpc_ipam" "this" {
-  operating_regions {
-    region_name = local.region
-  }
-}
-
-resource "aws_vpc_ipam_pool" "this" {
-  address_family                    = "ipv4"
-  ipam_scope_id                     = aws_vpc_ipam.this.public_default_scope_id
-  locale                            = local.region
-  allocation_default_netmask_length = 30
-
-  public_ip_source = "amazon"
-  aws_service      = "ec2"
-}
-
-resource "aws_vpc_ipam_pool_cidr" "this" {
-  ipam_pool_id   = aws_vpc_ipam_pool.this.id
-  netmask_length = 30
 }

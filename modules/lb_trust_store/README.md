@@ -60,7 +60,8 @@ No modules.
 | <a name="input_create_trust_store_revocation"></a> [create\_trust\_store\_revocation](#input\_create\_trust\_store\_revocation) | Whether to create a trust store revocation for use with an application load balancer. | `bool` | `false` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of the trust store. If omitted, Terraform will assign a random, unique name. This name must be unique per region, per account, can have a maximum of 32 characters, must contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen. | `string` | `null` | no |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | Creates a unique name beginning with the specified prefix. Conflicts with `name`. Cannot be longer than 6 characters. | `string` | `null` | no |
-| <a name="input_revocation_lists"></a> [revocation\_lists](#input\_revocation\_lists) | Map of revocation list configurations. | `any` | `{}` | no |
+| <a name="input_region"></a> [region](#input\_region) | Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration | `string` | `null` | no |
+| <a name="input_revocation_lists"></a> [revocation\_lists](#input\_revocation\_lists) | Map of revocation list configurations. | <pre>map(object({<br/>    revocations_s3_bucket         = string<br/>    revocations_s3_key            = string<br/>    revocations_s3_object_version = optional(string)<br/>  }))</pre> | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Map of tags to assign to the resource. | `map(string)` | `{}` | no |
 
 ## Outputs
