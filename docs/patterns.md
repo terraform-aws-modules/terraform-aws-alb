@@ -226,12 +226,12 @@ module "alb" {
       weighted_forward = {
         target_groups = [
           {
-            target_group_key = "ex-lambda-with-trigger"
-            weight           = 60
+            key    = "ex-lambda-with-trigger"
+            weight = 60
           },
           {
-            target_group_key = "ex-lambda-without-trigger"
-            weight           = 40
+            key    = "ex-lambda-without-trigger"
+            weight = 40
           }
         ]
       }
@@ -257,7 +257,7 @@ module "alb" {
 
 module "lambda_with_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   # Truncated for brevity ...
 
@@ -271,7 +271,7 @@ module "lambda_with_allowed_triggers" {
 
 module "lambda_without_allowed_triggers" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 6.0"
+  version = "~> 8.0"
 
   # Truncated for brevity ...
 

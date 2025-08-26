@@ -136,7 +136,7 @@ resource "aws_lb_listener" "this" {
         user_pool_domain                    = default_action.value.user_pool_domain
       }
 
-      order = default_action.value.order
+      order = each.value.order
       type  = "authenticate-cognito"
     }
   }
@@ -159,7 +159,7 @@ resource "aws_lb_listener" "this" {
         user_info_endpoint                  = default_action.value.user_info_endpoint
       }
 
-      order = default_action.value.order
+      order = each.value.order
       type  = "authenticate-oidc"
     }
   }
@@ -174,7 +174,7 @@ resource "aws_lb_listener" "this" {
         status_code  = default_action.value.status_code
       }
 
-      order = default_action.value.order
+      order = each.value.order
       type  = "fixed-response"
     }
   }
@@ -183,22 +183,22 @@ resource "aws_lb_listener" "this" {
     for_each = each.value.forward != null ? [each.value.forward] : []
 
     content {
-      order            = default_action.value.order
+      order            = each.value.order
       target_group_arn = try(aws_lb_target_group.this[default_action.value.target_group_key].arn, default_action.value.target_group_arn)
       type             = "forward"
     }
   }
 
   dynamic "default_action" {
-    for_each = each.value.forward != null ? [each.value.forward] : []
+    for_each = each.value.weighted_forward != null ? [each.value.weighted_forward] : []
 
     content {
       forward {
         dynamic "target_group" {
-          for_each = default_action.value.target_group != null ? default_action.value.target_group : []
+          for_each = default_action.value.target_groups != null ? default_action.value.target_groups : []
 
           content {
-            arn    = try(aws_lb_target_group.this[target_group.value.key].arn, target_group.value.arn)
+            arn    = try(aws_lb_target_group.this[target_group.value.target_group_key].arn, target_group.value.target_group_arn)
             weight = target_group.value.weight
           }
         }
@@ -213,7 +213,7 @@ resource "aws_lb_listener" "this" {
         }
       }
 
-      order = default_action.value.order
+      order = each.value.order
       type  = "forward"
     }
   }
@@ -231,7 +231,7 @@ resource "aws_lb_listener" "this" {
         status_code = default_action.value.status_code
       }
 
-      order = default_action.value.order
+      order = each.value.order
       type  = "redirect"
     }
   }
@@ -301,6 +301,7 @@ resource "aws_lb_listener_rule" "this" {
 
   region = var.region
 
+  # Authenticate OIDC
   dynamic "action" {
     for_each = [for action in each.value.actions : action if action.authenticate_cognito != null]
 
@@ -325,6 +326,7 @@ resource "aws_lb_listener_rule" "this" {
     }
   }
 
+  # Authenticate OIDC
   dynamic "action" {
     for_each = [for action in each.value.actions : action if action.authenticate_oidc != null]
 
@@ -352,6 +354,7 @@ resource "aws_lb_listener_rule" "this" {
     }
   }
 
+  # Fixed response
   dynamic "action" {
     for_each = [for action in each.value.actions : action if action.fixed_response != null]
 
@@ -371,16 +374,18 @@ resource "aws_lb_listener_rule" "this" {
     }
   }
 
+  # Forward
   dynamic "action" {
     for_each = [for action in each.value.actions : action if action.forward != null]
 
     content {
       order            = action.value.order
-      target_group_arn = try(aws_lb_target_group.this[forward.value.target_group_key].arn, forward.value.target_group_arn)
+      target_group_arn = try(aws_lb_target_group.this[action.value.forward.target_group_key].arn, action.value.forward.target_group_arn)
       type             = "forward"
     }
   }
 
+  # Redirect
   dynamic "action" {
     for_each = [for action in each.value.actions : action if action.redirect != null]
 
@@ -403,6 +408,7 @@ resource "aws_lb_listener_rule" "this" {
     }
   }
 
+  # Weighted forward
   dynamic "action" {
     for_each = [for action in each.value.actions : action if action.weighted_forward != null]
 
@@ -424,7 +430,7 @@ resource "aws_lb_listener_rule" "this" {
             for_each = forward.value.target_groups
 
             content {
-              arn    = try(aws_lb_target_group.this[target_group.value.key].arn, target_group.value.arn)
+              arn    = try(aws_lb_target_group.this[target_group.value.target_group_key].arn, target_group.value.target_group_arn)
               weight = target_group.value.weight
             }
           }
@@ -682,11 +688,11 @@ resource "aws_lb_target_group_attachment" "additional" {
 # lambda_function_name, the 6th index is taken from the function ARN format below
 # arn:aws:lambda:<region>:<account-id>:function:my-function-name:<version-number>
 locals {
-  lambda_target_groups = {
+  lambda_target_groups = var.target_groups != null ? {
     for k, v in var.target_groups :
     (k) => merge(v, { lambda_function_name = split(":", v.target_id)[6] })
     if v.attach_lambda_permission
-  }
+  } : {}
 }
 
 resource "aws_lambda_permission" "this" {

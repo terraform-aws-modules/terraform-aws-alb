@@ -246,7 +246,6 @@ variable "listeners" {
       user_pool_arn                       = optional(string)
       user_pool_client_id                 = optional(string)
       user_pool_domain                    = optional(string)
-      order                               = optional(number)
     }))
     authenticate_oidc = optional(object({
       authentication_request_extra_params = optional(map(string))
@@ -260,30 +259,26 @@ variable "listeners" {
       session_timeout                     = optional(number)
       token_endpoint                      = string
       user_info_endpoint                  = string
-      order                               = optional(number)
     }))
     fixed_response = optional(object({
       content_type = string
       message_body = optional(string)
       status_code  = optional(string)
-      order        = optional(number)
     }))
     forward = optional(object({
       target_group_arn = optional(string)
       target_group_key = optional(string)
-      order            = optional(number)
     }))
     weighted_forward = optional(object({
-      target_group = optional(list(object({
-        arn    = optional(string)
-        key    = optional(string)
-        weight = optional(number)
+      target_groups = optional(list(object({
+        target_group_arn = optional(string)
+        target_group_key = optional(string)
+        weight           = optional(number)
       })))
       stickiness = optional(object({
         duration = optional(number)
         enabled  = optional(bool)
       }))
-      order = optional(number)
     }))
     redirect = optional(object({
       host        = optional(string)
@@ -292,7 +287,6 @@ variable "listeners" {
       protocol    = optional(string)
       query       = optional(string)
       status_code = string
-      order       = optional(number)
     }))
     mutual_authentication = optional(object({
       advertise_trust_store_ca_names   = optional(string)
@@ -300,6 +294,7 @@ variable "listeners" {
       mode                             = string
       trust_store_arn                  = optional(string)
     }))
+    order                                                                 = optional(number)
     port                                                                  = optional(number)
     protocol                                                              = optional(string)
     routing_http_request_x_amzn_mtls_clientcert_header_name               = optional(string)
@@ -375,9 +370,9 @@ variable "listeners" {
             enabled  = optional(bool)
           }))
           target_groups = optional(list(object({
-            arn    = optional(string)
-            key    = optional(string)
-            weight = optional(number)
+            target_group_arn = optional(string)
+            target_group_key = optional(string)
+            weight           = optional(number)
           })))
         }))
       }))
@@ -406,6 +401,7 @@ variable "listeners" {
       listener_arn = optional(string)
       listener_key = optional(string)
       priority     = optional(number)
+      tags         = optional(map(string), {})
     })), {})
   }))
   default = {}
@@ -470,6 +466,7 @@ variable "target_groups" {
       unhealthy_draining_interval             = optional(number)
     }))
     target_type = optional(string)
+    target_id   = optional(string)
     vpc_id      = optional(string)
     # Attachment
     create_attachment = optional(bool, true)
@@ -479,6 +476,7 @@ variable "target_groups" {
     lambda_qualifier          = optional(string)
     lambda_statement_id       = optional(string)
     lambda_action             = optional(string)
+    lambda_principal          = optional(string)
     lambda_source_account     = optional(string)
     lambda_event_source_token = optional(string)
   }))

@@ -67,10 +67,6 @@ module "alb" {
     prefix  = "connection-logs"
   }
 
-  minimum_load_balancer_capacity = {
-    capacity_units = 10
-  }
-
   client_keep_alive = 7200
 
   listeners = {
@@ -165,12 +161,12 @@ module "alb" {
       weighted_forward = {
         target_groups = [
           {
-            key    = "ex-lambda-with-trigger"
-            weight = 60
+            target_group_key = "ex-lambda-with-trigger"
+            weight           = 60
           },
           {
-            key    = "ex-instance"
-            weight = 40
+            target_group_key = "ex-instance"
+            weight           = 40
           }
         ]
       }
@@ -248,12 +244,12 @@ module "alb" {
             weighted_forward = {
               target_groups = [
                 {
-                  key    = "ex-instance"
-                  weight = 2
+                  target_group_key = "ex-instance"
+                  weight           = 2
                 },
                 {
-                  key    = "ex-lambda-with-trigger"
-                  weight = 1
+                  target_group_key = "ex-lambda-with-trigger"
+                  weight           = 1
                 }
               ]
               stickiness = {
@@ -374,53 +370,6 @@ module "alb" {
       forward = {
         target_group_key = "ex-instance"
       }
-    }
-
-    ex-response-headers = {
-      port            = "443"
-      protocol        = "HTTPS"
-      ssl_policy      = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
-      certificate_arn = module.acm.acm_certificate_arn
-
-      fixed_response = {
-        content_type = "text/plain"
-        message_body = "Fixed message"
-        status_code  = "200"
-      }
-
-      routing_http_response_server_enabled                                = false
-      routing_http_response_strict_transport_security_header_value        = "max-age=31536000; includeSubDomains; preload"
-      routing_http_response_access_control_allow_origin_header_value      = "https://example.com"
-      routing_http_response_access_control_allow_methods_header_value     = "TRACE,GET"
-      routing_http_response_access_control_allow_headers_header_value     = "Accept-Language,Content-Language"
-      routing_http_response_access_control_allow_credentials_header_value = "true"
-      routing_http_response_access_control_expose_headers_header_value    = "Cache-Control"
-      routing_http_response_access_control_max_age_header_value           = 86400
-      routing_http_response_content_security_policy_header_value          = "*"
-      routing_http_response_x_content_type_options_header_value           = "nosniff"
-      routing_http_response_x_frame_options_header_value                  = "SAMEORIGIN"
-    }
-
-    ex-request-headers = {
-      port            = "443"
-      protocol        = "HTTPS"
-      ssl_policy      = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
-      certificate_arn = module.acm.acm_certificate_arn
-
-      fixed_response = {
-        content_type = "text/plain"
-        message_body = "Fixed message"
-        status_code  = "200"
-      }
-
-      routing_http_request_x_amzn_tls_version_header_name                   = "X-Amzn-Tls-Version-Custom"
-      routing_http_request_x_amzn_tls_cipher_suite_header_name              = "X-Amzn-Tls-Cipher-Suite-Custom"
-      routing_http_request_x_amzn_mtls_clientcert_header_name               = "X-Amzn-Mtls-Clientcert-Custom"
-      routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = "X-Amzn-Mtls-Clientcert-Serial-Number-Custom"
-      routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = "X-Amzn-Mtls-Clientcert-Issuer-Custom"
-      routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = "X-Amzn-Mtls-Clientcert-Subject-Custom"
-      routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = "X-Amzn-Mtls-Clientcert-Validity-Custom"
-      routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = "X-Amzn-Mtls-Clientcert-Leaf-Custom"
     }
   }
 
@@ -598,16 +547,22 @@ module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 6.0"
 
-  domain_name = var.domain_name
-  zone_id     = data.aws_route53_zone.this.id
+  domain_name       = var.domain_name
+  zone_id           = data.aws_route53_zone.this.id
+  validation_method = "DNS"
+
+  tags = local.tags
 }
 
 module "wildcard_cert" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 6.0"
 
-  domain_name = "*.${var.domain_name}"
-  zone_id     = data.aws_route53_zone.this.id
+  domain_name       = "*.${var.domain_name}"
+  zone_id           = data.aws_route53_zone.this.id
+  validation_method = "DNS"
+
+  tags = local.tags
 }
 
 data "aws_ssm_parameter" "al2023" {
