@@ -54,7 +54,7 @@ Please consult the `examples` directory for reference example configurations. If
 
 ### Diff of Before vs After
 
-```hcl
+```diff
  module "alb" {
    source  = "terraform-aws-modules/alb/aws"
 -  version = "9.17.0"
@@ -75,7 +75,7 @@ Please consult the `examples` directory for reference example configurations. If
           priority = 3
           actions = [{
             # Same for all action types, not just `fixed_response`
--            type         = "fixed-response"
+-            type           = "fixed-response"
 +            fixed_response = {
                content_type = "text/plain"
                status_code  = 200
