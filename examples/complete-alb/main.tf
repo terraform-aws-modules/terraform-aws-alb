@@ -545,7 +545,7 @@ data "aws_route53_zone" "this" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 6.0"
+  version = "~> 5.0"
 
   domain_name       = var.domain_name
   zone_id           = data.aws_route53_zone.this.id
@@ -556,7 +556,7 @@ module "acm" {
 
 module "wildcard_cert" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 6.0"
+  version = "~> 5.0"
 
   domain_name       = "*.${var.domain_name}"
   zone_id           = data.aws_route53_zone.this.id

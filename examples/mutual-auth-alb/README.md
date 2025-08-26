@@ -37,7 +37,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | ~> 6.0 |
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | ~> 5.0 |
 | <a name="module_alb"></a> [alb](#module\_alb) | ../../ | n/a |
 | <a name="module_ca_cert_object"></a> [ca\_cert\_object](#module\_ca\_cert\_object) | terraform-aws-modules/s3-bucket/aws//modules/object | ~> 5.0 |
 | <a name="module_certificate_bucket"></a> [certificate\_bucket](#module\_certificate\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 5.0 |
