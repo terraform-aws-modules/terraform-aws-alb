@@ -10,6 +10,7 @@ module "wrapper" {
   create_trust_store_revocation            = try(each.value.create_trust_store_revocation, var.defaults.create_trust_store_revocation, false)
   name                                     = try(each.value.name, var.defaults.name, null)
   name_prefix                              = try(each.value.name_prefix, var.defaults.name_prefix, null)
-  revocation_lists                         = try(each.value.revocation_lists, var.defaults.revocation_lists, {})
+  region                                   = try(each.value.region, var.defaults.region, null)
+  revocation_lists                         = try(each.value.revocation_lists, var.defaults.revocation_lists, null)
   tags                                     = try(each.value.tags, var.defaults.tags, {})
 }

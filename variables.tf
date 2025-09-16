@@ -4,6 +4,12 @@ variable "create" {
   default     = true
 }
 
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
@@ -16,26 +22,28 @@ variable "tags" {
 
 variable "access_logs" {
   description = "Map containing access logging configuration for load balancer"
-  type        = map(string)
-  default     = {}
+  type = object({
+    bucket  = string
+    enabled = optional(bool, true)
+    prefix  = optional(string)
+  })
+  default = null
+}
+
+variable "client_keep_alive" {
+  description = "Client keep alive value in seconds. The valid range is 60-604800 seconds. The default is 3600 seconds"
+  type        = number
+  default     = null
 }
 
 variable "connection_logs" {
   description = "Map containing access logging configuration for load balancer"
-  type        = map(string)
-  default     = {}
-}
-
-variable "ipam_pools" {
-  description = "The IPAM pools to use with the load balancer"
-  type        = map(string)
-  default     = {}
-}
-
-variable "client_keep_alive" {
-  description = "Client keep alive value in seconds. The valid range is 60-604800 seconds. The default is 3600 seconds."
-  type        = number
-  default     = null
+  type = object({
+    bucket  = string
+    enabled = optional(bool, true)
+    prefix  = optional(string)
+  })
+  default = null
 }
 
 variable "customer_owned_ipv4_pool" {
@@ -51,7 +59,7 @@ variable "desync_mitigation_mode" {
 }
 
 variable "dns_record_client_routing_policy" {
-  description = "Indicates how traffic is distributed among the load balancer Availability Zones. Possible values are any_availability_zone (default), availability_zone_affinity, or partial_availability_zone_affinity. Only valid for network type load balancers."
+  description = "Indicates how traffic is distributed among the load balancer Availability Zones. Possible values are any_availability_zone (default), availability_zone_affinity, or partial_availability_zone_affinity. Only valid for network type load balancers"
   type        = string
   default     = null
 }
@@ -104,6 +112,12 @@ variable "enable_zonal_shift" {
   default     = null
 }
 
+variable "enforce_security_group_inbound_rules_on_private_link_traffic" {
+  description = "Indicates whether inbound security group rules are enforced for traffic originating from a PrivateLink. Only valid for Load Balancers of type network. The possible values are on and off"
+  type        = string
+  default     = null
+}
+
 variable "idle_timeout" {
   description = "The time in seconds that the connection is allowed to be idle. Only valid for Load Balancers of type `application`. Default: `60`"
   type        = number
@@ -122,22 +136,26 @@ variable "ip_address_type" {
   default     = null
 }
 
+variable "ipam_pools" {
+  description = "The IPAM pools to use with the load balancer"
+  type = object({
+    ipv4_ipam_pool_id = string
+  })
+  default = null
+}
+
 variable "load_balancer_type" {
   description = "The type of load balancer to create. Possible values are `application`, `gateway`, or `network`. The default value is `application`"
   type        = string
   default     = "application"
 }
 
-variable "enforce_security_group_inbound_rules_on_private_link_traffic" {
-  description = "Indicates whether inbound security group rules are enforced for traffic originating from a PrivateLink. Only valid for Load Balancers of type network. The possible values are on and off."
-  type        = string
-  default     = null
-}
-
 variable "minimum_load_balancer_capacity" {
   description = "Minimum capacity for a load balancer. Only valid for Load Balancers of type `application` or `network`"
-  type        = any
-  default     = {}
+  type = object({
+    capacity_units = number
+  })
+  default = null
 }
 
 variable "name" {
@@ -166,8 +184,13 @@ variable "security_groups" {
 
 variable "subnet_mapping" {
   description = "A list of subnet mapping blocks describing subnets to attach to load balancer"
-  type        = list(map(string))
-  default     = []
+  type = list(object({
+    allocation_id        = optional(string)
+    ipv6_address         = optional(string)
+    private_ipv4_address = optional(string)
+    subnet_id            = string
+  }))
+  default = null
 }
 
 variable "subnets" {
@@ -184,8 +207,12 @@ variable "xff_header_processing_mode" {
 
 variable "timeouts" {
   description = "Create, update, and delete timeout configurations for the load balancer"
-  type        = map(string)
-  default     = {}
+  type = object({
+    create = optional(string)
+    update = optional(string)
+    delete = optional(string)
+  })
+  default = null
 }
 
 ################################################################################
@@ -206,8 +233,178 @@ variable "default_protocol" {
 
 variable "listeners" {
   description = "Map of listener configurations to create"
-  type        = any
-  default     = {}
+  type = map(object({
+    alpn_policy                 = optional(string)
+    certificate_arn             = optional(string)
+    additional_certificate_arns = optional(list(string), [])
+    authenticate_cognito = optional(object({
+      authentication_request_extra_params = optional(map(string))
+      on_unauthenticated_request          = optional(string)
+      scope                               = optional(string)
+      session_cookie_name                 = optional(string)
+      session_timeout                     = optional(number)
+      user_pool_arn                       = optional(string)
+      user_pool_client_id                 = optional(string)
+      user_pool_domain                    = optional(string)
+    }))
+    authenticate_oidc = optional(object({
+      authentication_request_extra_params = optional(map(string))
+      authorization_endpoint              = string
+      client_id                           = string
+      client_secret                       = string
+      issuer                              = string
+      on_unauthenticated_request          = optional(string)
+      scope                               = optional(string)
+      session_cookie_name                 = optional(string)
+      session_timeout                     = optional(number)
+      token_endpoint                      = string
+      user_info_endpoint                  = string
+    }))
+    fixed_response = optional(object({
+      content_type = string
+      message_body = optional(string)
+      status_code  = optional(string)
+    }))
+    forward = optional(object({
+      target_group_arn = optional(string)
+      target_group_key = optional(string)
+    }))
+    weighted_forward = optional(object({
+      target_groups = optional(list(object({
+        target_group_arn = optional(string)
+        target_group_key = optional(string)
+        weight           = optional(number)
+      })))
+      stickiness = optional(object({
+        duration = optional(number)
+        enabled  = optional(bool)
+      }))
+    }))
+    redirect = optional(object({
+      host        = optional(string)
+      path        = optional(string)
+      port        = optional(string)
+      protocol    = optional(string)
+      query       = optional(string)
+      status_code = string
+    }))
+    mutual_authentication = optional(object({
+      advertise_trust_store_ca_names   = optional(string)
+      ignore_client_certificate_expiry = optional(bool)
+      mode                             = string
+      trust_store_arn                  = optional(string)
+    }))
+    order                                                                 = optional(number)
+    port                                                                  = optional(number)
+    protocol                                                              = optional(string)
+    routing_http_request_x_amzn_mtls_clientcert_header_name               = optional(string)
+    routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = optional(string)
+    routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = optional(string)
+    routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = optional(string)
+    routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = optional(string)
+    routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = optional(string)
+    routing_http_request_x_amzn_tls_cipher_suite_header_name              = optional(string)
+    routing_http_request_x_amzn_tls_version_header_name                   = optional(string)
+    routing_http_response_access_control_allow_credentials_header_value   = optional(string)
+    routing_http_response_access_control_allow_headers_header_value       = optional(string)
+    routing_http_response_access_control_allow_methods_header_value       = optional(string)
+    routing_http_response_access_control_allow_origin_header_value        = optional(string)
+    routing_http_response_access_control_expose_headers_header_value      = optional(string)
+    routing_http_response_access_control_max_age_header_value             = optional(string)
+    routing_http_response_content_security_policy_header_value            = optional(string)
+    routing_http_response_server_enabled                                  = optional(bool)
+    routing_http_response_strict_transport_security_header_value          = optional(string)
+    routing_http_response_x_content_type_options_header_value             = optional(string)
+    routing_http_response_x_frame_options_header_value                    = optional(string)
+    ssl_policy                                                            = optional(string)
+    tcp_idle_timeout_seconds                                              = optional(number)
+    tags                                                                  = optional(map(string), {})
+
+    # Listener rules
+    rules = optional(map(object({
+      actions = list(object({
+        authenticate_cognito = optional(object({
+          authentication_request_extra_params = optional(map(string))
+          on_unauthenticated_request          = optional(string)
+          scope                               = optional(string)
+          session_cookie_name                 = optional(string)
+          session_timeout                     = optional(number)
+          user_pool_arn                       = string
+          user_pool_client_id                 = string
+          user_pool_domain                    = string
+        }))
+        authenticate_oidc = optional(object({
+          authentication_request_extra_params = optional(map(string))
+          authorization_endpoint              = string
+          client_id                           = string
+          client_secret                       = string
+          issuer                              = string
+          on_unauthenticated_request          = optional(string)
+          scope                               = optional(string)
+          session_cookie_name                 = optional(string)
+          session_timeout                     = optional(number)
+          token_endpoint                      = string
+          user_info_endpoint                  = string
+        }))
+        fixed_response = optional(object({
+          content_type = string
+          message_body = optional(string)
+          status_code  = optional(string)
+        }))
+        forward = optional(object({
+          target_group_arn = optional(string)
+          target_group_key = optional(string)
+        }))
+        order = optional(number)
+        redirect = optional(object({
+          host        = optional(string)
+          path        = optional(string)
+          port        = optional(string)
+          protocol    = optional(string)
+          query       = optional(string)
+          status_code = string
+        }))
+        weighted_forward = optional(object({
+          stickiness = optional(object({
+            duration = optional(number)
+            enabled  = optional(bool)
+          }))
+          target_groups = optional(list(object({
+            target_group_arn = optional(string)
+            target_group_key = optional(string)
+            weight           = optional(number)
+          })))
+        }))
+      }))
+      conditions = list(object({
+        host_header = optional(object({
+          values = list(string)
+        }))
+        http_header = optional(object({
+          http_header_name = string
+          values           = list(string)
+        }))
+        http_request_method = optional(object({
+          values = list(string)
+        }))
+        path_pattern = optional(object({
+          values = list(string)
+        }))
+        query_string = optional(list(object({
+          key   = optional(string)
+          value = string
+        })))
+        source_ip = optional(object({
+          values = list(string)
+        }))
+      }))
+      listener_arn = optional(string)
+      listener_key = optional(string)
+      priority     = optional(number)
+      tags         = optional(map(string), {})
+    })), {})
+  }))
+  default = {}
 }
 
 ################################################################################
@@ -216,14 +413,86 @@ variable "listeners" {
 
 variable "target_groups" {
   description = "Map of target group configurations to create"
-  type        = any
-  default     = {}
+  type = map(object({
+    connection_termination = optional(bool)
+    deregistration_delay   = optional(number)
+    health_check = optional(object({
+      enabled             = optional(bool)
+      healthy_threshold   = optional(number)
+      interval            = optional(number)
+      matcher             = optional(string)
+      path                = optional(string)
+      port                = optional(string)
+      protocol            = optional(string)
+      timeout             = optional(number)
+      unhealthy_threshold = optional(number)
+    }))
+    ip_address_type                    = optional(string)
+    lambda_multi_value_headers_enabled = optional(bool)
+    load_balancing_algorithm_type      = optional(string)
+    load_balancing_anomaly_mitigation  = optional(string)
+    load_balancing_cross_zone_enabled  = optional(bool)
+    name                               = optional(string)
+    name_prefix                        = optional(string)
+    port                               = optional(number)
+    preserve_client_ip                 = optional(bool)
+    protocol                           = optional(string)
+    protocol_version                   = optional(string)
+    proxy_protocol_v2                  = optional(bool)
+    slow_start                         = optional(number)
+    stickiness = optional(object({
+      cookie_duration = optional(number)
+      cookie_name     = optional(string)
+      enabled         = optional(bool)
+      type            = string
+    }))
+    tags = optional(map(string))
+    target_failover = optional(list(object({
+      on_deregistration = string
+      on_unhealthy      = string
+    })))
+    target_group_health = optional(object({
+      dns_failover = optional(object({
+        minimum_healthy_targets_count      = optional(string)
+        minimum_healthy_targets_percentage = optional(string)
+      }))
+      unhealthy_state_routing = optional(object({
+        minimum_healthy_targets_count      = optional(number)
+        minimum_healthy_targets_percentage = optional(string)
+      }))
+    }))
+    target_health_state = optional(object({
+      enable_unhealthy_connection_termination = bool
+      unhealthy_draining_interval             = optional(number)
+    }))
+    target_type = optional(string)
+    target_id   = optional(string)
+    vpc_id      = optional(string)
+    # Attachment
+    create_attachment = optional(bool, true)
+    availability_zone = optional(string)
+    # Lambda
+    attach_lambda_permission  = optional(bool, false)
+    lambda_qualifier          = optional(string)
+    lambda_statement_id       = optional(string)
+    lambda_action             = optional(string)
+    lambda_principal          = optional(string)
+    lambda_source_account     = optional(string)
+    lambda_event_source_token = optional(string)
+  }))
+  default = null
 }
 
 variable "additional_target_group_attachments" {
   description = "Map of additional target group attachments to create. Use `target_group_key` to attach to the target group created in `target_groups`"
-  type        = any
-  default     = {}
+  type = map(object({
+    target_group_key  = string
+    target_id         = string
+    target_type       = optional(string)
+    port              = optional(number)
+    availability_zone = optional(string)
+  }))
+  default = null
 }
 
 ################################################################################
@@ -262,14 +531,38 @@ variable "vpc_id" {
 
 variable "security_group_ingress_rules" {
   description = "Security group ingress rules to add to the security group created"
-  type        = any
-  default     = {}
+  type = map(object({
+    name = optional(string)
+
+    cidr_ipv4                    = optional(string)
+    cidr_ipv6                    = optional(string)
+    description                  = optional(string)
+    from_port                    = optional(string)
+    ip_protocol                  = optional(string, "tcp")
+    prefix_list_id               = optional(string)
+    referenced_security_group_id = optional(string)
+    tags                         = optional(map(string), {})
+    to_port                      = optional(string)
+  }))
+  default = null
 }
 
 variable "security_group_egress_rules" {
   description = "Security group egress rules to add to the security group created"
-  type        = any
-  default     = {}
+  type = map(object({
+    name = optional(string)
+
+    cidr_ipv4                    = optional(string)
+    cidr_ipv6                    = optional(string)
+    description                  = optional(string)
+    from_port                    = optional(string)
+    ip_protocol                  = optional(string, "tcp")
+    prefix_list_id               = optional(string)
+    referenced_security_group_id = optional(string)
+    tags                         = optional(map(string), {})
+    to_port                      = optional(string)
+  }))
+  default = null
 }
 
 variable "security_group_tags" {
@@ -284,8 +577,12 @@ variable "security_group_tags" {
 
 variable "route53_records" {
   description = "Map of Route53 records to create. Each record map should contain `zone_id`, `name`, and `type`"
-  type        = any
-  default     = {}
+  type = map(object({
+    zone_id = string
+    name    = optional(string)
+    type    = string
+  }))
+  default = null
 }
 
 ################################################################################

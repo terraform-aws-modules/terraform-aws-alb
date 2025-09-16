@@ -96,10 +96,11 @@ module "alb" {
           priority = 3
           actions = [
             {
-              type         = "fixed-response"
-              content_type = "text/plain"
-              status_code  = 200
-              message_body = "This is a fixed response"
+              fixed_response = {
+                content_type = "text/plain"
+                status_code  = 200
+                message_body = "This is a fixed response"
+              }
             }
           ]
           conditions = [{
@@ -184,7 +185,7 @@ module "trust_store" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -196,19 +197,19 @@ module "vpc" {
   tags = local.tags
 }
 
-data "aws_ssm_parameter" "al2" {
-  name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+data "aws_ssm_parameter" "al2023" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
 
 resource "aws_instance" "this" {
-  ami           = data.aws_ssm_parameter.al2.value
+  ami           = data.aws_ssm_parameter.al2023.value
   instance_type = "t3.nano"
   subnet_id     = element(module.vpc.private_subnets, 0)
 }
 
 module "log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   bucket_prefix = "${local.name}-logs-"
   acl           = "log-delivery-write"
@@ -234,10 +235,13 @@ data "aws_route53_zone" "this" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 4.0"
+  version = "~> 5.0"
 
-  domain_name = "*.${var.domain_name}"
-  zone_id     = data.aws_route53_zone.this.id
+  domain_name       = "*.${var.domain_name}"
+  zone_id           = data.aws_route53_zone.this.id
+  validation_method = "DNS"
+
+  tags = local.tags
 }
 
 resource "null_resource" "generate_crl" {
@@ -253,7 +257,7 @@ resource "null_resource" "generate_crl" {
 
 module "certificate_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   bucket_prefix = "${local.name}-certificate-"
   force_destroy = true
@@ -262,7 +266,8 @@ module "certificate_bucket" {
 }
 
 module "ca_cert_object" {
-  source = "terraform-aws-modules/s3-bucket/aws//modules/object"
+  source  = "terraform-aws-modules/s3-bucket/aws//modules/object"
+  version = "~> 5.0"
 
   bucket = module.certificate_bucket.s3_bucket_id
   key    = "ca_cert/RootCA.pem"
@@ -273,7 +278,8 @@ module "ca_cert_object" {
 }
 
 module "crl_object" {
-  source = "terraform-aws-modules/s3-bucket/aws//modules/object"
+  source  = "terraform-aws-modules/s3-bucket/aws//modules/object"
+  version = "~> 5.0"
 
   bucket = module.certificate_bucket.s3_bucket_id
   key    = "crl/crl.pem"

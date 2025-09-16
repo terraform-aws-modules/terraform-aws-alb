@@ -177,7 +177,7 @@ module "nlb" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -195,10 +195,13 @@ data "aws_route53_zone" "this" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "~> 4.0"
+  version = "~> 5.0"
 
-  domain_name = var.domain_name
-  zone_id     = data.aws_route53_zone.this.id
+  domain_name       = var.domain_name
+  zone_id           = data.aws_route53_zone.this.id
+  validation_method = "DNS"
+
+  tags = local.tags
 }
 
 resource "aws_eip" "this" {
@@ -207,19 +210,19 @@ resource "aws_eip" "this" {
   domain = "vpc"
 }
 
-data "aws_ssm_parameter" "al2" {
-  name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+data "aws_ssm_parameter" "al2023" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
 
 resource "aws_instance" "this" {
-  ami           = data.aws_ssm_parameter.al2.value
+  ami           = data.aws_ssm_parameter.al2023.value
   instance_type = "t3.nano"
   subnet_id     = element(module.vpc.private_subnets, 0)
 }
 
 module "log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.0"
+  version = "~> 5.0"
 
   bucket_prefix = "${local.name}-logs-"
   acl           = "log-delivery-write"

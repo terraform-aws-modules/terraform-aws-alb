@@ -4,6 +4,22 @@ variable "create" {
   default     = true
 }
 
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
+variable "tags" {
+  description = "Map of tags to assign to the resource."
+  type        = map(string)
+  default     = {}
+}
+
+################################################################################
+# Trust Store
+################################################################################
+
 variable "ca_certificates_bundle_s3_bucket" {
   description = "S3 bucket name holding the client certificate CA bundle."
   type        = string
@@ -40,14 +56,16 @@ variable "create_trust_store_revocation" {
   default     = false
 }
 
+################################################################################
+# Trust Store Revocation(s)
+################################################################################
+
 variable "revocation_lists" {
   description = "Map of revocation list configurations."
-  type        = any
-  default     = {}
-}
-
-variable "tags" {
-  description = "Map of tags to assign to the resource."
-  type        = map(string)
-  default     = {}
+  type = map(object({
+    revocations_s3_bucket         = string
+    revocations_s3_key            = string
+    revocations_s3_object_version = optional(string)
+  }))
+  default = null
 }
