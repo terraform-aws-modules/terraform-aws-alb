@@ -15,7 +15,7 @@ Please consult the `examples` directory for reference example configurations. If
 
 ### Modified
 
-- Variable definitions now contain detailed `object` types in place of the previously used any type.
+- Variable definitions now contain detailed `object` types in place of the previously used `any` type.
 - Security group rules now use a default naming scheme of `<security-group-name>-<map-key>` unless a more specific rule name is provided.
 - `rule.actions.type` has been replaced with `rule.actions.<type>`. See before/after below for more details.
 - `query_string` supports a list of key:value pairs; type definition updated to support this (i.e. was `map(string)` and is now `list(map(string))`)
