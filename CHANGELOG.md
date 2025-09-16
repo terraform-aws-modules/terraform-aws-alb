@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.17.0...v10.0.0) (2025-09-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* Bump min supported version of Terraform and AWS to 1.5.7 and `6.5` respectively (#411)
+
+### Features
+
+* Bump min supported version of Terraform and AWS to 1.5.7 and `6.5` respectively ([#411](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/411)) ([f431c0f](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/f431c0f68c6251b40c4aa567c14bd7914b5dfaa1))
+
 ## [9.17.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.16.0...v9.17.0) (2025-06-18)
 
 
