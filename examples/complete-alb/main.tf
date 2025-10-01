@@ -104,12 +104,12 @@ module "alb" {
             weighted_forward = {
               target_groups = [
                 {
-                  key    = "ex-lambda-with-trigger"
-                  weight = 2
+                  target_group_key = "ex-lambda-with-trigger"
+                  weight           = 2
                 },
                 {
-                  key    = "ex-instance"
-                  weight = 1
+                  target_group_key = "ex-instance"
+                  weight           = 1
                 }
               ]
               stickiness = {
@@ -259,15 +259,19 @@ module "alb" {
             }
           }]
 
-          conditions = [{
-            query_string = [{
-              key   = "weighted"
-              value = "true"
-            }],
-            path_pattern = {
-              values = ["/some/path"]
-            }
-          }]
+          conditions = [
+            {
+              query_string = [{
+                key   = "weighted"
+                value = "true"
+              }]
+            },
+            {
+              path_pattern = {
+                values = ["/some/path"]
+              }
+            },
+          ]
         }
 
         ex-redirect = {
