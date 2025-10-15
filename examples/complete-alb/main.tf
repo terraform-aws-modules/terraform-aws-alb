@@ -386,7 +386,7 @@ module "alb" {
       deregistration_delay              = 10
       load_balancing_algorithm_type     = "weighted_random"
       load_balancing_anomaly_mitigation = "on"
-      load_balancing_cross_zone_enabled = false
+      load_balancing_cross_zone_enabled = "use_load_balancer_configuration"
 
       target_group_health = {
         dns_failover = {

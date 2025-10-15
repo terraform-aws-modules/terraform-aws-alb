@@ -431,7 +431,7 @@ variable "target_groups" {
     lambda_multi_value_headers_enabled = optional(bool)
     load_balancing_algorithm_type      = optional(string)
     load_balancing_anomaly_mitigation  = optional(string)
-    load_balancing_cross_zone_enabled  = optional(bool)
+    load_balancing_cross_zone_enabled  = optional(string)
     name                               = optional(string)
     name_prefix                        = optional(string)
     port                               = optional(number)
