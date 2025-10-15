@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.0.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.0.0...v10.0.1) (2025-10-15)
+
+
+### Bug Fixes
+
+* Update `load_balancing_cross_zone_enabled` variable to accept `string` instead of `bool` ([#417](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/417)) ([d8a5521](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/d8a552103b42b865e1790397f20da8ea1b2204bb))
+
 ## [10.0.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v9.17.0...v10.0.0) (2025-09-16)
 
 
