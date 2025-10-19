@@ -28,11 +28,10 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Zip archive
+# Lambda build artifacts
+builds/
+__pycache__/
 *.zip
 
-# Ignore cert generation files
-*.pem
-*.key
-*.csr
-**/cert_files/*
+.DS_Store
+.idea
