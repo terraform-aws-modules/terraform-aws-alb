@@ -1,0 +1,5 @@
+# Ignore cert generation files
+*.pem
+*.key
+*.csr
+**/cert_files/*
