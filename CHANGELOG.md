@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.0.2](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.0.1...v10.0.2) (2025-10-21)
+
+### Bug Fixes
+
+* Update CI workflow versions to latest ([#419](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/419)) ([f76da80](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/f76da8059ff6e7bb53c71b3cf797eeb036732d36))
+
 ## [10.0.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.0.0...v10.0.1) (2025-10-15)
 
 
