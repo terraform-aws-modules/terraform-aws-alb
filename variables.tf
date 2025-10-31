@@ -378,17 +378,20 @@ variable "listeners" {
       }))
       conditions = list(object({
         host_header = optional(object({
-          values = list(string)
+          values       = optional(list(string))
+          regex_values = optional(list(string))
         }))
         http_header = optional(object({
           http_header_name = string
-          values           = list(string)
+          values           = optional(list(string))
+          regex_values     = optional(list(string))
         }))
         http_request_method = optional(object({
           values = list(string)
         }))
         path_pattern = optional(object({
-          values = list(string)
+          values       = optional(list(string))
+          regex_values = optional(list(string))
         }))
         query_string = optional(list(object({
           key   = optional(string)
@@ -401,7 +404,22 @@ variable "listeners" {
       listener_arn = optional(string)
       listener_key = optional(string)
       priority     = optional(number)
-      tags         = optional(map(string), {})
+      transforms = optional(map(object({
+        type = optional(string)
+        host_header_rewrite_config = optional(object({
+          rewrite = optional(object({
+            regex   = string
+            replace = string
+          }))
+        }))
+        url_rewrite_config = optional(object({
+          rewrite = optional(object({
+            regex   = string
+            replace = string
+          }))
+        }))
+      })))
+      tags = optional(map(string), {})
     })), {})
   }))
   default = {}
