@@ -795,7 +795,7 @@ resource "aws_route53_record" "this" {
   alias {
     name                   = aws_lb.this[0].dns_name
     zone_id                = aws_lb.this[0].zone_id
-    evaluate_target_health = true
+    evaluate_target_health = coalesce(each.value.evaluate_target_health, true)
   }
 }
 

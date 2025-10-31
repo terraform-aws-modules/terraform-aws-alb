@@ -581,6 +581,7 @@ variable "route53_records" {
     zone_id = string
     name    = optional(string)
     type    = string
+    evaluate_target_health = optional(bool)
   }))
   default = null
 }
