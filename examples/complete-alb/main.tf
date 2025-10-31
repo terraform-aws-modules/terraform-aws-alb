@@ -126,7 +126,7 @@ module "alb" {
             }]
           }]
 
-          transforms = {
+          transform = {
             host-header-rewrite = {
               host_header_rewrite_config = {
                 rewrite = {

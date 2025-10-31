@@ -404,7 +404,7 @@ variable "listeners" {
       listener_arn = optional(string)
       listener_key = optional(string)
       priority     = optional(number)
-      transforms = optional(map(object({
+      transform = optional(map(object({
         type = optional(string)
         host_header_rewrite_config = optional(object({
           rewrite = optional(object({

@@ -505,7 +505,7 @@ resource "aws_lb_listener_rule" "this" {
   priority     = each.value.priority
 
   dynamic "transform" {
-    for_each = each.value.transforms != null ? each.value.transforms : {}
+    for_each = each.value.transform != null ? each.value.transform : {}
 
     content {
       type = coalesce(transform.value.type, transform.key)
