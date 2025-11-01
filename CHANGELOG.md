@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.1.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.0.2...v10.1.0) (2025-11-01)
+
+### Features
+
+* Support `aws_lb_listener_rule.transform`, `regex_values`, and update docs ([#422](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/422)) ([2f90229](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/2f9022962c78efa1c020e7c2bba234edd62d3153))
+
 ## [10.0.2](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.0.1...v10.0.2) (2025-10-21)
 
 ### Bug Fixes
