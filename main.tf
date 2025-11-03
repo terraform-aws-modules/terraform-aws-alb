@@ -450,7 +450,8 @@ resource "aws_lb_listener_rule" "this" {
         for_each = condition.value.host_header != null ? [condition.value.host_header] : []
 
         content {
-          values = host_header.value.values
+          values       = host_header.value.values
+          regex_values = host_header.value.regex_values
         }
       }
 
@@ -460,6 +461,7 @@ resource "aws_lb_listener_rule" "this" {
         content {
           http_header_name = http_header.value.http_header_name
           values           = http_header.value.values
+          regex_values     = http_header.value.regex_values
         }
       }
 
@@ -475,7 +477,8 @@ resource "aws_lb_listener_rule" "this" {
         for_each = condition.value.path_pattern != null ? [condition.value.path_pattern] : []
 
         content {
-          values = path_pattern.value.values
+          values       = path_pattern.value.values
+          regex_values = path_pattern.value.regex_values
         }
       }
 
@@ -500,6 +503,45 @@ resource "aws_lb_listener_rule" "this" {
 
   listener_arn = try(aws_lb_listener.this[each.value.listener_key].arn, each.value.listener_arn)
   priority     = each.value.priority
+
+  dynamic "transform" {
+    for_each = each.value.transform != null ? each.value.transform : {}
+
+    content {
+      type = coalesce(transform.value.type, transform.key)
+
+      dynamic "host_header_rewrite_config" {
+        for_each = transform.value.host_header_rewrite_config != null ? [transform.value.host_header_rewrite_config] : []
+
+        content {
+
+          dynamic "rewrite" {
+            for_each = host_header_rewrite_config.value.rewrite != null ? [host_header_rewrite_config.value.rewrite] : []
+
+            content {
+              regex   = rewrite.value.regex
+              replace = rewrite.value.replace
+            }
+          }
+        }
+      }
+      dynamic "url_rewrite_config" {
+        for_each = transform.value.url_rewrite_config != null ? [transform.value.url_rewrite_config] : []
+
+        content {
+
+          dynamic "rewrite" {
+            for_each = url_rewrite_config.value.rewrite != null ? [url_rewrite_config.value.rewrite] : []
+
+            content {
+              regex   = rewrite.value.regex
+              replace = rewrite.value.replace
+            }
+          }
+        }
+      }
+    }
+  }
 
   tags = merge(
     local.tags,

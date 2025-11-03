@@ -19,6 +19,7 @@ Please consult the `examples` directory for reference example configurations. If
 - Security group rules now use a default naming scheme of `<security-group-name>-<map-key>` unless a more specific rule name is provided.
 - `rule.actions.type` has been replaced with `rule.actions.<type>`. See before/after below for more details.
 - `query_string` supports a list of key:value pairs; type definition updated to support this (i.e. was `map(string)` and is now `list(map(string))`)
+- `aws_lb_listener.ssl_policy` now defaults to `ELBSecurityPolicy-TLS13-1-3-2021-06`
 
 ### Removed
 

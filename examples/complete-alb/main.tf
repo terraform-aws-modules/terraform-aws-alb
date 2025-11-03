@@ -93,7 +93,7 @@ module "alb" {
           conditions = [{
             http_header = {
               http_header_name = "x-Gimme-Fixed-Response"
-              values           = ["yes", "please", "right now"]
+              regex_values     = ["^yes$", "^please$", "^right\\snow$"]
             }
           }]
         }
@@ -125,6 +125,26 @@ module "alb" {
               value = "true"
             }]
           }]
+
+          transform = {
+            host-header-rewrite = {
+              host_header_rewrite_config = {
+                rewrite = {
+                  regex   = "^mywebsite-(.+).com$"
+                  replace = "test.$1.myweb.com"
+                }
+              }
+            }
+            my_other_tranform = {
+              type = "url-rewrite"
+              url_rewrite_config = {
+                rewrite = {
+                  regex   = "^mywebsite-(.+).net"
+                  replace = "test.$1.myweb.net"
+                }
+              }
+            }
+          }
         }
 
         ex-redirect = {
