@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.2.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.1.0...v10.2.0) (2025-11-03)
+
+### Features
+
+* Allow setting `evaluate_target_health` for Route53 records ([#423](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/423)) ([ebad35b](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/ebad35b913e41cdca73137981a36c513da3e7b8f))
+
 ## [10.1.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.0.2...v10.1.0) (2025-11-01)
 
 ### Features
