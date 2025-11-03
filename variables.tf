@@ -596,9 +596,10 @@ variable "security_group_tags" {
 variable "route53_records" {
   description = "Map of Route53 records to create. Each record map should contain `zone_id`, `name`, and `type`"
   type = map(object({
-    zone_id = string
-    name    = optional(string)
-    type    = string
+    zone_id                = string
+    name                   = optional(string)
+    type                   = string
+    evaluate_target_health = optional(bool, true)
   }))
   default = null
 }
