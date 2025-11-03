@@ -147,15 +147,15 @@ module "alb" {
   # Route53 Record(s)
   route53_records = {
     A = {
-      name    = local.name
-      type    = "A"
-      zone_id = data.aws_route53_zone.this.id
+      name                   = local.name
+      type                   = "A"
+      zone_id                = data.aws_route53_zone.this.id
       evaluate_target_health = true
     }
     AAAA = {
-      name    = local.name
-      type    = "AAAA"
-      zone_id = data.aws_route53_zone.this.id
+      name                   = local.name
+      type                   = "AAAA"
+      zone_id                = data.aws_route53_zone.this.id
       evaluate_target_health = true
     }
   }
