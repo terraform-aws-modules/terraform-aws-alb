@@ -165,6 +165,30 @@ resource "aws_lb_listener" "this" {
   }
 
   dynamic "default_action" {
+    for_each = each.value.jwt_validation != null ? [each.value.jwt_validation] : []
+
+    content {
+      jwt_validation {
+        issuer        = default_action.value.issuer
+        jwks_endpoint = default_action.value.jwks_endpoint
+
+        dynamic "additional_claim" {
+          for_each = default_action.value.additional_claim != null ? default_action.value.additional_claim : []
+
+          content {
+            format = additional_claim.value.format
+            name   = additional_claim.value.name
+            values = additional_claim.value.values
+          }
+        }
+      }
+
+      order = each.value.order
+      type  = "jwt-validation"
+    }
+  }
+
+  dynamic "default_action" {
     for_each = each.value.fixed_response != null ? [each.value.fixed_response] : []
 
     content {
@@ -351,6 +375,35 @@ resource "aws_lb_listener_rule" "this" {
 
       order = action.value.order
       type  = "authenticate-oidc"
+    }
+  }
+
+  # JWT validation
+  dynamic "action" {
+    for_each = [for action in each.value.actions : action if action.jwt_validation != null]
+
+    content {
+      dynamic "jwt_validation" {
+        for_each = [action.value.jwt_validation]
+
+        content {
+          issuer        = jwt_validation.value.issuer
+          jwks_endpoint = jwt_validation.value.jwks_endpoint
+
+          dynamic "additional_claim" {
+            for_each = jwt_validation.value.additional_claim != null ? jwt_validation.value.additional_claim : []
+
+            content {
+              format = additional_claim.value.format
+              name   = additional_claim.value.name
+              values = additional_claim.value.values
+            }
+          }
+        }
+      }
+
+      order = action.value.order
+      type  = "jwt-validation"
     }
   }
 
