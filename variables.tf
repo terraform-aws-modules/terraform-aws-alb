@@ -269,6 +269,15 @@ variable "listeners" {
       target_group_arn = optional(string)
       target_group_key = optional(string)
     }))
+    jwt_validation = optional(object({
+      issuer        = string
+      jwks_endpoint = string
+      additional_claim = optional(list(object({
+        format = string
+        name   = string
+        values = list(string)
+      })))
+    }))
     weighted_forward = optional(object({
       target_groups = optional(list(object({
         target_group_arn = optional(string)
@@ -345,6 +354,15 @@ variable "listeners" {
           session_timeout                     = optional(number)
           token_endpoint                      = string
           user_info_endpoint                  = string
+        }))
+        jwt_validation = optional(object({
+          issuer        = string
+          jwks_endpoint = string
+          additional_claim = optional(list(object({
+            format = string
+            name   = string
+            values = list(string)
+          })))
         }))
         fixed_response = optional(object({
           content_type = string

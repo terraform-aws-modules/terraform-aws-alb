@@ -395,6 +395,45 @@ module "alb" {
         target_group_key = "ex-instance"
       }
     }
+
+    ex-jwt = {
+      port            = 445
+      protocol        = "HTTPS"
+      certificate_arn = module.acm.acm_certificate_arn
+
+      forward = {
+        target_group_key = "ex-instance"
+      }
+
+      rules = {
+        ex-jwt = {
+          priority = 5
+
+          actions = [
+            {
+              jwt_validation = {
+                issuer        = "https://${var.domain_name}"
+                jwks_endpoint = "https://${var.domain_name}/jwks.json"
+                additional_claim = [
+                  { format = "space-separated-values", name = "scp", values = ["read", "write"] }
+                ]
+              }
+            },
+            {
+              forward = {
+                target_group_key = "ex-lambda-with-trigger"
+              }
+            }
+          ]
+
+          conditions = [{
+            host_header = {
+              values = ["foobar.com"]
+            }
+          }]
+        }
+      }
+    }
   }
 
   target_groups = {
