@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.2.0...v10.3.0) (2025-11-21)
+
+### Features
+
+* Support for `jwt_validation` in `aws_lb_listener` and `aws_lb_listener_rule` ([#426](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/426)) ([e754974](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/e75497464c2b2f4b826928038cb9c3f17391e5f8))
+
 ## [10.2.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.1.0...v10.2.0) (2025-11-03)
 
 ### Features
