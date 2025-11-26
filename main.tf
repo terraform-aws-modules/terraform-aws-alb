@@ -273,8 +273,8 @@ resource "aws_lb_listener" "this" {
     }
   }
 
-  port                                                                  = coalesce(each.value.port, var.default_port)
-  protocol                                                              = coalesce(each.value.protocol, var.default_protocol)
+  port                                                                  = contains(["GENEVE"], coalesce(each.value.protocol, var.default_protocol)) ? null : coalesce(each.value.port, var.default_port)
+  protocol                                                              = contains(["GENEVE"], coalesce(each.value.protocol, var.default_protocol)) ? null : coalesce(each.value.protocol, var.default_protocol)
   routing_http_request_x_amzn_mtls_clientcert_header_name               = coalesce(each.value.protocol, var.default_protocol) == "HTTPS" ? each.value.routing_http_request_x_amzn_mtls_clientcert_header_name : null
   routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = coalesce(each.value.protocol, var.default_protocol) == "HTTPS" ? each.value.routing_http_request_x_amzn_mtls_clientcert_issuer_header_name : null
   routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = coalesce(each.value.protocol, var.default_protocol) == "HTTPS" ? each.value.routing_http_request_x_amzn_mtls_clientcert_leaf_header_name : null
