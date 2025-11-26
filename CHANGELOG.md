@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.3.0...v10.3.1) (2025-11-26)
+
+### Bug Fixes
+
+* Update port and protocol handling for GENEVE in aws_lb_listener ([#427](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/427)) ([0689d64](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/0689d640f7b884d8f85eb590e094af652ec8d3b2))
+
 ## [10.3.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.2.0...v10.3.0) (2025-11-21)
 
 ### Features
