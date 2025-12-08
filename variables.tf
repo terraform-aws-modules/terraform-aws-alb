@@ -118,6 +118,16 @@ variable "enforce_security_group_inbound_rules_on_private_link_traffic" {
   default     = null
 }
 
+variable "health_check_logs" {
+  description = "Map containing health check logging configuration for application load balancers"
+  type = object({
+    bucket  = string
+    enabled = optional(bool, true)
+    prefix  = optional(string)
+  })
+  default = null
+}
+
 variable "idle_timeout" {
   description = "The time in seconds that the connection is allowed to be idle. Only valid for Load Balancers of type `application`. Default: `60`"
   type        = number

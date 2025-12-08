@@ -54,6 +54,15 @@ resource "aws_lb" "this" {
   internal                                                     = var.internal
   ip_address_type                                              = var.ip_address_type
 
+  dynamic "health_check_logs" {
+    for_each = var.health_check_logs != null ? [var.health_check_logs] : []
+    content {
+      bucket  = health_check_logs.value.bucket
+      enabled = health_check_logs.value.enabled
+      prefix  = health_check_logs.value.prefix
+    }
+  }
+
   dynamic "ipam_pools" {
     for_each = var.ipam_pools != null ? [var.ipam_pools] : []
 

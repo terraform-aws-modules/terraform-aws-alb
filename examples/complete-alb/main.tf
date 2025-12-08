@@ -67,6 +67,11 @@ module "alb" {
     prefix  = "connection-logs"
   }
 
+  health_check_logs = {
+    bucket = module.log_bucket.s3_bucket_id
+    prefix = "health-check-logs"
+  }
+
   client_keep_alive = 7200
 
   listeners = {

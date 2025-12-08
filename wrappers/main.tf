@@ -24,6 +24,7 @@ module "wrapper" {
   enable_xff_client_port                                       = try(each.value.enable_xff_client_port, var.defaults.enable_xff_client_port, null)
   enable_zonal_shift                                           = try(each.value.enable_zonal_shift, var.defaults.enable_zonal_shift, null)
   enforce_security_group_inbound_rules_on_private_link_traffic = try(each.value.enforce_security_group_inbound_rules_on_private_link_traffic, var.defaults.enforce_security_group_inbound_rules_on_private_link_traffic, null)
+  health_check_logs                                            = try(each.value.health_check_logs, var.defaults.health_check_logs, null)
   idle_timeout                                                 = try(each.value.idle_timeout, var.defaults.idle_timeout, null)
   internal                                                     = try(each.value.internal, var.defaults.internal, null)
   ip_address_type                                              = try(each.value.ip_address_type, var.defaults.ip_address_type, null)

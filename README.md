@@ -357,13 +357,13 @@ See [patterns.md](https://github.com/terraform-aws-modules/terraform-aws-alb/blo
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.22 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.25 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.22 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.25 |
 
 ## Modules
 
@@ -413,6 +413,7 @@ No modules.
 | <a name="input_enable_xff_client_port"></a> [enable\_xff\_client\_port](#input\_enable\_xff\_client\_port) | Indicates whether the X-Forwarded-For header should preserve the source port that the client used to connect to the load balancer in `application` load balancers. Defaults to `false` | `bool` | `null` | no |
 | <a name="input_enable_zonal_shift"></a> [enable\_zonal\_shift](#input\_enable\_zonal\_shift) | Whether zonal shift is enabled | `bool` | `null` | no |
 | <a name="input_enforce_security_group_inbound_rules_on_private_link_traffic"></a> [enforce\_security\_group\_inbound\_rules\_on\_private\_link\_traffic](#input\_enforce\_security\_group\_inbound\_rules\_on\_private\_link\_traffic) | Indicates whether inbound security group rules are enforced for traffic originating from a PrivateLink. Only valid for Load Balancers of type network. The possible values are on and off | `string` | `null` | no |
+| <a name="input_health_check_logs"></a> [health\_check\_logs](#input\_health\_check\_logs) | Map containing health check logging configuration for application load balancers | <pre>object({<br/>    bucket  = string<br/>    enabled = optional(bool, true)<br/>    prefix  = optional(string)<br/>  })</pre> | `null` | no |
 | <a name="input_idle_timeout"></a> [idle\_timeout](#input\_idle\_timeout) | The time in seconds that the connection is allowed to be idle. Only valid for Load Balancers of type `application`. Default: `60` | `number` | `null` | no |
 | <a name="input_internal"></a> [internal](#input\_internal) | If true, the LB will be internal. Defaults to `false` | `bool` | `null` | no |
 | <a name="input_ip_address_type"></a> [ip\_address\_type](#input\_ip\_address\_type) | The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack` | `string` | `null` | no |
