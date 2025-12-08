@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.3.1...v10.4.0) (2025-12-08)
+
+### Features
+
+* ALB Health Check Logs ([#428](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/428)) ([aa32d75](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/aa32d751401f4e9dcf4448a774abacb5bbb8261c))
+
 ## [10.3.1](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.3.0...v10.3.1) (2025-11-26)
 
 ### Bug Fixes
