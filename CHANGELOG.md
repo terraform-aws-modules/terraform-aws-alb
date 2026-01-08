@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [10.5.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.4.0...v10.5.0) (2026-01-08)
+
+### Features
+
+* Add provider meta user-agent, replacing static tag ([#431](https://github.com/terraform-aws-modules/terraform-aws-alb/issues/431)) ([18d799c](https://github.com/terraform-aws-modules/terraform-aws-alb/commit/18d799c0fa95a7b8025d2fe5d155100ec5b0ff08))
+
 ## [10.4.0](https://github.com/terraform-aws-modules/terraform-aws-alb/compare/v10.3.1...v10.4.0) (2025-12-08)
 
 ### Features
