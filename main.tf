@@ -4,7 +4,6 @@ data "aws_partition" "current" {
 
 locals {
   create = var.create && var.putin_khuylo
-  tags   = merge(var.tags, { terraform-aws-modules = "alb" })
 }
 
 ################################################################################
@@ -98,7 +97,7 @@ resource "aws_lb" "this" {
   }
 
   subnets                    = var.subnets
-  tags                       = local.tags
+  tags                       = var.tags
   xff_header_processing_mode = var.xff_header_processing_mode
 
   dynamic "timeouts" {
@@ -307,7 +306,7 @@ resource "aws_lb_listener" "this" {
   tcp_idle_timeout_seconds                                              = coalesce(each.value.protocol, var.default_protocol) == "TCP" ? each.value.tcp_idle_timeout_seconds : null
 
   tags = merge(
-    local.tags,
+    var.tags,
     each.value.tags,
   )
 }
@@ -606,7 +605,7 @@ resource "aws_lb_listener_rule" "this" {
   }
 
   tags = merge(
-    local.tags,
+    var.tags,
     each.value.tags,
   )
 }
@@ -743,7 +742,7 @@ resource "aws_lb_target_group" "this" {
   vpc_id      = coalesce(each.value.vpc_id, var.vpc_id)
 
   tags = merge(
-    local.tags,
+    var.tags,
     each.value.tags,
   )
 
@@ -834,7 +833,7 @@ resource "aws_security_group" "this" {
   description = coalesce(var.security_group_description, "Security group for ${local.security_group_name} ${var.load_balancer_type} load balancer")
   vpc_id      = var.vpc_id
 
-  tags = merge(local.tags, var.security_group_tags)
+  tags = merge(var.tags, var.security_group_tags)
 
   lifecycle {
     create_before_destroy = true
