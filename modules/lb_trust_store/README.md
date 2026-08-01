@@ -28,14 +28,14 @@ module "trust_store" {
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.28 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.28 |
 
 ## Modules
@@ -45,14 +45,14 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_lb_trust_store.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_trust_store) | resource |
 | [aws_lb_trust_store_revocation.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_trust_store_revocation) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_ca_certificates_bundle_s3_bucket"></a> [ca\_certificates\_bundle\_s3\_bucket](#input\_ca\_certificates\_bundle\_s3\_bucket) | S3 bucket name holding the client certificate CA bundle. | `string` | `null` | no |
 | <a name="input_ca_certificates_bundle_s3_key"></a> [ca\_certificates\_bundle\_s3\_key](#input\_ca\_certificates\_bundle\_s3\_key) | S3 object key holding the client certificate CA bundle. | `string` | `null` | no |
 | <a name="input_ca_certificates_bundle_s3_object_version"></a> [ca\_certificates\_bundle\_s3\_object\_version](#input\_ca\_certificates\_bundle\_s3\_object\_version) | Version ID of CA bundle S3 bucket object, if versioned, defaults to latest if omitted. | `string` | `null` | no |
@@ -67,7 +67,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_revocation_lists"></a> [revocation\_lists](#output\_revocation\_lists) | Map of revocation lists and their attributes. |
 | <a name="output_trust_store_arn"></a> [trust\_store\_arn](#output\_trust\_store\_arn) | ARN of the trust store (matches `id`). |
 | <a name="output_trust_store_arn_suffix"></a> [trust\_store\_arn\_suffix](#output\_trust\_store\_arn\_suffix) | ARN suffix for use with cloudwatch metrics. |
