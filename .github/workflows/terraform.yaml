@@ -1,0 +1,30 @@
+name: Terraform CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.9
+          terraform_wrapper: false
+      - run: terraform init -backend=false
+      - run: terraform validate
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.9
+          terraform_wrapper: false
+      - run: terraform fmt -check -recursive -diff

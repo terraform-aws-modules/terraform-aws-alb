@@ -1,0 +1,51 @@
+name: Cruft update
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"   # Mondays 04:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.x"
+
+      - name: Install cruft
+        run: pip install cruft
+
+      - name: Check for template updates
+        id: check
+        run: |
+          if cruft check; then
+            echo "outdated=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "outdated=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Apply template update
+        if: steps.check.outputs.outdated == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cruft update --skip-apply-ask
+
+      - name: Open pull request
+        if: steps.check.outputs.outdated == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/cruft-update
+          title: "chore: sync with module template"
+          commit-message: "chore: sync with module template"
+          body: |
+            Automated sync from the Terraform module template.
+            Review the diff and resolve any `.rej` conflict files before merging.
+          add-paths: .

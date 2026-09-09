@@ -1,0 +1,18 @@
+{
+  "template": "https://github.com/vshn/terraform-module-template",
+  "commit": "68ca419e889240938d31844993734f1f16886036",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_slug": "terraform-aws-alb",
+      "description": "AWS Application and Network Load Balancer (ALB & NLB) Terraform module",
+      "_copy_without_render": [
+        ".github/workflows/*"
+      ],
+      "skip": "README.md",
+      "_template": "https://github.com/vshn/terraform-module-template",
+      "_commit": "68ca419e889240938d31844993734f1f16886036"
+    }
+  },
+  "directory": null
+}

@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main, master]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Pick bump from PR labels
+        id: bump
+        run: |
+          bump=""
+          for l in $LABELS; do
+            case "$l" in
+              bump:major) bump=major; break ;;
+              bump:minor) [ "$bump" != "major" ] && bump=minor ;;
+              bump:patch) [ -z "$bump" ] && bump=patch ;;
+            esac
+          done
+          if [ -z "$bump" ]; then
+            echo "No bump:* label — no release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "bump=$bump" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Tag and release
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          BUMP: ${{ steps.bump.outputs.bump }}
+          SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          latest="$(git tag --list 'v*' --sort=-v:refname | head -n1)"
+          latest="${latest:-v0.0.0}"
+          IFS=. read -r ma mi pa <<< "${latest#v}"
+          case "$BUMP" in
+            major) ma=$((ma+1)); mi=0; pa=0 ;;
+            minor) mi=$((mi+1)); pa=0 ;;
+            patch) pa=$((pa+1)) ;;
+          esac
+          next="v${ma}.${mi}.${pa}"
+          echo "Releasing $next (previous: $latest)"
+          gh release create "$next" --target "$SHA" --title "$next" --generate-notes
