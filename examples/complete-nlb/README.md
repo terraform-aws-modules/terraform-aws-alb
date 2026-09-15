@@ -41,6 +41,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Type |
 | ---- | ---- |
+| [aws_cloudwatch_log_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_eip.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_instance.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
@@ -63,6 +64,9 @@ Note that this example may create resources which cost money. Run `terraform des
 | <a name="output_id"></a> [id](#output\_id) | The ID and ARN of the load balancer we created |
 | <a name="output_listener_rules"></a> [listener\_rules](#output\_listener\_rules) | Map of listeners rules created and their attributes |
 | <a name="output_listeners"></a> [listeners](#output\_listeners) | Map of listeners created and their attributes |
+| <a name="output_log_deliveries"></a> [log\_deliveries](#output\_log\_deliveries) | Map of log deliveries created and their attributes |
+| <a name="output_log_delivery_destinations"></a> [log\_delivery\_destinations](#output\_log\_delivery\_destinations) | Map of log delivery destinations created and their attributes |
+| <a name="output_log_delivery_sources"></a> [log\_delivery\_sources](#output\_log\_delivery\_sources) | Map of log delivery sources created and their attributes |
 | <a name="output_route53_records"></a> [route53\_records](#output\_route53\_records) | The Route53 records created and attached to the load balancer |
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |

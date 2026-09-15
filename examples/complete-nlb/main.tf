@@ -74,6 +74,15 @@ module "nlb" {
     bucket = module.log_bucket.s3_bucket_id
   }
 
+  # Vended log delivery; independent of the legacy `access_logs` attribute above
+  log_deliveries = {
+    access = {
+      log_type                 = "NLB_ACCESS_LOGS"
+      destination_resource_arn = aws_cloudwatch_log_group.this.arn
+      output_format            = "json"
+    }
+  }
+
   listeners = {
     ex-one = {
       port     = 81
@@ -238,6 +247,18 @@ module "log_bucket" {
 
   attach_deny_insecure_transport_policy = true
   attach_require_latest_tls_policy      = true
+
+  tags = local.tags
+}
+
+# AWS recommends the `/aws/vendedlogs/` prefix so that one wildcard entry covers
+# every log group in the delivery resource policy, which is capped at 51,200 bytes
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AWS-logs-infrastructure-V2-CloudWatchLogs.html
+resource "aws_cloudwatch_log_group" "this" {
+  name = "/aws/vendedlogs/${local.name}"
+
+  # For example only
+  retention_in_days = 1
 
   tags = local.tags
 }

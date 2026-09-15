@@ -72,3 +72,22 @@ output "route53_records" {
   description = "The Route53 records created and attached to the load balancer"
   value       = aws_route53_record.this
 }
+
+################################################################################
+# Log Delivery
+################################################################################
+
+output "log_delivery_sources" {
+  description = "Map of log delivery sources created and their attributes"
+  value       = aws_cloudwatch_log_delivery_source.this
+}
+
+output "log_delivery_destinations" {
+  description = "Map of log delivery destinations created and their attributes"
+  value       = aws_cloudwatch_log_delivery_destination.this
+}
+
+output "log_deliveries" {
+  description = "Map of log deliveries created and their attributes"
+  value       = aws_cloudwatch_log_delivery.this
+}

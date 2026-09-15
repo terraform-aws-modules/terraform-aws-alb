@@ -914,3 +914,68 @@ resource "aws_wafv2_web_acl_association" "this" {
   resource_arn = aws_lb.this[0].arn
   web_acl_arn  = var.web_acl_arn
 }
+
+################################################################################
+# Log Delivery
+################################################################################
+
+locals {
+  log_deliveries = local.create && var.log_deliveries != null ? var.log_deliveries : {}
+
+  # A delivery source is scoped to one load balancer and one log type, so the same
+  # log type sent to two destinations re-uses a single source
+  log_delivery_source_names = {
+    for log_type in toset([for delivery in local.log_deliveries : delivery.log_type]) :
+    log_type => lower(replace(replace(log_type, "/_LOGS$/", ""), "_", "-"))
+  }
+}
+
+resource "aws_cloudwatch_log_delivery_source" "this" {
+  for_each = local.log_delivery_source_names
+
+  region = var.region
+
+  log_type     = each.key
+  name         = "${aws_lb.this[0].name}-${each.value}"
+  resource_arn = aws_lb.this[0].arn
+
+  tags = var.tags
+}
+
+resource "aws_cloudwatch_log_delivery_destination" "this" {
+  for_each = { for k, v in local.log_deliveries : k => v if v.delivery_destination_arn == null }
+
+  region = var.region
+
+  name          = coalesce(each.value.destination_name, "${aws_lb.this[0].name}-${each.key}")
+  output_format = each.value.output_format
+
+  delivery_destination_configuration {
+    destination_resource_arn = each.value.destination_resource_arn
+  }
+
+  tags = merge(var.tags, each.value.tags)
+}
+
+resource "aws_cloudwatch_log_delivery" "this" {
+  for_each = local.log_deliveries
+
+  region = var.region
+
+  delivery_source_name     = aws_cloudwatch_log_delivery_source.this[each.value.log_type].name
+  delivery_destination_arn = each.value.delivery_destination_arn != null ? each.value.delivery_destination_arn : aws_cloudwatch_log_delivery_destination.this[each.key].arn
+
+  field_delimiter = each.value.field_delimiter
+  record_fields   = each.value.record_fields
+
+  dynamic "s3_delivery_configuration" {
+    for_each = each.value.s3_delivery_configuration != null ? [each.value.s3_delivery_configuration] : []
+
+    content {
+      enable_hive_compatible_path = s3_delivery_configuration.value.enable_hive_compatible_path
+      suffix_path                 = s3_delivery_configuration.value.suffix_path
+    }
+  }
+
+  tags = merge(var.tags, each.value.tags)
+}
