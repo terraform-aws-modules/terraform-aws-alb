@@ -72,6 +72,36 @@ module "alb" {
     prefix = "health-check-logs"
   }
 
+  # Vended log delivery; independent of the legacy `*_logs` attributes above
+  log_deliveries = {
+    access = {
+      log_type                 = "ALB_ACCESS_LOGS"
+      destination_resource_arn = aws_cloudwatch_log_group.this.arn
+      output_format            = "json"
+    }
+    connection = {
+      log_type                 = "ALB_CONNECTION_LOGS"
+      destination_resource_arn = aws_cloudwatch_log_group.this.arn
+      output_format            = "json"
+    }
+    health_check = {
+      log_type                 = "ALB_HEALTH_CHECK_LOGS"
+      destination_resource_arn = aws_cloudwatch_log_group.this.arn
+      output_format            = "json"
+    }
+    # The same log type can be sent to more than one destination; both deliveries
+    # share one delivery source
+    access_archive = {
+      log_type                 = "ALB_ACCESS_LOGS"
+      destination_resource_arn = module.log_bucket.s3_bucket_arn
+      output_format            = "parquet"
+
+      s3_delivery_configuration = {
+        suffix_path = "{region}/{yyyy}/{MM}/{dd}/"
+      }
+    }
+  }
+
   client_keep_alive = 7200
 
   listeners = {
@@ -696,6 +726,18 @@ module "log_bucket" {
 
   attach_deny_insecure_transport_policy = true
   attach_require_latest_tls_policy      = true
+
+  tags = local.tags
+}
+
+# AWS recommends the `/aws/vendedlogs/` prefix so that one wildcard entry covers
+# every log group in the delivery resource policy, which is capped at 51,200 bytes
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AWS-logs-infrastructure-V2-CloudWatchLogs.html
+resource "aws_cloudwatch_log_group" "this" {
+  name = "/aws/vendedlogs/${local.name}"
+
+  # For example only
+  retention_in_days = 1
 
   tags = local.tags
 }

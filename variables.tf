@@ -648,6 +648,33 @@ variable "web_acl_arn" {
   default     = null
 }
 
+################################################################################
+# Log Delivery
+################################################################################
+
+variable "log_deliveries" {
+  description = "Map of CloudWatch Logs deliveries to create for the load balancer. Valid `log_type` values are `ALB_ACCESS_LOGS`, `ALB_CONNECTION_LOGS`, `ALB_HEALTH_CHECK_LOGS` and `NLB_ACCESS_LOGS`"
+  type = map(object({
+    log_type = string
+
+    # Delivery destination; supply `delivery_destination_arn` to use an existing
+    # destination instead of creating one from `destination_resource_arn`
+    delivery_destination_arn = optional(string)
+    destination_name         = optional(string)
+    destination_resource_arn = optional(string)
+    output_format            = optional(string)
+
+    field_delimiter = optional(string)
+    record_fields   = optional(list(string))
+    s3_delivery_configuration = optional(object({
+      enable_hive_compatible_path = optional(bool)
+      suffix_path                 = optional(string)
+    }))
+    tags = optional(map(string), {})
+  }))
+  default = null
+}
+
 variable "putin_khuylo" {
   description = "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
   type        = bool

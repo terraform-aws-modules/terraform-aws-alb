@@ -31,6 +31,7 @@ module "wrapper" {
   ipam_pools                                                   = try(each.value.ipam_pools, var.defaults.ipam_pools, null)
   listeners                                                    = try(each.value.listeners, var.defaults.listeners, {})
   load_balancer_type                                           = try(each.value.load_balancer_type, var.defaults.load_balancer_type, "application")
+  log_deliveries                                               = try(each.value.log_deliveries, var.defaults.log_deliveries, null)
   minimum_load_balancer_capacity                               = try(each.value.minimum_load_balancer_capacity, var.defaults.minimum_load_balancer_capacity, null)
   name                                                         = try(each.value.name, var.defaults.name, null)
   name_prefix                                                  = try(each.value.name_prefix, var.defaults.name_prefix, null)

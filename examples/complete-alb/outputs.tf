@@ -74,3 +74,22 @@ output "route53_records" {
   description = "The Route53 records created and attached to the load balancer"
   value       = module.alb.route53_records
 }
+
+################################################################################
+# Log Delivery
+################################################################################
+
+output "log_delivery_sources" {
+  description = "Map of log delivery sources created and their attributes"
+  value       = module.alb.log_delivery_sources
+}
+
+output "log_delivery_destinations" {
+  description = "Map of log delivery destinations created and their attributes"
+  value       = module.alb.log_delivery_destinations
+}
+
+output "log_deliveries" {
+  description = "Map of log deliveries created and their attributes"
+  value       = module.alb.log_deliveries
+}
